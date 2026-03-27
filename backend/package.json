@@ -2,14 +2,33 @@
   "name": "portfolio",
   "version": "1.0.50",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "db:push": "bunx drizzle-kit push",
+    "db:generate": "bunx drizzle-kit generate",
+    "db:migrate": "bunx drizzle-kit migrate",
+    "db:studio": "bunx drizzle-kit studio"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@elysiajs/cors": "^1.4.1",
+    "@elysiajs/jwt": "^1.4.1",
+    "@elysiajs/openapi": "^1.4.14",
+    "@paralleldrive/cuid2": "^3.3.0",
+    "cloudinary": "^2.9.0",
+    "drizzle-orm": "^0.45.1",
+    "elysia": "latest",
+    "postgres": "^3.4.8"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "@elysiajs/eden": "^1.4.8",
+    "bun-types": "latest",
+    "drizzle-kit": "^0.31.10",
+    "drizzle-typebox": "^0.3.3",
+    "typescript": "^6.0.2"
+  },
+  "overrides": {
+    "@sinclair/typebox": "0.34.48"
   },
   "module": "src/index.js"
 }
