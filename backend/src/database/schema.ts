@@ -63,5 +63,59 @@ export const skillDetailsRelations = relations(skillDetails, ({ one }) => ({
   }),
 }));
 
-export const table = { users, skills, skillDetails } as const;
+export const experiences = pgTable("experiences", {
+  id: varchar("id")
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  companyTitle: varchar("company_title", { length: 255 }).notNull(),
+  companyLogoUrl: varchar("company_logo_url", { length: 512 }).notNull(),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date"),
+  position: varchar("position", { length: 255 }).notNull(),
+  responsibility: text("responsibility").notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+export const experienceAchievements = pgTable("experience_achievements", {
+  id: varchar("id")
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  experienceId: varchar("experience_id")
+    .notNull()
+    .references(() => experiences.id, { onDelete: "cascade" }),
+  description: text("description").notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+export const experiencesRelations = relations(experiences, ({ many }) => ({
+  achievements: many(experienceAchievements),
+}));
+
+export const experienceAchievementsRelations = relations(
+  experienceAchievements,
+  ({ one }) => ({
+    experience: one(experiences, {
+      fields: [experienceAchievements.experienceId],
+      references: [experiences.id],
+    }),
+  })
+);
+
+export const table = {
+  users,
+  skills,
+  skillDetails,
+  experiences,
+  experienceAchievements,
+} as const;
 export type Table = typeof table;

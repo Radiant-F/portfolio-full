@@ -3,6 +3,7 @@ import { cors } from "@elysiajs/cors";
 import { openapi } from "@elysiajs/openapi";
 import { authController } from "./modules/auth";
 import { skillController } from "./modules/skill";
+import { experienceController } from "./modules/experience";
 import { seedDefaultUser } from "./database/seed";
 
 const app = new Elysia()
@@ -18,6 +19,7 @@ const app = new Elysia()
         tags: [
           { name: "Auth", description: "Authentication endpoints" },
           { name: "Skills", description: "Skills CRUD endpoints" },
+          { name: "Experiences", description: "Experiences CRUD endpoints" },
         ],
         components: {
           securitySchemes: {
@@ -34,6 +36,7 @@ const app = new Elysia()
   .get("/", () => "Hello Elysia", { detail: { hide: true } })
   .use(authController)
   .use(skillController)
+  .use(experienceController)
   .listen(3000);
 
 seedDefaultUser().catch(console.error);
