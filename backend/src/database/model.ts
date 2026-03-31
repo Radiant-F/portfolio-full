@@ -37,6 +37,33 @@ const _selectExperienceAchievement = createSelectSchema(
   table.experienceAchievements
 );
 
+const _insertTag = createInsertSchema(table.tags);
+const _selectTag = createSelectSchema(table.tags);
+
+const _insertWork = createInsertSchema(table.works, {
+  iconUrl: t.String({ format: "uri" }),
+});
+const _selectWork = createSelectSchema(table.works, {
+  iconUrl: t.String({ format: "uri" }),
+});
+
+const _insertWorkLink = createInsertSchema(table.workLinks, {
+  url: t.String({ format: "uri" }),
+});
+const _selectWorkLink = createSelectSchema(table.workLinks, {
+  url: t.String({ format: "uri" }),
+});
+
+const _insertWorkScreenshot = createInsertSchema(table.workScreenshots, {
+  imageUrl: t.String({ format: "uri" }),
+});
+const _selectWorkScreenshot = createSelectSchema(table.workScreenshots, {
+  imageUrl: t.String({ format: "uri" }),
+});
+
+const _insertWorkTag = createInsertSchema(table.workTags);
+const _selectWorkTag = createSelectSchema(table.workTags);
+
 export const dbModel = {
   insert: spreads({
     users: _insertUser,
@@ -44,6 +71,11 @@ export const dbModel = {
     skillDetails: _insertSkillDetail,
     experiences: _insertExperience,
     experienceAchievements: _insertExperienceAchievement,
+    tags: _insertTag,
+    works: _insertWork,
+    workLinks: _insertWorkLink,
+    workScreenshots: _insertWorkScreenshot,
+    workTags: _insertWorkTag,
   }),
   select: spreads({
     users: _selectUser,
@@ -51,5 +83,10 @@ export const dbModel = {
     skillDetails: _selectSkillDetail,
     experiences: _selectExperience,
     experienceAchievements: _selectExperienceAchievement,
+    tags: _selectTag,
+    works: _selectWork,
+    workLinks: _selectWorkLink,
+    workScreenshots: _selectWorkScreenshot,
+    workTags: _selectWorkTag,
   }),
 } as const;
