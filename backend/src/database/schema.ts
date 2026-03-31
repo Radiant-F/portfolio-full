@@ -247,6 +247,20 @@ export const contacts = pgTable("contacts", {
     .$onUpdate(() => new Date()),
 });
 
+// ─── About ─────────────────────────────────────────────────
+
+export const about = pgTable("about", {
+  id: varchar("id")
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
 export const table = {
   users,
   skills,
@@ -259,5 +273,6 @@ export const table = {
   workScreenshots,
   workTags,
   contacts,
+  about,
 } as const;
 export type Table = typeof table;

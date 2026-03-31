@@ -7,6 +7,7 @@ import { experienceController } from "./modules/experience";
 import { tagController } from "./modules/tag";
 import { workController } from "./modules/work";
 import { contactController } from "./modules/contact";
+import { aboutController } from "./modules/about";
 import { seedDefaultUser } from "./database/seed";
 
 const app = new Elysia()
@@ -26,6 +27,7 @@ const app = new Elysia()
           { name: "Tags", description: "Tags CRUD endpoints" },
           { name: "Works", description: "Works CRUD endpoints" },
           { name: "Contacts", description: "Contacts CRUD endpoints" },
+          { name: "About", description: "About me content endpoint" },
         ],
         components: {
           securitySchemes: {
@@ -46,6 +48,7 @@ const app = new Elysia()
   .use(tagController)
   .use(workController)
   .use(contactController)
+  .use(aboutController)
   .listen(3000);
 
 seedDefaultUser().catch(console.error);

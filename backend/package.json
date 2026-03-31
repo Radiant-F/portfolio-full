@@ -18,10 +18,12 @@
     "cloudinary": "^2.9.0",
     "drizzle-orm": "^0.45.1",
     "elysia": "latest",
-    "postgres": "^3.4.8"
+    "postgres": "^3.4.8",
+    "sanitize-html": "^2.17.2"
   },
   "devDependencies": {
     "@elysiajs/eden": "^1.4.8",
+    "@types/sanitize-html": "^2.16.1",
     "bun-types": "latest",
     "drizzle-kit": "^0.31.10",
     "drizzle-typebox": "^0.3.3",
