@@ -7,13 +7,18 @@ import type {
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
 import { storage } from "./storage";
+import { Platform } from "react-native";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.EXPO_PUBLIC_API_URL,
   prepareHeaders: (headers, api) => {
     const accessToken = (api.getState() as RootState).auth.credentials
       .accessToken;
-    if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
+
+    // Web platform uses cookie
+    if (accessToken && Platform.OS !== "web")
+      headers.set("Authorization", `Bearer ${accessToken}`);
+
     return headers;
   },
 });

@@ -7,6 +7,7 @@ import { Image } from "expo-image";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  ActivityIndicator,
   Modal,
   Pressable,
   ScrollView,
@@ -15,15 +16,18 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function SignIn() {
   const dispatch = useAppDispatch();
   const { t, i18n } = useTranslation();
   const { email, password } = useAppSelector((state) => state.auth);
 
+  const insets = useSafeAreaInsets();
+
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [login] = useSignInMutation();
+  const [login, { isLoading }] = useSignInMutation();
 
   const selectedLanguage = i18n.language;
   const availableLanguages = [
@@ -38,15 +42,32 @@ export default function SignIn() {
       name: "Sundanese",
       flag: require("@/assets/flags/xx.svg"),
     },
+    {
+      locale: "ar",
+      name: "Arabic",
+      flag: require("@/assets/flags/sa.svg"),
+    },
+    {
+      locale: "he",
+      name: "Hebrew",
+      flag: require("@/assets/flags/il.svg"),
+    },
+    {
+      locale: "ur",
+      name: "Urdu",
+      flag: require("@/assets/flags/pk.svg"),
+    },
   ];
 
   return (
     <View style={{ flex: 1 }}>
       <Image
-        source={require("@/assets/images/background-3.jpg")}
+        source={require("@/assets/images/background-4.jpg")}
         style={{ width: "100%", height: "100%", position: "absolute" }}
         blurRadius={10}
       />
+
+      <View style={{ height: insets.top }} />
 
       {availableLanguages
         .filter((value) => value.locale === selectedLanguage)
@@ -60,7 +81,7 @@ export default function SignIn() {
               style={{
                 fontFamily: "LexendRegular",
                 color: "white",
-                marginRight: 10,
+                marginHorizontal: 10,
               }}
             >
               {value.locale.toUpperCase()}
@@ -110,12 +131,12 @@ export default function SignIn() {
                 <Text
                   style={{
                     fontFamily: "LexendRegular",
-                    marginLeft: 10,
-                    flex: 1,
+                    marginHorizontal: 10,
                   }}
                 >
                   {lang.name}
                 </Text>
+                <View style={{ flex: 1 }} />
                 {lang.locale == selectedLanguage && (
                   <MCIcons name="check" size={20} color={"black"} />
                 )}
@@ -125,51 +146,62 @@ export default function SignIn() {
         </View>
       </Modal>
 
-      <ScrollView
-        style={{ backgroundColor: "aqua" }}
-        contentContainerStyle={{ backgroundColor: "tomato" }}
-      >
-        <View style={{}}>
-          <Text style={styles.textTitle}>{t("sign-in")}</Text>
-
-          <Text style={{ fontFamily: "LexendBold", color: "white" }}>
-            Email
-          </Text>
-          <View style={styles.viewInputForm}>
-            <MCIcons name="email" size={25} color={"white"} />
-            <TextInput
-              placeholderTextColor={"grey"}
-              placeholder={t("form-placeholder-email")}
-              onChangeText={(input) => dispatch(setEmail(input))}
-              style={styles.inputForm}
-              autoCapitalize="none"
-              keyboardType="email-address"
-            />
-          </View>
-          <View style={{ height: 15 }} />
-          <Text style={{ fontFamily: "LexendBold", color: "white" }}>
-            Password
-          </Text>
-          <View style={styles.viewInputForm}>
-            <MCIcons name="lock" size={25} color={"white"} />
-            <TextInput
-              placeholderTextColor={"grey"}
-              placeholder={t("form-placeholder-password")}
-              onChangeText={(input) => dispatch(setPassword(input))}
-              style={styles.inputForm}
-              autoCapitalize="none"
-            />
-          </View>
-
-          <View style={{ height: 20 }} />
-          <Button
-            onPress={() => login({ email, password })}
-            style={styles.btnSignIn}
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <View>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              maxWidth: 520,
+              width: "85%",
+              alignSelf: "center",
+              paddingBottom: insets.top + insets.bottom + 50,
+            }}
           >
-            <Text style={styles.textSignIn}>{t("sign-in")}</Text>
-          </Button>
+            <Text style={styles.textTitle}>{t("sign-in")}</Text>
+
+            <Text style={{ fontFamily: "LexendBold", color: "white" }}>
+              Email
+            </Text>
+            <View style={styles.viewInputForm}>
+              <MCIcons name="email" size={25} color={"white"} />
+              <TextInput
+                placeholderTextColor={"grey"}
+                placeholder={t("form-placeholder-email")}
+                onChangeText={(input) => dispatch(setEmail(input))}
+                style={styles.inputForm}
+                autoCapitalize="none"
+                keyboardType="email-address"
+              />
+            </View>
+            <View style={{ height: 15 }} />
+            <Text style={{ fontFamily: "LexendBold", color: "white" }}>
+              Password
+            </Text>
+            <View style={styles.viewInputForm}>
+              <MCIcons name="lock" size={25} color={"white"} />
+              <TextInput
+                placeholderTextColor={"grey"}
+                placeholder={t("form-placeholder-password")}
+                onChangeText={(input) => dispatch(setPassword(input))}
+                style={styles.inputForm}
+                autoCapitalize="none"
+              />
+            </View>
+
+            <View style={{ height: 20 }} />
+            <Button
+              onPress={() => login({ email, password })}
+              style={styles.btnSignIn}
+            >
+              {isLoading ? (
+                <ActivityIndicator />
+              ) : (
+                <Text style={styles.textSignIn}>{t("sign-in")}</Text>
+              )}
+            </Button>
+          </ScrollView>
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 }
@@ -230,6 +262,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "85%",
     marginBottom: 10,
+    maxWidth: 480,
   },
   buttonClose: {
     width: 50,
@@ -244,6 +277,7 @@ const styles = StyleSheet.create({
     width: "85%",
     padding: 20,
     borderRadius: 20,
+    maxWidth: 480,
   },
   modalContainer: {
     flex: 1,
