@@ -26,6 +26,7 @@
     "expo-linking": "~55.0.13",
     "expo-localization": "^55.0.13",
     "expo-router": "~55.0.12",
+    "expo-secure-store": "~55.0.13",
     "expo-splash-screen": "~55.0.18",
     "expo-status-bar": "~55.0.5",
     "expo-symbols": "~55.0.7",
@@ -35,9 +36,11 @@
     "i18next": "^26.0.4",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "react-hook-form": "^7.73.1",
     "react-i18next": "^17.0.2",
     "react-native": "0.83.4",
     "react-native-gesture-handler": "~2.30.0",
+    "react-native-get-random-values": "~1.11.0",
     "react-native-mmkv": "^4.3.1",
     "react-native-nitro-modules": "^0.35.4",
     "react-native-reanimated": "4.2.1",
@@ -45,7 +48,8 @@
     "react-native-screens": "~4.23.0",
     "react-native-web": "~0.21.0",
     "react-native-worklets": "0.7.2",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@types/react": "~19.2.10",

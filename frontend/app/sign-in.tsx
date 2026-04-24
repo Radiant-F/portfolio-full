@@ -62,7 +62,7 @@ export default function SignIn() {
   return (
     <View style={{ flex: 1 }}>
       <Image
-        source={require("@/assets/images/background-4.jpg")}
+        source={require("@/assets/images/background-3.jpg")}
         style={{ width: "100%", height: "100%", position: "absolute" }}
         blurRadius={10}
       />
@@ -190,7 +190,9 @@ export default function SignIn() {
 
             <View style={{ height: 20 }} />
             <Button
-              onPress={() => login({ email, password })}
+              onPress={() => {
+                login({ email, password });
+              }}
               style={styles.btnSignIn}
             >
               {isLoading ? (
@@ -221,6 +223,7 @@ const styles = StyleSheet.create({
     height: 50,
     flex: 1,
     paddingHorizontal: 10,
+    color: "white",
   },
   viewInputForm: {
     flexDirection: "row",

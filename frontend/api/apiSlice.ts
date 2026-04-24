@@ -10,7 +10,7 @@ import { storage } from "./storage";
 import { Platform } from "react-native";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.EXPO_PUBLIC_API_URL,
+  baseUrl: "http://192.168.20.138:3000",
   prepareHeaders: (headers, api) => {
     const accessToken = (api.getState() as RootState).auth.credentials
       .accessToken;
