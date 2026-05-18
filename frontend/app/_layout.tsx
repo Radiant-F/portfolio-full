@@ -4,23 +4,30 @@ import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { useEffect, useState } from "react";
-import { setCredentials } from "@/features/auth";
+import {
+  clearCredentials,
+  setSessionStatus,
+  useRefreshTokenMutation,
+} from "@/features/auth";
 import { restoreSettings } from "@/features/app-settings";
 import type { ThemeMode } from "@/features/app-settings";
 import { Text, View } from "react-native";
 import { storage } from "@/api/storage";
 import { useFonts } from "expo-font";
 import { DEFAULT_DESIGN, type DesignVariant } from "@/constants/theme";
+import {
+  clearStoredSession,
+  hasRestorableSession,
+} from "@/features/auth/services/session";
 
 function RootNavigator() {
   const dispatch = useAppDispatch();
+  const [refreshSession] = useRefreshTokenMutation();
 
   const [isReady, setIsReady] = useState(false);
 
-  const accessToken = useAppSelector(
-    (state) => state.auth.credentials.accessToken,
-  );
-  const isLoggedIn = !!accessToken;
+  const sessionStatus = useAppSelector((state) => state.auth.sessionStatus);
+  const isLoggedIn = sessionStatus === "authenticated";
 
   const [fontLoaded, error] = useFonts({
     LexendRegular: require("@/assets/fonts/Lexend-Regular.ttf"),
@@ -32,13 +39,6 @@ function RootNavigator() {
 
     async function restoreSession() {
       try {
-        const accessToken = storage.getString("token.access") ?? null;
-        const refreshToken = storage.getString("token.refresh") ?? null;
-
-        if (accessToken || refreshToken) {
-          dispatch(setCredentials({ accessToken, refreshToken, user: null }));
-        }
-
         const savedTheme = storage.getString("settings.theme") as
           | ThemeMode
           | undefined;
@@ -58,7 +58,18 @@ function RootNavigator() {
         if (savedLanguage && savedLanguage !== i18n.language) {
           await i18n.changeLanguage(savedLanguage);
         }
+
+        dispatch(setSessionStatus("checking"));
+
+        if (hasRestorableSession()) {
+          await refreshSession(null).unwrap();
+        } else {
+          clearStoredSession();
+          dispatch(clearCredentials());
+        }
       } catch (restoreError) {
+        clearStoredSession();
+        dispatch(clearCredentials());
         console.log("ERROR READING SESSION:", restoreError);
       } finally {
         setIsReady(true);
@@ -66,7 +77,7 @@ function RootNavigator() {
     }
 
     restoreSession();
-  }, [dispatch, error, fontLoaded]);
+  }, [dispatch, error, fontLoaded, refreshSession]);
 
   if (!isReady) {
     return (

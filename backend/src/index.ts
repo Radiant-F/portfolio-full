@@ -39,9 +39,11 @@ const app = new Elysia()
           },
         },
       },
-    })
+    }),
   )
-  .get("/", () => "Hello Elysia", { detail: { hide: true } })
+  .get("/", () => "Hey there, cutie. Documentation is available at /openapi.", {
+    detail: { hide: true },
+  })
   .use(authController)
   .use(skillController)
   .use(experienceController)
@@ -54,7 +56,7 @@ const app = new Elysia()
 seedDefaultUser().catch(console.error);
 
 console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
 );
 
 export type App = typeof app;

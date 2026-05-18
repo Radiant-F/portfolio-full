@@ -15,6 +15,7 @@ export type LoginRequest = {
 export type AuthState = {
   email: string;
   password: string;
+  sessionStatus: "checking" | "authenticated" | "unauthenticated";
   credentials: {
     accessToken: string | null;
     refreshToken: string | null;

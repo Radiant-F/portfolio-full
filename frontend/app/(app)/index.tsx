@@ -385,6 +385,7 @@ export default function Dashboard() {
             </Text>
           </View>
 
+          {/* Content */}
           <View style={styles.grid}>
             {CARDS.map((card, idx) => (
               <Animated.View

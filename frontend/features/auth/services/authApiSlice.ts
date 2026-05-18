@@ -2,7 +2,12 @@ import { apiSlice } from "@/api/apiSlice";
 import { LoginRequest, LoginResponse } from "../auth";
 import { clearCredentials, setCredentials } from "./authReducerSlice";
 import { router } from "expo-router";
-import { storage } from "@/api/storage";
+import {
+  buildRefreshRequest,
+  clearStoredSession,
+  persistSession,
+  toAuthCredentials,
+} from "./session";
 
 const authReducerSlice = apiSlice.injectEndpoints({
   overrideExisting: true,
@@ -17,10 +22,8 @@ const authReducerSlice = apiSlice.injectEndpoints({
         try {
           const { data } = await api.queryFulfilled;
 
-          storage.set("token.access", data.accessToken);
-          storage.set("token.refresh", data.refreshToken);
-
-          api.dispatch(setCredentials(data));
+          persistSession(data);
+          api.dispatch(setCredentials(toAuthCredentials(data)));
           router.replace("/(app)");
         } catch (error) {
           console.log("ERROR LOGIN:", error);
@@ -32,18 +35,29 @@ const authReducerSlice = apiSlice.injectEndpoints({
       onQueryStarted: async (_args, api) => {
         try {
           await api.queryFulfilled;
-
-          storage.remove("token.access");
-          storage.remove("token.refresh");
-
-          api.dispatch(clearCredentials());
         } catch (error) {
           console.log("ERROR LOGOUT:", error);
+        } finally {
+          clearStoredSession();
+          api.dispatch(clearCredentials());
+          router.replace("/sign-in");
         }
       },
     }),
     refreshToken: build.mutation<LoginResponse, null>({
-      query: () => ({ url: "/auth/refresh", method: "POST" }),
+      query: () => buildRefreshRequest(),
+      onQueryStarted: async (_args, api) => {
+        try {
+          const { data } = await api.queryFulfilled;
+
+          persistSession(data);
+          api.dispatch(setCredentials(toAuthCredentials(data)));
+        } catch (error) {
+          clearStoredSession();
+          api.dispatch(clearCredentials());
+          console.log("ERROR REFRESH TOKEN:", error);
+        }
+      },
     }),
     me: build.query<{ id: string; email: string }, null>({
       query: () => "/auth/me",

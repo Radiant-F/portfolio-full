@@ -1,4 +1,15 @@
-import { setCredentials } from "@/features/auth/services/authReducerSlice";
+import type { LoginResponse } from "@/features/auth/auth";
+import {
+  clearCredentials,
+  setCredentials,
+} from "@/features/auth/services/authReducerSlice";
+import {
+  buildRefreshRequest,
+  clearStoredSession,
+  hasRestorableSession,
+  persistSession,
+  toAuthCredentials,
+} from "@/features/auth/services/session";
 import { RootState } from "@/redux/store";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type {
@@ -6,11 +17,32 @@ import type {
   FetchArgs,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
-import { storage } from "./storage";
 import { Platform } from "react-native";
 
+let refreshRequest: Promise<boolean> | null = null;
+
+const defaultApiBaseUrl =
+  Platform.OS === "web" && typeof window !== "undefined"
+    ? `${window.location.protocol}//${window.location.hostname}:3000`
+    : "http://192.168.20.55:3000";
+
+const apiBaseUrl = process.env.EXPO_PUBLIC_API_URL || defaultApiBaseUrl;
+
+function getRequestUrl(args: string | FetchArgs) {
+  return typeof args === "string" ? args : args.url;
+}
+
+function isReauthExcludedRequest(args: string | FetchArgs) {
+  const url = getRequestUrl(args);
+
+  return ["/auth/login", "/auth/logout", "/auth/refresh"].some((path) =>
+    url.startsWith(path),
+  );
+}
+
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://192.168.20.121:3000",
+  baseUrl: apiBaseUrl,
+  credentials: Platform.OS === "web" ? "include" : "omit",
   prepareHeaders: (headers, api) => {
     const accessToken = (api.getState() as RootState).auth.credentials
       .accessToken;
@@ -28,37 +60,51 @@ const baseQueryWithReauth: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, api, extra) => {
+  async function refreshSession() {
+    if (!refreshRequest) {
+      refreshRequest = (async () => {
+        const refreshResult = await baseQuery(
+          buildRefreshRequest(),
+          api,
+          extra,
+        );
+
+        if (!refreshResult.data) {
+          clearStoredSession();
+          api.dispatch(clearCredentials());
+          return false;
+        }
+
+        const data = refreshResult.data as LoginResponse;
+
+        persistSession(data);
+        api.dispatch(setCredentials(toAuthCredentials(data)));
+        return true;
+      })().finally(() => {
+        refreshRequest = null;
+      });
+    }
+
+    return refreshRequest;
+  }
+
   let result = await baseQuery(args, api, extra);
 
-  if (result.error && result.error.status === 401) {
-    const refreshToken = storage.getString("token.refresh");
-    if (!refreshToken) return result;
+  if (
+    result.error?.status === 401 &&
+    !isReauthExcludedRequest(args) &&
+    hasRestorableSession()
+  ) {
+    const didRefresh = await refreshSession();
 
-    const refreshResult = await baseQuery(
-      { url: "/auth/refresh", method: "POST", body: { refreshToken } },
-      api,
-      extra,
-    );
+    if (!didRefresh) return result;
 
-    if (refreshResult.data) {
-      const data = refreshResult.data as {
-        accessToken: string;
-        refreshToken: string;
-      };
+    result = await baseQuery(args, api, extra);
+  }
 
-      storage.set("token.access", data.accessToken);
-      storage.set("token.refresh", data.refreshToken);
-
-      api.dispatch(
-        setCredentials({
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-          user: null,
-        }),
-      );
-
-      result = await baseQuery(args, api, extra);
-    }
+  if (result.error?.status === 401 && !isReauthExcludedRequest(args)) {
+    clearStoredSession();
+    api.dispatch(clearCredentials());
   }
 
   return result;

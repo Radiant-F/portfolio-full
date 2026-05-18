@@ -17,9 +17,11 @@ export {
 // Reducer
 export {
   default as authReducer,
+  clearCredentials,
   setEmail,
   setPassword,
   setCredentials,
+  setSessionStatus,
 } from "./services/authReducerSlice";
 
 // Components

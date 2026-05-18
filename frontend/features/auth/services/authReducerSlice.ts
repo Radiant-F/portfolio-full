@@ -4,6 +4,7 @@ import { AuthState } from "../auth";
 const initialState: AuthState = {
   email: "",
   password: "",
+  sessionStatus: "checking",
   credentials: {
     accessToken: null,
     refreshToken: null,
@@ -20,9 +21,17 @@ export const authSlice = createSlice({
       action: PayloadAction<AuthState["credentials"]>,
     ) => {
       state.credentials = action.payload;
+      state.sessionStatus = "authenticated";
     },
     clearCredentials: (state) => {
       state.credentials = initialState.credentials;
+      state.sessionStatus = "unauthenticated";
+    },
+    setSessionStatus: (
+      state,
+      action: PayloadAction<AuthState["sessionStatus"]>,
+    ) => {
+      state.sessionStatus = action.payload;
     },
     setEmail: (state, action: PayloadAction<string>) => {
       state.email = action.payload;
@@ -33,7 +42,12 @@ export const authSlice = createSlice({
   },
 });
 
-export const { clearCredentials, setCredentials, setEmail, setPassword } =
-  authSlice.actions;
+export const {
+  clearCredentials,
+  setCredentials,
+  setSessionStatus,
+  setEmail,
+  setPassword,
+} = authSlice.actions;
 
 export default authSlice.reducer;
