@@ -5,5 +5,82 @@
   "form-placeholder-email": "example@email.com",
   "form-placeholder-password": "Your password...",
   "change-language-to": "Change language to",
-  "change-language": "Change Language"
+  "change-language": "Change Language",
+  "cms": {
+    "title": "CMS",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "confirm-delete": "Are you sure you want to delete this?",
+    "loading": "Loading...",
+    "no-items": "No items yet",
+    "add": "Add",
+    "preview": "Preview",
+    "sort-order": "Sort Order",
+    "drag-to-reorder": "Drag to reorder",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "theme": "Theme",
+    "theme-light": "Light",
+    "theme-dark": "Dark",
+    "theme-system": "System",
+    "language": "Language",
+    "about": {
+      "title": "About",
+      "content": "Content",
+      "no-content": "No content yet. Start writing!",
+      "content-hint": "Write in Markdown. Use **bold**, *italic*, # headings..."
+    },
+    "skill": {
+      "title": "Skills",
+      "name": "Skill Title",
+      "details": "Details",
+      "detail-name": "Detail Name",
+      "detail-description": "Description",
+      "add-detail": "Add Detail",
+      "no-details": "No details yet"
+    },
+    "experience": {
+      "title": "Experience",
+      "company": "Company",
+      "position": "Position",
+      "responsibility": "Responsibility",
+      "start-date": "Start Date",
+      "end-date": "End Date",
+      "present": "Present",
+      "achievements": "Achievements",
+      "achievement-description": "Description",
+      "add-achievement": "Add Achievement",
+      "no-achievements": "No achievements yet"
+    },
+    "work": {
+      "title": "Works",
+      "description": "Description",
+      "links": "Links",
+      "link-label": "Label",
+      "link-url": "URL",
+      "screenshots": "Screenshots",
+      "tags": "Tags",
+      "add-link": "Add Link",
+      "add-screenshot": "Add Screenshot",
+      "no-links": "No links yet",
+      "no-screenshots": "No screenshots yet",
+      "no-tags": "No tags attached"
+    },
+    "contact": {
+      "title": "Contacts",
+      "platform": "Platform",
+      "link-title": "Title",
+      "url": "URL"
+    },
+    "tag": {
+      "title": "Tags",
+      "name": "Tag Name",
+      "add-tag": "Add Tag"
+    }
+  }
 }

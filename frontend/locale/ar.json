@@ -5,5 +5,82 @@
   "form-placeholder-email": "example@email.com",
   "form-placeholder-password": "كلمة المرور الخاصة بك...",
   "change-language-to": "تغيير اللغة إلى",
-  "change-language": "تغيير اللغة"
+  "change-language": "تغيير اللغة",
+  "cms": {
+    "title": "نظام إدارة المحتوى",
+    "create": "إنشاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "save": "حفظ",
+    "saving": "جاري الحفظ...",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "confirm-delete": "هل أنت متأكد من الحذف؟",
+    "loading": "جاري التحميل...",
+    "no-items": "لا توجد عناصر بعد",
+    "add": "إضافة",
+    "preview": "معاينة",
+    "sort-order": "ترتيب الفرز",
+    "drag-to-reorder": "اسحب لإعادة الترتيب",
+    "dashboard": "لوحة التحكم",
+    "settings": "الإعدادات",
+    "theme": "المظهر",
+    "theme-light": "فاتح",
+    "theme-dark": "داكن",
+    "theme-system": "النظام",
+    "language": "اللغة",
+    "about": {
+      "title": "حول",
+      "content": "المحتوى",
+      "no-content": "لا يوجد محتوى بعد. ابدأ الكتابة!",
+      "content-hint": "اكتب بـ Markdown. استخدم **عريض**، *مائل*، # عناوين..."
+    },
+    "skill": {
+      "title": "المهارات",
+      "name": "عنوان المهارة",
+      "details": "التفاصيل",
+      "detail-name": "اسم التفصيل",
+      "detail-description": "الوصف",
+      "add-detail": "إضافة تفصيل",
+      "no-details": "لا توجد تفاصيل بعد"
+    },
+    "experience": {
+      "title": "الخبرة",
+      "company": "الشركة",
+      "position": "المنصب",
+      "responsibility": "المسؤولية",
+      "start-date": "تاريخ البداية",
+      "end-date": "تاريخ النهاية",
+      "present": "حتى الآن",
+      "achievements": "الإنجازات",
+      "achievement-description": "الوصف",
+      "add-achievement": "إضافة إنجاز",
+      "no-achievements": "لا توجد إنجازات بعد"
+    },
+    "work": {
+      "title": "الأعمال",
+      "description": "الوصف",
+      "links": "الروابط",
+      "link-label": "العنوان",
+      "link-url": "الرابط",
+      "screenshots": "لقطات الشاشة",
+      "tags": "الوسوم",
+      "add-link": "إضافة رابط",
+      "add-screenshot": "إضافة لقطة",
+      "no-links": "لا توجد روابط بعد",
+      "no-screenshots": "لا توجد لقطات بعد",
+      "no-tags": "لا توجد وسوم مرفقة"
+    },
+    "contact": {
+      "title": "جهات الاتصال",
+      "platform": "المنصة",
+      "link-title": "العنوان",
+      "url": "الرابط"
+    },
+    "tag": {
+      "title": "الوسوم",
+      "name": "اسم الوسم",
+      "add-tag": "إضافة وسم"
+    }
+  }
 }

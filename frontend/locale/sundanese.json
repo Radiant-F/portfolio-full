@@ -5,5 +5,82 @@
   "form-placeholder-email": "conto@email.com",
   "form-placeholder-password": "Kecap akses...",
   "change-language-to": "Robah bahasa ka",
-  "change-language": "Gentos Bahasa"
+  "change-language": "Gentos Bahasa",
+  "cms": {
+    "title": "CMS",
+    "create": "Jieun",
+    "edit": "Éditan",
+    "delete": "Hapus",
+    "save": "Simpen",
+    "saving": "Simpen...",
+    "cancel": "Batal",
+    "confirm": "Konfirmasi",
+    "confirm-delete": "Anjeun yakin hoyong ngahapus ieu?",
+    "loading": "Ngamuat...",
+    "no-items": "Tacan aya item",
+    "add": "Tambah",
+    "preview": "Sawangan",
+    "sort-order": "Urutan",
+    "drag-to-reorder": "Séred pikeun nyusun deui",
+    "dashboard": "Dasbor",
+    "settings": "Setélan",
+    "theme": "Tema",
+    "theme-light": "Caang",
+    "theme-dark": "Poék",
+    "theme-system": "Sistem",
+    "language": "Basa",
+    "about": {
+      "title": "Ngeunaan",
+      "content": "Eusi",
+      "no-content": "Tacan aya eusi. Mimiti nulis!",
+      "content-hint": "Tulis dina Markdown. Paké **kandel**, *miring*, # lulugu..."
+    },
+    "skill": {
+      "title": "Kaparigelan",
+      "name": "Judul Kaparigelan",
+      "details": "Rinci",
+      "detail-name": "Ngaran Rinci",
+      "detail-description": "Katerangan",
+      "add-detail": "Tambah Rinci",
+      "no-details": "Tacan aya rinci"
+    },
+    "experience": {
+      "title": "Pangalaman",
+      "company": "Perusahaan",
+      "position": "Jabatan",
+      "responsibility": "Tanggung Jawab",
+      "start-date": "Tanggal Mimiti",
+      "end-date": "Tanggal Réngsé",
+      "present": "Ayeuna",
+      "achievements": "Prestasi",
+      "achievement-description": "Katerangan",
+      "add-achievement": "Tambah Prestasi",
+      "no-achievements": "Tacan aya prestasi"
+    },
+    "work": {
+      "title": "Karya",
+      "description": "Katerangan",
+      "links": "Tautan",
+      "link-label": "Label",
+      "link-url": "URL",
+      "screenshots": "Potret Layar",
+      "tags": "Tag",
+      "add-link": "Tambah Tautan",
+      "add-screenshot": "Tambah Potret Layar",
+      "no-links": "Tacan aya tautan",
+      "no-screenshots": "Tacan aya potret layar",
+      "no-tags": "Tacan aya tag"
+    },
+    "contact": {
+      "title": "Kontak",
+      "platform": "Platform",
+      "link-title": "Judul",
+      "url": "URL"
+    },
+    "tag": {
+      "title": "Tag",
+      "name": "Ngaran Tag",
+      "add-tag": "Tambah Tag"
+    }
+  }
 }

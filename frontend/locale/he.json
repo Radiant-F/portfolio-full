@@ -5,5 +5,82 @@
   "form-placeholder-email": "example@email.com",
   "form-placeholder-password": "הסיסמה שלך...",
   "change-language-to": "שנה שפה ל",
-  "change-language": "שנה שפה"
+  "change-language": "שנה שפה",
+  "cms": {
+    "title": "ניהול תוכן",
+    "create": "צור",
+    "edit": "ערוך",
+    "delete": "מחק",
+    "save": "שמור",
+    "saving": "שומר...",
+    "cancel": "ביטול",
+    "confirm": "אישור",
+    "confirm-delete": "האם אתה בטוח שברצונך למחוק?",
+    "loading": "טוען...",
+    "no-items": "אין פריטים עדיין",
+    "add": "הוסף",
+    "preview": "תצוגה מקדימה",
+    "sort-order": "סדר מיון",
+    "drag-to-reorder": "גרור לסידור מחדש",
+    "dashboard": "לוח בקרה",
+    "settings": "הגדרות",
+    "theme": "ערכת נושא",
+    "theme-light": "בהיר",
+    "theme-dark": "כהה",
+    "theme-system": "מערכת",
+    "language": "שפה",
+    "about": {
+      "title": "אודות",
+      "content": "תוכן",
+      "no-content": "אין תוכן עדיין. התחל לכתוב!",
+      "content-hint": "כתוב ב-Markdown. השתמש ב-**מודגש**, *נטוי*, # כותרות..."
+    },
+    "skill": {
+      "title": "מיומנויות",
+      "name": "שם המיומנות",
+      "details": "פרטים",
+      "detail-name": "שם הפרט",
+      "detail-description": "תיאור",
+      "add-detail": "הוסף פרט",
+      "no-details": "אין פרטים עדיין"
+    },
+    "experience": {
+      "title": "ניסיון",
+      "company": "חברה",
+      "position": "תפקיד",
+      "responsibility": "אחריות",
+      "start-date": "תאריך התחלה",
+      "end-date": "תאריך סיום",
+      "present": "כיום",
+      "achievements": "הישגים",
+      "achievement-description": "תיאור",
+      "add-achievement": "הוסף הישג",
+      "no-achievements": "אין הישגים עדיין"
+    },
+    "work": {
+      "title": "עבודות",
+      "description": "תיאור",
+      "links": "קישורים",
+      "link-label": "תווית",
+      "link-url": "כתובת URL",
+      "screenshots": "צילומי מסך",
+      "tags": "תגיות",
+      "add-link": "הוסף קישור",
+      "add-screenshot": "הוסף צילום מסך",
+      "no-links": "אין קישורים עדיין",
+      "no-screenshots": "אין צילומי מסך עדיין",
+      "no-tags": "לא מחוברות תגיות"
+    },
+    "contact": {
+      "title": "אנשי קשר",
+      "platform": "פלטפורמה",
+      "link-title": "כותרת",
+      "url": "כתובת URL"
+    },
+    "tag": {
+      "title": "תגיות",
+      "name": "שם התגית",
+      "add-tag": "הוסף תגית"
+    }
+  }
 }

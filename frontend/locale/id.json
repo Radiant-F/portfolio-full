@@ -5,5 +5,82 @@
   "form-placeholder-email": "contoh@email.com",
   "form-placeholder-password": "Masukan kata sandi...",
   "change-language-to": "Ganti bahasa ke",
-  "change-language": "Ganti Bahasa"
+  "change-language": "Ganti Bahasa",
+  "cms": {
+    "title": "CMS",
+    "create": "Buat",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "save": "Simpan",
+    "saving": "Menyimpan...",
+    "cancel": "Batal",
+    "confirm": "Konfirmasi",
+    "confirm-delete": "Apakah Anda yakin ingin menghapus ini?",
+    "loading": "Memuat...",
+    "no-items": "Belum ada item",
+    "add": "Tambah",
+    "preview": "Pratinjau",
+    "sort-order": "Urutan",
+    "drag-to-reorder": "Seret untuk mengurutkan ulang",
+    "dashboard": "Dasbor",
+    "settings": "Pengaturan",
+    "theme": "Tema",
+    "theme-light": "Terang",
+    "theme-dark": "Gelap",
+    "theme-system": "Sistem",
+    "language": "Bahasa",
+    "about": {
+      "title": "Tentang",
+      "content": "Konten",
+      "no-content": "Belum ada konten. Mulai menulis!",
+      "content-hint": "Tulis dalam Markdown. Gunakan **tebal**, *miring*, # judul..."
+    },
+    "skill": {
+      "title": "Keahlian",
+      "name": "Judul Keahlian",
+      "details": "Detail",
+      "detail-name": "Nama Detail",
+      "detail-description": "Deskripsi",
+      "add-detail": "Tambah Detail",
+      "no-details": "Belum ada detail"
+    },
+    "experience": {
+      "title": "Pengalaman",
+      "company": "Perusahaan",
+      "position": "Jabatan",
+      "responsibility": "Tanggung Jawab",
+      "start-date": "Tanggal Mulai",
+      "end-date": "Tanggal Selesai",
+      "present": "Sekarang",
+      "achievements": "Pencapaian",
+      "achievement-description": "Deskripsi",
+      "add-achievement": "Tambah Pencapaian",
+      "no-achievements": "Belum ada pencapaian"
+    },
+    "work": {
+      "title": "Karya",
+      "description": "Deskripsi",
+      "links": "Tautan",
+      "link-label": "Label",
+      "link-url": "URL",
+      "screenshots": "Tangkapan Layar",
+      "tags": "Tag",
+      "add-link": "Tambah Tautan",
+      "add-screenshot": "Tambah Tangkapan Layar",
+      "no-links": "Belum ada tautan",
+      "no-screenshots": "Belum ada tangkapan layar",
+      "no-tags": "Belum ada tag"
+    },
+    "contact": {
+      "title": "Kontak",
+      "platform": "Platform",
+      "link-title": "Judul",
+      "url": "URL"
+    },
+    "tag": {
+      "title": "Tag",
+      "name": "Nama Tag",
+      "add-tag": "Tambah Tag"
+    }
+  }
 }
