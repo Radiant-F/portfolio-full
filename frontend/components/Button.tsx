@@ -7,6 +7,7 @@ import {
   ViewStyle,
 } from "react-native";
 import React, { useRef } from "react";
+import { useTheme } from "@/hooks";
 
 type ButtonPropsType = {
   title?: string;
@@ -17,6 +18,7 @@ export default React.forwardRef<
   View,
   ButtonPropsType & React.ComponentProps<typeof Pressable>
 >(function Button({ title, children, style, ...rest }, ref) {
+  const { motion, typography } = useTheme();
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   return (
@@ -25,8 +27,9 @@ export default React.forwardRef<
       {...rest}
       onPressIn={(e) => {
         rest.onPressIn?.(e);
+        if (rest.disabled) return;
         Animated.spring(scaleAnim, {
-          toValue: 0.92,
+          toValue: motion.pressScale,
           useNativeDriver: true,
           speed: 50,
           bounciness: 0,
@@ -43,10 +46,16 @@ export default React.forwardRef<
       }}
     >
       {(state) => (
-        <Animated.View style={[style, { transform: [{ scale: scaleAnim }] }]}>
+        <Animated.View
+          style={[
+            style,
+            rest.disabled && { opacity: 0.55 },
+            { transform: [{ scale: scaleAnim }] },
+          ]}
+        >
           {typeof children === "function" ? children(state) : children}
           {title && (
-            <Text style={{ fontFamily: "LexendRegular" }}>{title}</Text>
+            <Text style={{ fontFamily: typography.bodyBold }}>{title}</Text>
           )}
         </Animated.View>
       )}

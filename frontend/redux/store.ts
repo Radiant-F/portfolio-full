@@ -7,6 +7,7 @@ import { skillReducer } from "@/features/skill";
 import { workReducer } from "@/features/work";
 import { experienceReducer } from "@/features/experience";
 import { tagReducer } from "@/features/tag";
+import { appSettingsReducer } from "@/features/app-settings";
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     work: workReducer,
     experience: experienceReducer,
     tag: tagReducer,
+    appSettings: appSettingsReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (defaultMiddleware) =>

@@ -13,7 +13,7 @@ export default function Index() {
     <View>
       <Text
         style={{ textAlign: "center" }}
-      >{`💜\n✨ Rain is a cutie :3 ✨\n💜`}</Text>
+      >{`💜\n✨ Melom is a cutie :3 ✨\n💜`}</Text>
       <Text>{process.env.EXPO_PUBLIC_API_URL}</Text>
       <Button
         title={isLoggedIn ? "To CMS" : "To Sign In"}

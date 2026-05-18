@@ -10,12 +10,12 @@ import { storage } from "./storage";
 import { Platform } from "react-native";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://192.168.20.138:3000",
+  baseUrl: "http://192.168.20.121:3000",
   prepareHeaders: (headers, api) => {
     const accessToken = (api.getState() as RootState).auth.credentials
       .accessToken;
 
-    // Web platform uses cookie
+    // Web platform uses cookie but mobile isn't
     if (accessToken && Platform.OS !== "web")
       headers.set("Authorization", `Bearer ${accessToken}`);
 
