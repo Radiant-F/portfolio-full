@@ -5,6 +5,7 @@ import ImagePickerInput from "./ImagePickerInput";
 import MarkdownEditor from "./MarkdownEditor";
 import DraggableList from "./DraggableList";
 import DateInput from "./DateInput";
+import HeaderPublic from "./header-public";
 
 export {
   Button,
@@ -14,4 +15,5 @@ export {
   MarkdownEditor,
   DraggableList,
   DateInput,
+  HeaderPublic,
 };

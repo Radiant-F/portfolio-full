@@ -25,9 +25,7 @@ const authReducerSlice = apiSlice.injectEndpoints({
           persistSession(data);
           api.dispatch(setCredentials(toAuthCredentials(data)));
           router.replace("/(app)");
-        } catch (error) {
-          console.log("ERROR LOGIN:", error);
-        }
+        } catch (error) {}
       },
     }),
     signOut: build.mutation<{ message: string }, null>({
@@ -36,7 +34,6 @@ const authReducerSlice = apiSlice.injectEndpoints({
         try {
           await api.queryFulfilled;
         } catch (error) {
-          console.log("ERROR LOGOUT:", error);
         } finally {
           clearStoredSession();
           api.dispatch(clearCredentials());
@@ -55,7 +52,6 @@ const authReducerSlice = apiSlice.injectEndpoints({
         } catch (error) {
           clearStoredSession();
           api.dispatch(clearCredentials());
-          console.log("ERROR REFRESH TOKEN:", error);
         }
       },
     }),

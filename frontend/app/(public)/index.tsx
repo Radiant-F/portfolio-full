@@ -11,7 +11,7 @@ export default function Index() {
   return (
     <View>
       <Text
-        style={{ textAlign: "center" }}
+        style={{ textAlign: "center", color: "rgb(172, 193, 210)" }}
       >{`💜\n✨ Who will be the next cutie.. ✨\n💜`}</Text>
       <Text>{process.env.EXPO_PUBLIC_API_URL}</Text>
       <Button
