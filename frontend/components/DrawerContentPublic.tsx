@@ -1,0 +1,42 @@
+import { DrawerContentComponentProps } from "@react-navigation/drawer";
+import { usePathname } from "expo-router";
+import { StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import ButtonNavigation from "./header-public/ButtonNavigation";
+import { DrawerActions } from "@react-navigation/native";
+
+export default function DrawerContentPublic(
+  props: DrawerContentComponentProps,
+) {
+  const { top } = useSafeAreaInsets();
+
+  const pathname = usePathname();
+  const activeRouteName = pathname.split("/").filter(Boolean)[0] ?? "index";
+  const routes = [
+    { name: "index", label: "Home" },
+    { name: "work", label: "Work" },
+    { name: "skill", label: "Skill" },
+    { name: "experience", label: "Experience" },
+    { name: "contact", label: "Contact" },
+    { name: "about", label: "About" },
+  ];
+
+  return (
+    <View style={{ paddingTop: 20 + top, gap: 20, padding: 20 }}>
+      {routes.map((route) => {
+        return (
+          <ButtonNavigation
+            key={route.name}
+            label={route.label}
+            focused={route.name === activeRouteName}
+            onPress={() =>
+              props.navigation.dispatch(DrawerActions.jumpTo(route.name))
+            }
+          />
+        );
+      })}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({});

@@ -6,6 +6,7 @@ import MarkdownEditor from "./MarkdownEditor";
 import DraggableList from "./DraggableList";
 import DateInput from "./DateInput";
 import HeaderPublic from "./header-public";
+import DrawerContentPublic from "./DrawerContentPublic";
 
 export {
   Button,
@@ -16,4 +17,5 @@ export {
   DraggableList,
   DateInput,
   HeaderPublic,
+  DrawerContentPublic,
 };
