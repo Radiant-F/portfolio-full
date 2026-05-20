@@ -56,7 +56,7 @@ export default function AppSettings() {
     opacity: progress.value * 0.5,
   }));
 
-  const headerStyle = useAnimatedStyle(() => ({
+  const contentStyle = useAnimatedStyle(() => ({
     opacity: progress.value,
     transform: [
       { translateY: (1 - progress.value) * 10 },
@@ -64,11 +64,11 @@ export default function AppSettings() {
     ],
   }));
 
-  const contentStyle = useAnimatedStyle(() => ({
+  const headerStyle = useAnimatedStyle(() => ({
     opacity: progress.value,
     transform: [
-      { translateY: (1 - progress.value) * 18 },
-      { scale: 0.985 + progress.value * 0.015 },
+      { translateY: (1 - progress.value) * 10 },
+      { scale: 0.95 + progress.value * 0.05 },
     ],
   }));
 
