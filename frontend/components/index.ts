@@ -7,6 +7,8 @@ import DraggableList from "./DraggableList";
 import DateInput from "./DateInput";
 import HeaderPublic from "./header-public";
 import DrawerContentPublic from "./DrawerContentPublic";
+import Flags from "./Flags";
+import ButtonCustom from "./ButtonCustom";
 
 export {
   Button,
@@ -18,4 +20,6 @@ export {
   DateInput,
   HeaderPublic,
   DrawerContentPublic,
+  Flags,
+  ButtonCustom,
 };
