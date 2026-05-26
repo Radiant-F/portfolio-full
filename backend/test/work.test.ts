@@ -61,7 +61,7 @@ beforeAll(async () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: TEST_EMAIL, password: TEST_PASSWORD }),
-    })
+    }),
   );
   const data = await res.json();
   accessToken = data.accessToken;
@@ -79,7 +79,7 @@ describe("Work Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ name: "React Native" }),
-        })
+        }),
       );
       expect(res.status).toBe(200);
       const data = await res.json();
@@ -108,7 +108,7 @@ describe("Work Endpoints", () => {
         new Request("http://localhost/works", {
           method: "POST",
           body: formData,
-        })
+        }),
       );
       expect(res.status).toBe(401);
     });
@@ -125,7 +125,7 @@ describe("Work Endpoints", () => {
           method: "POST",
           headers: { Authorization: `Bearer ${accessToken}` },
           body: formData,
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -156,7 +156,7 @@ describe("Work Endpoints", () => {
   describe("GET /works/:id", () => {
     it("should return work with relations", async () => {
       const res = await app.handle(
-        new Request(`http://localhost/works/${workId}`)
+        new Request(`http://localhost/works/${workId}`),
       );
       expect(res.status).toBe(200);
       const data = await res.json();
@@ -168,7 +168,7 @@ describe("Work Endpoints", () => {
 
     it("should return 404 for non-existent work", async () => {
       const res = await app.handle(
-        new Request("http://localhost/works/non-existent-id")
+        new Request("http://localhost/works/non-existent-id"),
       );
       expect(res.status).toBe(404);
     });
@@ -184,7 +184,7 @@ describe("Work Endpoints", () => {
           method: "PUT",
           headers: { Authorization: `Bearer ${accessToken}` },
           body: formData,
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -202,7 +202,7 @@ describe("Work Endpoints", () => {
           method: "PUT",
           headers: { Authorization: `Bearer ${accessToken}` },
           body: formData,
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -226,7 +226,7 @@ describe("Work Endpoints", () => {
             url: "https://github.com/example/portfolio",
             sortOrder: 0,
           }),
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -250,7 +250,7 @@ describe("Work Endpoints", () => {
             label: "Test",
             url: "https://example.com",
           }),
-        })
+        }),
       );
       expect(res.status).toBe(404);
     });
@@ -266,7 +266,7 @@ describe("Work Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ label: "Source Code" }),
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -281,7 +281,7 @@ describe("Work Endpoints", () => {
         new Request(`http://localhost/works/${workId}/links/${linkId}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${accessToken}` },
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -302,7 +302,7 @@ describe("Work Endpoints", () => {
           method: "POST",
           headers: { Authorization: `Bearer ${accessToken}` },
           body: formData,
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -322,7 +322,7 @@ describe("Work Endpoints", () => {
           method: "POST",
           headers: { Authorization: `Bearer ${accessToken}` },
           body: formData,
-        })
+        }),
       );
       expect(res.status).toBe(404);
     });
@@ -336,8 +336,8 @@ describe("Work Endpoints", () => {
           {
             method: "DELETE",
             headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        )
+          },
+        ),
       );
 
       expect(res.status).toBe(200);
@@ -357,7 +357,7 @@ describe("Work Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ tagId }),
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -374,7 +374,7 @@ describe("Work Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ tagId }),
-        })
+        }),
       );
 
       expect(res.status).toBe(409);
@@ -389,7 +389,7 @@ describe("Work Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ tagId }),
-        })
+        }),
       );
 
       expect(res.status).toBe(404);
@@ -399,7 +399,7 @@ describe("Work Endpoints", () => {
   describe("GET /works/:id (with relations)", () => {
     it("should return work with attached tag", async () => {
       const res = await app.handle(
-        new Request(`http://localhost/works/${workId}`)
+        new Request(`http://localhost/works/${workId}`),
       );
       expect(res.status).toBe(200);
       const data = await res.json();
@@ -414,7 +414,7 @@ describe("Work Endpoints", () => {
         new Request(`http://localhost/works/${workId}/tags/${tagId}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${accessToken}` },
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -436,7 +436,7 @@ describe("Work Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ name: "TypeScript" }),
-        })
+        }),
       );
       expect(res.status).toBe(200);
       const data = await res.json();
@@ -452,7 +452,7 @@ describe("Work Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ tagIds: [tagId, tagId2] }),
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -470,7 +470,7 @@ describe("Work Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ tagIds: [tagId] }),
-        })
+        }),
       );
       expect(res.status).toBe(404);
     });
@@ -484,7 +484,7 @@ describe("Work Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ tagIds: ["non-existent-tag-id"] }),
-        })
+        }),
       );
       expect(res.status).toBe(404);
     });
@@ -494,7 +494,7 @@ describe("Work Endpoints", () => {
         new Request(`http://localhost/tags/${tagId2}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${accessToken}` },
-        })
+        }),
       );
     });
   });
@@ -509,7 +509,7 @@ describe("Work Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ tagIds: [tagId] }),
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -527,7 +527,7 @@ describe("Work Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ tagIds: [] }),
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -548,7 +548,7 @@ describe("Work Endpoints", () => {
           method: "POST",
           headers: { Authorization: `Bearer ${accessToken}` },
           body: formData,
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -568,7 +568,7 @@ describe("Work Endpoints", () => {
           method: "POST",
           headers: { Authorization: `Bearer ${accessToken}` },
           body: formData,
-        })
+        }),
       );
       expect(res.status).toBe(404);
     });
@@ -578,7 +578,7 @@ describe("Work Endpoints", () => {
     it("should reorder screenshots", async () => {
       // First get the work to find screenshot IDs
       const getRes = await app.handle(
-        new Request(`http://localhost/works/${workId}`)
+        new Request(`http://localhost/works/${workId}`),
       );
       const work = await getRes.json();
       const screenshots = work.screenshots;
@@ -596,7 +596,7 @@ describe("Work Endpoints", () => {
               { id: screenshots[1].id, sortOrder: 5 },
             ],
           }),
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -609,21 +609,38 @@ describe("Work Endpoints", () => {
 
     it("should return 404 for non-existent work", async () => {
       const res = await app.handle(
-        new Request(
-          "http://localhost/works/non-existent/screenshots/reorder",
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify({
-              items: [{ id: "any-id", sortOrder: 0 }],
-            }),
-          }
-        )
+        new Request("http://localhost/works/non-existent/screenshots/reorder", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            items: [{ id: "any-id", sortOrder: 0 }],
+          }),
+        }),
       );
       expect(res.status).toBe(404);
+    });
+  });
+
+  describe("GET /works/screenshots/preview (public)", () => {
+    it("should return the available preview screenshots without auth", async () => {
+      const res = await app.handle(
+        new Request("http://localhost/works/screenshots/preview"),
+      );
+
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      expect(data).toBeArray();
+      expect(data.length).toBeLessThanOrEqual(6);
+
+      if (data.length > 0) {
+        expect(data[0]).toHaveProperty("id");
+        expect(data[0]).toHaveProperty("workId");
+        expect(data[0]).toHaveProperty("imageUrl");
+        expect(data[0]).toHaveProperty("sortOrder");
+      }
     });
   });
 
@@ -634,7 +651,7 @@ describe("Work Endpoints", () => {
         new Request(`http://localhost/works/${workId}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${accessToken}` },
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -644,7 +661,7 @@ describe("Work Endpoints", () => {
 
     it("should return 404 after deletion", async () => {
       const res = await app.handle(
-        new Request(`http://localhost/works/${workId}`)
+        new Request(`http://localhost/works/${workId}`),
       );
       expect(res.status).toBe(404);
     });
@@ -657,7 +674,7 @@ describe("Work Endpoints", () => {
         new Request(`http://localhost/tags/${tagId}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${accessToken}` },
-        })
+        }),
       );
       expect(res.status).toBe(200);
     });

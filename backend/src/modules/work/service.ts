@@ -14,6 +14,45 @@ import type {
   UpdateWorkLinkBody,
 } from "./model";
 
+export function selectPreviewScreenshots<T>(
+  orderedWorkIds: string[],
+  screenshotsByWorkId: Map<string, T[]>,
+  limit: number = 6,
+) {
+  if (limit <= 0 || orderedWorkIds.length === 0) {
+    return [];
+  }
+
+  const preview: T[] = [];
+  let index = 0;
+
+  while (preview.length < limit) {
+    let addedInRound = false;
+
+    for (const workId of orderedWorkIds) {
+      const screenshots = screenshotsByWorkId.get(workId);
+      if (!screenshots || index >= screenshots.length) {
+        continue;
+      }
+
+      preview.push(screenshots[index]);
+      addedInRound = true;
+
+      if (preview.length === limit) {
+        break;
+      }
+    }
+
+    if (!addedInRound) {
+      break;
+    }
+
+    index += 1;
+  }
+
+  return preview;
+}
+
 export abstract class WorkService {
   static async getAll() {
     const allWorks = await db
@@ -211,7 +250,7 @@ export abstract class WorkService {
   static async addScreenshot(
     workId: string,
     imageUrl: string,
-    sortOrder: number = 0
+    sortOrder: number = 0,
   ) {
     const [work] = await db
       .select({ id: works.id })
@@ -246,6 +285,50 @@ export abstract class WorkService {
       .from(workScreenshots)
       .where(eq(workScreenshots.workId, workId))
       .orderBy(asc(workScreenshots.sortOrder));
+  }
+
+  static async getPreviewScreenshots(limit: number = 6) {
+    if (limit <= 0) {
+      return [];
+    }
+
+    const orderedWorks = await db
+      .select({ id: works.id })
+      .from(works)
+      .orderBy(asc(works.sortOrder));
+
+    if (orderedWorks.length === 0) {
+      return [];
+    }
+
+    const allScreenshots = await db
+      .select()
+      .from(workScreenshots)
+      .orderBy(asc(workScreenshots.sortOrder));
+
+    if (allScreenshots.length === 0) {
+      return [];
+    }
+
+    const screenshotsByWorkId = new Map<
+      string,
+      (typeof allScreenshots)[number][]
+    >();
+
+    for (const screenshot of allScreenshots) {
+      const items = screenshotsByWorkId.get(screenshot.workId);
+      if (items) {
+        items.push(screenshot);
+      } else {
+        screenshotsByWorkId.set(screenshot.workId, [screenshot]);
+      }
+    }
+
+    return selectPreviewScreenshots(
+      orderedWorks.map((work) => work.id),
+      screenshotsByWorkId,
+      limit,
+    );
   }
 
   static async addTag(workId: string, tagId: string) {
@@ -377,7 +460,7 @@ export abstract class WorkService {
 
   static async bulkAddScreenshots(
     workId: string,
-    items: { imageUrl: string; sortOrder: number }[]
+    items: { imageUrl: string; sortOrder: number }[],
   ) {
     const [work] = await db
       .select({ id: works.id })
@@ -397,7 +480,7 @@ export abstract class WorkService {
 
   static async reorderScreenshots(
     workId: string,
-    items: { id: string; sortOrder: number }[]
+    items: { id: string; sortOrder: number }[],
   ) {
     // Verify work exists
     const [work] = await db
@@ -415,8 +498,8 @@ export abstract class WorkService {
         .where(
           and(
             eq(workScreenshots.id, item.id),
-            eq(workScreenshots.workId, workId)
-          )
+            eq(workScreenshots.workId, workId),
+          ),
         );
     }
 

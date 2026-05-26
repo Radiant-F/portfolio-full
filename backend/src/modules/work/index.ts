@@ -45,7 +45,23 @@ export const workController = new Elysia({
         description:
           "Returns all works with links, screenshots, and tags, ordered by sortOrder. Public endpoint.",
       },
-    }
+    },
+  )
+  .get(
+    "/screenshots/preview",
+    async () => {
+      return WorkService.getPreviewScreenshots();
+    },
+    {
+      response: {
+        200: workScreenshotListResponse,
+      },
+      detail: {
+        summary: "Get work screenshot previews",
+        description:
+          "Returns up to 6 screenshots for the frontend preview carousel using round-robin selection across works. Public endpoint.",
+      },
+    },
   )
   .get(
     "/:id",
@@ -67,7 +83,7 @@ export const workController = new Elysia({
         description:
           "Returns a single work with its links, screenshots, and tags. Public endpoint.",
       },
-    }
+    },
   )
   // --- Authenticated work CRUD ---
   .post(
@@ -75,7 +91,7 @@ export const workController = new Elysia({
     async ({ body }) => {
       const iconUrl = await CloudinaryService.uploadImage(
         body.icon,
-        "portfolio/works"
+        "portfolio/works",
       );
       return WorkService.create({
         title: body.title,
@@ -96,7 +112,7 @@ export const workController = new Elysia({
           "Create a new work entry. Accepts multipart form with icon file upload.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   .put(
     "/:id",
@@ -111,12 +127,10 @@ export const workController = new Elysia({
 
         iconUrl = await CloudinaryService.uploadImage(
           body.icon,
-          "portfolio/works"
+          "portfolio/works",
         );
 
-        const oldPublicId = CloudinaryService.extractPublicId(
-          existing.iconUrl
-        );
+        const oldPublicId = CloudinaryService.extractPublicId(existing.iconUrl);
         if (oldPublicId) {
           CloudinaryService.deleteImage(oldPublicId).catch(console.error);
         }
@@ -147,7 +161,7 @@ export const workController = new Elysia({
           "Update an existing work. If icon is provided, replaces the old icon on Cloudinary.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   .delete(
     "/:id",
@@ -168,9 +182,7 @@ export const workController = new Elysia({
 
       // Clean up all screenshot images from Cloudinary
       for (const screenshot of screenshots) {
-        const publicId = CloudinaryService.extractPublicId(
-          screenshot.imageUrl
-        );
+        const publicId = CloudinaryService.extractPublicId(screenshot.imageUrl);
         if (publicId) {
           CloudinaryService.deleteImage(publicId).catch(console.error);
         }
@@ -191,7 +203,7 @@ export const workController = new Elysia({
           "Delete a work, its children (cascade), and all Cloudinary images (icon + screenshots).",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   // --- Links ---
   .post(
@@ -216,7 +228,7 @@ export const workController = new Elysia({
         description: "Add a resource link (GitHub, website, etc.) to a work.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   .put(
     "/:id/links/:linkId",
@@ -240,7 +252,7 @@ export const workController = new Elysia({
         description: "Update a specific link entry.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   .delete(
     "/:id/links/:linkId",
@@ -263,7 +275,7 @@ export const workController = new Elysia({
         description: "Delete a specific link entry.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   // --- Screenshots ---
   .post(
@@ -271,12 +283,12 @@ export const workController = new Elysia({
     async ({ params, body, status }) => {
       const imageUrl = await CloudinaryService.uploadImage(
         body.image,
-        "portfolio/works/screenshots"
+        "portfolio/works/screenshots",
       );
       const screenshot = await WorkService.addScreenshot(
         params.id,
         imageUrl,
-        body.sortOrder
+        body.sortOrder,
       );
       if (!screenshot) {
         return status(404, { message: "Work not found" });
@@ -297,7 +309,7 @@ export const workController = new Elysia({
           "Upload a screenshot image for a work. Stored on Cloudinary.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   .delete(
     "/:id/screenshots/:screenshotId",
@@ -327,7 +339,7 @@ export const workController = new Elysia({
         description: "Delete a screenshot and its Cloudinary image.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   // --- Tag Attachments ---
   .post(
@@ -361,7 +373,7 @@ export const workController = new Elysia({
           "Attach an existing tag to a work. Returns 409 if already attached.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   .delete(
     "/:id/tags/:tagId",
@@ -384,7 +396,7 @@ export const workController = new Elysia({
         description: "Remove a tag association from a work.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   // --- Bulk Tags ---
   .post(
@@ -415,7 +427,7 @@ export const workController = new Elysia({
           "Attach multiple tags at once. Skips already-attached tags. Returns all current tags.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   .put(
     "/:id/tags",
@@ -445,7 +457,7 @@ export const workController = new Elysia({
           "Replace all tag associations with the provided set. Pass empty array to remove all tags.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   // --- Bulk Screenshots ---
   .post(
@@ -456,14 +468,14 @@ export const workController = new Elysia({
       for (let i = 0; i < body.images.length; i++) {
         const imageUrl = await CloudinaryService.uploadImage(
           body.images[i],
-          "portfolio/works/screenshots"
+          "portfolio/works/screenshots",
         );
         items.push({ imageUrl, sortOrder: i });
       }
 
       const screenshots = await WorkService.bulkAddScreenshots(
         params.id,
-        items
+        items,
       );
       if (!screenshots) {
         return status(404, { message: "Work not found" });
@@ -485,14 +497,14 @@ export const workController = new Elysia({
           "Upload multiple screenshot images at once. Stored on Cloudinary.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   .put(
     "/:id/screenshots/reorder",
     async ({ params, body, status }) => {
       const screenshots = await WorkService.reorderScreenshots(
         params.id,
-        body.items
+        body.items,
       );
       if (!screenshots) {
         return status(404, { message: "Work not found" });
@@ -513,5 +525,5 @@ export const workController = new Elysia({
           "Update sortOrder for multiple screenshots in a single request.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   );

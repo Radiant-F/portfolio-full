@@ -1,5 +1,8 @@
 import { describe, expect, it } from "bun:test";
-import { WorkService } from "../src/modules/work/service";
+import {
+  selectPreviewScreenshots,
+  WorkService,
+} from "../src/modules/work/service";
 import { TagService } from "../src/modules/tag/service";
 
 let workId: string;
@@ -100,7 +103,7 @@ describe("WorkService", () => {
     const screenshot = await WorkService.addScreenshot(
       workId,
       "https://example.com/screenshot.png",
-      0
+      0,
     );
     expect(screenshot).not.toBeNull();
     expect(screenshot!.imageUrl).toBe("https://example.com/screenshot.png");
@@ -112,7 +115,7 @@ describe("WorkService", () => {
   it("should return null when adding screenshot to non-existent work", async () => {
     const screenshot = await WorkService.addScreenshot(
       "non-existent",
-      "https://example.com/ss.png"
+      "https://example.com/ss.png",
     );
     expect(screenshot).toBeNull();
   });
@@ -335,5 +338,123 @@ describe("WorkService – Bulk Operations", () => {
     await TagService.delete(bulkTagId1);
     await TagService.delete(bulkTagId2);
     await TagService.delete(bulkTagId3);
+  });
+});
+
+describe("WorkService – Preview Screenshots", () => {
+  const createPreviewMap = (
+    entries: Array<[string, { imageUrl: string; workId: string }[]]>,
+  ) => new Map(entries);
+
+  it("should return empty array when no screenshots exist", () => {
+    const result = selectPreviewScreenshots([], new Map(), 6);
+    expect(result).toEqual([]);
+  });
+
+  it("should limit a single work to the first 6 screenshots", () => {
+    const result = selectPreviewScreenshots(
+      ["work-a"],
+      createPreviewMap([
+        [
+          "work-a",
+          Array.from({ length: 7 }, (_, index) => ({
+            workId: "work-a",
+            imageUrl: `https://example.com/preview-single-${index}.png`,
+          })),
+        ],
+      ]),
+      6,
+    );
+
+    expect(result).toHaveLength(6);
+    expect(result.map((item) => item.imageUrl)).toEqual([
+      "https://example.com/preview-single-0.png",
+      "https://example.com/preview-single-1.png",
+      "https://example.com/preview-single-2.png",
+      "https://example.com/preview-single-3.png",
+      "https://example.com/preview-single-4.png",
+      "https://example.com/preview-single-5.png",
+    ]);
+  });
+
+  it("should return all screenshots when a single work has fewer than 6", () => {
+    const result = selectPreviewScreenshots(
+      ["work-a"],
+      createPreviewMap([
+        [
+          "work-a",
+          Array.from({ length: 3 }, (_, index) => ({
+            workId: "work-a",
+            imageUrl: `https://example.com/preview-under-limit-${index}.png`,
+          })),
+        ],
+      ]),
+      6,
+    );
+
+    expect(result).toHaveLength(3);
+    expect(result.map((item) => item.imageUrl)).toEqual([
+      "https://example.com/preview-under-limit-0.png",
+      "https://example.com/preview-under-limit-1.png",
+      "https://example.com/preview-under-limit-2.png",
+    ]);
+  });
+
+  it("should select screenshots round-robin across multiple works", () => {
+    const result = selectPreviewScreenshots(
+      ["work-a", "work-b", "work-c"],
+      createPreviewMap([
+        [
+          "work-a",
+          [
+            {
+              workId: "work-a",
+              imageUrl: "https://example.com/preview-round-robin-a-0.png",
+            },
+            {
+              workId: "work-a",
+              imageUrl: "https://example.com/preview-round-robin-a-1.png",
+            },
+            {
+              workId: "work-a",
+              imageUrl: "https://example.com/preview-round-robin-a-2.png",
+            },
+          ],
+        ],
+        [
+          "work-b",
+          [
+            {
+              workId: "work-b",
+              imageUrl: "https://example.com/preview-round-robin-b-0.png",
+            },
+            {
+              workId: "work-b",
+              imageUrl: "https://example.com/preview-round-robin-b-1.png",
+            },
+          ],
+        ],
+        [
+          "work-c",
+          [
+            {
+              workId: "work-c",
+              imageUrl: "https://example.com/preview-round-robin-c-0.png",
+            },
+          ],
+        ],
+      ]),
+      6,
+    );
+
+    expect(result).toHaveLength(6);
+    expect(result.map((item) => item.imageUrl)).toEqual([
+      "https://example.com/preview-round-robin-a-0.png",
+      "https://example.com/preview-round-robin-b-0.png",
+      "https://example.com/preview-round-robin-c-0.png",
+      "https://example.com/preview-round-robin-a-1.png",
+      "https://example.com/preview-round-robin-b-1.png",
+      "https://example.com/preview-round-robin-a-2.png",
+    ]);
   });
 });
