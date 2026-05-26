@@ -16,6 +16,7 @@ import Animated, {
 import { runOnJS } from "react-native-worklets";
 import Button from "../Button";
 import MCIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import AdminForm from "./AdminForm";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -109,10 +110,8 @@ export default function AppSettings() {
           <View style={{ height: 10 }} />
 
           <Animated.View style={[styles.modalContent, contentStyle]}>
-            <ScrollView contentContainerStyle={{ padding: 20 }}>
-              <Text style={{ color: "white" }}>Meow</Text>
-              <Text style={{ color: "white" }}>Meow</Text>
-              <Text style={{ color: "white" }}>Meow</Text>
+            <ScrollView contentContainerStyle={{ padding: 25 }}>
+              <AdminForm />
             </ScrollView>
           </Animated.View>
         </View>

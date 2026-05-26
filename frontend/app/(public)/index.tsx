@@ -1,12 +1,7 @@
 import { ButtonCustom } from "@/components";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  useWindowDimensions,
-} from "react-native";
+import { Text, View, StyleSheet, useWindowDimensions } from "react-native";
 import MCIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { Wave, WorkPreview } from "@/features/home";
 
 export default function Index() {
   const { width } = useWindowDimensions();
@@ -15,6 +10,8 @@ export default function Index() {
 
   return (
     <View style={{ flex: 1 }}>
+      <Wave />
+
       <View
         style={{
           ...styles.containerHero,
@@ -28,8 +25,7 @@ export default function Index() {
               <Text style={{ color: "rgb(158, 213, 255)" }}>Koi</Text>
             </Text>
             <Text style={{ color: "rgb(172, 193, 210)" }}>
-              Customize your mobile experience through ReVanced by applying
-              patches to your applications.
+              Mrrp meow meow nyaa mrrp.
             </Text>
             <View style={{ gap: 10 }}>
               <ButtonCustom
@@ -74,16 +70,7 @@ export default function Index() {
           </View>
         </View>
 
-        {isWide && (
-          <View style={styles.viewWorkPreview}>
-            <Image
-              source={require("@/assets/images/qing.png")}
-              resizeMethod="resize"
-              resizeMode="contain"
-              style={{ width: "100%", height: "100%" }}
-            />
-          </View>
-        )}
+        <WorkPreview />
       </View>
     </View>
   );
@@ -118,13 +105,7 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "space-evenly",
   },
-  viewWorkPreview: {
-    backgroundColor: "rgb(30, 31, 36)",
-    elevation: 5,
-    borderRadius: 20,
-    width: 400,
-    height: 550,
-  },
+
   containerHero: {
     alignItems: "center",
     justifyContent: "space-evenly",

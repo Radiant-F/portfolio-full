@@ -7,16 +7,17 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useEffect } from "react";
+import Flags from "../Flags";
 
 type ButtonLangProps = {
   label: string;
-  flag: ImageSourcePropType;
+  locale: "en" | "id" | "sundanese" | "ar" | "he" | "ur" | "jp" | "cn" | "ru";
   onPress: () => void;
   selected: boolean;
 };
 
 export default function ButtonLanguage({
-  flag,
+  locale,
   label,
   onPress,
   selected,
@@ -54,12 +55,7 @@ export default function ButtonLanguage({
   return (
     <Button onPress={onPress}>
       <Animated.View style={[styles.container, containerStyle]}>
-        <Image
-          source={flag}
-          style={{ width: 20, height: 15 }}
-          resizeMethod="resize"
-          resizeMode="contain"
-        />
+        <Flags locale={locale} />
         <Animated.Text
           selectable={false}
           style={[{ marginHorizontal: 10 }, labelStyle]}

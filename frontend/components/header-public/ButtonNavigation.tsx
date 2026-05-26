@@ -4,19 +4,23 @@ import Animated, {
   withTiming,
   useAnimatedStyle,
   interpolateColor,
+  AnimatedStyle,
 } from "react-native-reanimated";
 import Button from "../Button";
+import type { StyleProp, ViewStyle } from "react-native";
 
 type ButtonNavProps = {
   label: string;
   focused: boolean;
   onPress: () => void;
+  style?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>;
 };
 
 export default function ButtonNavigation({
   focused,
   label,
   onPress,
+  style,
 }: ButtonNavProps) {
   const focusProgress = useSharedValue(focused ? 1 : 0);
   const hoverProgress = useSharedValue(0);
@@ -74,6 +78,7 @@ export default function ButtonNavigation({
             borderWidth: 1,
             borderColor: "rgba(104, 188, 248, 0)",
           },
+          style,
           containerStyle,
         ]}
       >

@@ -24,7 +24,7 @@ let refreshRequest: Promise<boolean> | null = null;
 const defaultApiBaseUrl =
   Platform.OS === "web" && typeof window !== "undefined"
     ? `${window.location.protocol}//${window.location.hostname}:3000`
-    : "http://192.168.20.55:3000";
+    : "http://192.168.20.72:3000";
 
 const apiBaseUrl = process.env.EXPO_PUBLIC_API_URL || defaultApiBaseUrl;
 

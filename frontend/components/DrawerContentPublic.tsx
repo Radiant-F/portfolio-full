@@ -1,6 +1,6 @@
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { usePathname } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ButtonNavigation from "./header-public/ButtonNavigation";
 import { DrawerActions } from "@react-navigation/native";
@@ -22,10 +22,16 @@ export default function DrawerContentPublic(
   ];
 
   return (
-    <View style={{ paddingTop: 20 + top, gap: 20, padding: 20 }}>
+    <View style={{ paddingTop: 20 + top, gap: 15, padding: 20 }}>
       {routes.map((route) => {
         return (
           <ButtonNavigation
+            style={{
+              height: 49,
+              borderRadius: 49 / 2,
+              padding: 0,
+              justifyContent: "center",
+            }}
             key={route.name}
             label={route.label}
             focused={route.name === activeRouteName}
@@ -38,5 +44,3 @@ export default function DrawerContentPublic(
     </View>
   );
 }
-
-const styles = StyleSheet.create({});

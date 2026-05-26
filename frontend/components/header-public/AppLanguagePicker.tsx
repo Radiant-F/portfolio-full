@@ -11,39 +11,27 @@ import Animated, {
 import { runOnJS } from "react-native-worklets";
 import { setLanguage } from "@/locale/i18n";
 import ButtonLanguage from "./ButtonLanguage";
+import Flags from "../Flags";
+
+type LanguageTypes = {
+  locale: "en" | "id" | "sundanese" | "ar" | "he" | "ur" | "jp" | "cn" | "ru";
+  label: string;
+};
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function AppLanguagePicker() {
   const { i18n } = useTranslation();
   const selectedLanguage = i18n.language;
-  const languages = [
-    { locale: "en", name: "English", flag: require("@/assets/flags/us.svg") },
-    {
-      locale: "id",
-      name: "Indonesian",
-      flag: require("@/assets/flags/id.svg"),
-    },
-    {
-      locale: "sundanese",
-      name: "Sundanese",
-      flag: require("@/assets/flags/xx.svg"),
-    },
-    {
-      locale: "ar",
-      name: "Arabic",
-      flag: require("@/assets/flags/sa.svg"),
-    },
-    {
-      locale: "he",
-      name: "Hebrew",
-      flag: require("@/assets/flags/il.svg"),
-    },
-    {
-      locale: "ur",
-      name: "Urdu",
-      flag: require("@/assets/flags/pk.svg"),
-    },
+  const languages: LanguageTypes[] = [
+    { locale: "en", label: "English" },
+    { locale: "jp", label: "Japanese" },
+    { locale: "cn", label: "Chinese (traditional)" },
+    { locale: "ru", label: "Russian" },
+    { locale: "id", label: "Indonesian" },
+    { locale: "sundanese", label: "Sundanese" },
+    { locale: "ar", label: "Arabic" },
+    { locale: "ur", label: "Urdu" },
   ];
 
   const progress = useSharedValue(0);
@@ -100,7 +88,8 @@ export default function AppLanguagePicker() {
             onPress={openModal}
           >
             <Text style={styles.textLocale}>{value.locale.toUpperCase()}</Text>
-            <Image source={value.flag} style={{ width: 20, height: 15 }} />
+            <Flags locale={value.locale} />
+            {/* <Image source={value.flag} style={{ width: 20, height: 15 }} /> */}
           </Button>
         ))}
 
@@ -121,8 +110,8 @@ export default function AppLanguagePicker() {
               <ButtonLanguage
                 key={lang.locale}
                 onPress={() => setLanguage(lang.locale)}
-                flag={lang.flag}
-                label={lang.name}
+                locale={lang.locale}
+                label={lang.label}
                 selected={lang.locale === selectedLanguage}
               />
             ))}
