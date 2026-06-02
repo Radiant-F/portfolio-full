@@ -314,7 +314,6 @@ const styles = StyleSheet.create({
     borderRadius: 35 / 2,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 15,
   },
   imgBackdrop: {
     position: "absolute",

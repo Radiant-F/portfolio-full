@@ -36,8 +36,11 @@ function RootNavigator() {
 
   useEffect(() => {
     if (!fontLoaded && !error) return;
+    let isMounted = true;
 
     async function restoreSession() {
+      let shouldRestoreSession = false;
+
       try {
         const savedTheme = storage.getString("settings.theme") as
           | ThemeMode
@@ -59,23 +62,41 @@ function RootNavigator() {
           await i18n.changeLanguage(savedLanguage);
         }
 
-        dispatch(setSessionStatus("checking"));
+        shouldRestoreSession = hasRestorableSession();
 
-        if (hasRestorableSession()) {
-          await refreshSession(null).unwrap();
+        if (shouldRestoreSession) {
+          dispatch(setSessionStatus("checking"));
         } else {
           clearStoredSession();
           dispatch(clearCredentials());
         }
       } catch (restoreError) {
+        shouldRestoreSession = false;
         clearStoredSession();
         dispatch(clearCredentials());
       } finally {
-        setIsReady(true);
+        if (isMounted) {
+          setIsReady(true);
+        }
+      }
+
+      if (!shouldRestoreSession) {
+        return;
+      }
+
+      try {
+        await refreshSession(null).unwrap();
+      } catch (restoreError) {
+        clearStoredSession();
+        dispatch(clearCredentials());
       }
     }
 
     restoreSession();
+
+    return () => {
+      isMounted = false;
+    };
   }, [dispatch, error, fontLoaded, refreshSession]);
 
   if (!isReady) {

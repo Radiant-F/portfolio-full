@@ -1,12 +1,12 @@
 import { ButtonCustom } from "@/components";
 import { Text, View, StyleSheet, useWindowDimensions } from "react-native";
 import MCIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { Wave, WorkPreview } from "@/features/home";
+import { HeroDescription, Wave, WorkPreview } from "@/features/home";
 
 export default function Index() {
   const { width } = useWindowDimensions();
-  const BREAKPOINT = 900;
-  const isWide = width >= BREAKPOINT;
+  const isWide = width >= 900;
+  const isWideSocial = width >= 450;
 
   return (
     <View style={{ flex: 1 }}>
@@ -19,14 +19,17 @@ export default function Index() {
         }}
       >
         <View style={styles.viewHero}>
+          {/* Hero Section */}
           <View style={styles.viewHeroText}>
             <Text style={styles.textHero}>
-              {`Continuing the\nlegacy of `}
-              <Text style={{ color: "rgb(158, 213, 255)" }}>Koi</Text>
+              {`Heya!\nThe name is `}
+              <Text style={{ color: "rgb(158, 213, 255)" }}>Radiant</Text>.
             </Text>
-            <Text style={{ color: "rgb(172, 193, 210)" }}>
-              Mrrp meow meow nyaa mrrp.
-            </Text>
+            {/* HeroDescription component (incase your derpy eyes missed it) */}
+
+            <View style={{ height: 40 }}>
+              <HeroDescription />
+            </View>
             <View style={{ gap: 10 }}>
               <ButtonCustom
                 style={styles.btnPrimary}
@@ -58,7 +61,7 @@ export default function Index() {
           </View>
 
           <View style={styles.viewSocial}>
-            {[...Array(5).keys()].map((i) => (
+            {[...Array(5).keys()].slice(0, isWideSocial ? 5 : 4).map((i) => (
               <ButtonCustom style={styles.btnSocial} key={i}>
                 <MCIcons
                   name="ab-testing"
@@ -78,18 +81,19 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   viewHeroText: {
-    gap: 20,
+    gap: 15,
     flex: 1,
     justifyContent: "center",
     maxWidth: 450,
     // backgroundColor: "aqua",
+    paddingHorizontal: 25,
   },
   viewSocial: {
     flexDirection: "row",
     paddingVertical: 40,
-    paddingLeft: 0,
     // backgroundColor: "tomato",
     gap: 10,
+    paddingHorizontal: 25,
   },
   btnSocial: {
     backgroundColor: "rgb(39, 48, 58)",
@@ -146,5 +150,6 @@ const styles = StyleSheet.create({
     color: "rgb(224, 242, 255)",
     fontWeight: "600",
     fontSize: 55,
+    // backgroundColor: "dodgerblue",
   },
 });

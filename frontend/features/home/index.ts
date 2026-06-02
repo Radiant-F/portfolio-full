@@ -13,3 +13,4 @@
 // Components
 export { default as WorkPreview } from "./components/WorkPreview";
 export { default as Wave } from "./components/Wave";
+export { default as HeroDescription } from "./components/HeroDescription";
