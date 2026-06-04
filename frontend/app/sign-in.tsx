@@ -1,4 +1,5 @@
-import { Button } from "@/components";
+import { Button, Flags } from "@/components";
+import { LANGUAGES } from "@/constants/language";
 import { setEmail, setPassword, useSignInMutation } from "@/features/auth";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { setLanguage } from "@/locale/i18n";
@@ -30,34 +31,6 @@ export default function SignIn() {
   const [login, { isLoading }] = useSignInMutation();
 
   const selectedLanguage = i18n.language;
-  const availableLanguages = [
-    { locale: "en", name: "English", flag: require("@/assets/flags/us.svg") },
-    {
-      locale: "id",
-      name: "Indonesian",
-      flag: require("@/assets/flags/id.svg"),
-    },
-    {
-      locale: "sundanese",
-      name: "Sundanese",
-      flag: require("@/assets/flags/xx.svg"),
-    },
-    {
-      locale: "ar",
-      name: "Arabic",
-      flag: require("@/assets/flags/sa.svg"),
-    },
-    {
-      locale: "he",
-      name: "Hebrew",
-      flag: require("@/assets/flags/il.svg"),
-    },
-    {
-      locale: "ur",
-      name: "Urdu",
-      flag: require("@/assets/flags/pk.svg"),
-    },
-  ];
 
   return (
     <View style={{ flex: 1 }}>
@@ -69,9 +42,8 @@ export default function SignIn() {
 
       <View style={{ height: insets.top }} />
 
-      {availableLanguages
-        .filter((value) => value.locale === selectedLanguage)
-        .map((value) => (
+      {LANGUAGES.filter((value) => value.locale === selectedLanguage).map(
+        (value) => (
           <Button
             key={value.locale}
             style={styles.btnOpenModal}
@@ -86,9 +58,10 @@ export default function SignIn() {
             >
               {value.locale.toUpperCase()}
             </Text>
-            <Image source={value.flag} style={{ width: 20, height: 15 }} />
+            <Flags locale={value.locale} />
           </Button>
-        ))}
+        ),
+      )}
 
       <Modal
         transparent
@@ -117,27 +90,27 @@ export default function SignIn() {
           </View>
 
           <View style={styles.modalContent}>
-            {availableLanguages.map((lang) => (
+            {LANGUAGES.map((value) => (
               <Button
-                key={lang.locale}
-                onPress={() => setLanguage(lang.locale)}
+                key={value.locale}
+                onPress={() => setLanguage(value.locale)}
                 style={{
                   ...styles.btnFlag,
                   backgroundColor:
-                    lang.locale == selectedLanguage ? "#0000001a" : "white",
+                    value.locale == selectedLanguage ? "#0000001a" : "white",
                 }}
               >
-                <Image source={lang.flag} style={{ width: 20, height: 15 }} />
+                <Flags locale={value.locale} />
                 <Text
                   style={{
                     fontFamily: "LexendRegular",
                     marginHorizontal: 10,
                   }}
                 >
-                  {lang.name}
+                  {value.label}
                 </Text>
                 <View style={{ flex: 1 }} />
-                {lang.locale == selectedLanguage && (
+                {value.locale == selectedLanguage && (
                   <MCIcons name="check" size={20} color={"black"} />
                 )}
               </Button>

@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import Button from "../Button";
 import { useEffect, useState } from "react";
 import Animated, {
@@ -12,27 +12,13 @@ import { runOnJS } from "react-native-worklets";
 import { setLanguage } from "@/locale/i18n";
 import ButtonLanguage from "./ButtonLanguage";
 import Flags from "../Flags";
-
-type LanguageTypes = {
-  locale: "en" | "id" | "sundanese" | "ar" | "he" | "ur" | "jp" | "cn" | "ru";
-  label: string;
-};
+import { LANGUAGES } from "@/constants/language";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function AppLanguagePicker() {
   const { i18n } = useTranslation();
   const selectedLanguage = i18n.language;
-  const languages: LanguageTypes[] = [
-    { locale: "en", label: "English" },
-    { locale: "jp", label: "Japanese" },
-    { locale: "cn", label: "Chinese (traditional)" },
-    { locale: "ru", label: "Russian" },
-    { locale: "id", label: "Indonesian" },
-    { locale: "sundanese", label: "Sundanese" },
-    { locale: "ar", label: "Arabic" },
-    { locale: "ur", label: "Urdu" },
-  ];
 
   const progress = useSharedValue(0);
   const [modalMounted, setModalMounted] = useState(false);
@@ -79,9 +65,8 @@ export default function AppLanguagePicker() {
 
   return (
     <View>
-      {languages
-        .filter((value) => value.locale === selectedLanguage)
-        .map((value) => (
+      {LANGUAGES.filter((value) => value.locale === selectedLanguage).map(
+        (value) => (
           <Button
             key={value.locale}
             style={styles.btnOpenModal}
@@ -89,9 +74,9 @@ export default function AppLanguagePicker() {
           >
             <Text style={styles.textLocale}>{value.locale.toUpperCase()}</Text>
             <Flags locale={value.locale} />
-            {/* <Image source={value.flag} style={{ width: 20, height: 15 }} /> */}
           </Button>
-        ))}
+        ),
+      )}
 
       <Modal
         animationType="none"
@@ -106,7 +91,7 @@ export default function AppLanguagePicker() {
           />
 
           <Animated.View style={[styles.modalContent, contentStyle]}>
-            {languages.map((lang) => (
+            {LANGUAGES.map((lang) => (
               <ButtonLanguage
                 key={lang.locale}
                 onPress={() => setLanguage(lang.locale)}

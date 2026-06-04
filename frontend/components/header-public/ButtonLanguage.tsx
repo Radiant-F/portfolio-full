@@ -8,10 +8,11 @@ import Animated, {
 } from "react-native-reanimated";
 import { useEffect } from "react";
 import Flags from "../Flags";
+import type { LocaleType } from "@/constants/language";
 
 type ButtonLangProps = {
   label: string;
-  locale: "en" | "id" | "sundanese" | "ar" | "he" | "ur" | "jp" | "cn" | "ru";
+  locale: LocaleType;
   onPress: () => void;
   selected: boolean;
 };
