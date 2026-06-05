@@ -25,11 +25,12 @@ export default function Index() {
               {`Heya!\nThe name is `}
               <Text style={{ color: "rgb(158, 213, 255)" }}>Radiant</Text>.
             </Text>
-            {/* HeroDescription component (incase your derpy eyes missed it) */}
 
+            {/* Hero Description component (incase your derpy eyes missed it) */}
             <View style={{ height: 40 }}>
               <HeroDescription />
             </View>
+
             <View style={{ gap: 10 }}>
               <ButtonCustom
                 style={styles.btnPrimary}

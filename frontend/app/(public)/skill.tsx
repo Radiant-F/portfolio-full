@@ -154,7 +154,7 @@ export default function Skill() {
                 With this skill, I managed to do:
               </Text>
               {[...Array(7).keys()].map((v) => (
-                <View key={v} style={styles.viewDetail}>
+                <View key={v} style={{ gap: 5 }}>
                   <View style={{ alignSelf: "flex-start", gap: 2.5 }}>
                     <Text
                       style={{
@@ -193,13 +193,6 @@ export default function Skill() {
 }
 
 const styles = StyleSheet.create({
-  viewDetail: {
-    // borderWidth: 1,
-    // borderColor: "rgb(55, 62, 78)",
-    // borderRadius: 25,
-    // padding: 20,
-    gap: 5,
-  },
   btnCloseModal: {
     width: 50,
     height: 50,
@@ -252,7 +245,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    gap: 10,
+    gap: 15,
   },
   btn: {
     backgroundColor: "rgb(39, 48, 58)",

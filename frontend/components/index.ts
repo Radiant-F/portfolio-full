@@ -9,6 +9,7 @@ import HeaderPublic from "./header-public";
 import DrawerContentPublic from "./DrawerContentPublic";
 import Flags from "./Flags";
 import ButtonCustom from "./ButtonCustom";
+import { WorkTag } from "./WorkTag";
 
 export {
   Button,
@@ -22,4 +23,5 @@ export {
   DrawerContentPublic,
   Flags,
   ButtonCustom,
+  WorkTag,
 };
