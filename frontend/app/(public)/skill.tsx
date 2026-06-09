@@ -1,85 +1,31 @@
-import { ButtonCustom } from "@/components";
-import MCIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useEffect, useState } from "react";
-import {
-  Image,
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-import { runOnJS } from "react-native-worklets";
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+import { ButtonCustom, ModalCustom } from "@/components";
+import { useState } from "react";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Skill() {
+  const { bottom: bottomInset } = useSafeAreaInsets();
   const [modalMounted, setModalMounted] = useState(false);
-  const progress = useSharedValue(0);
-
-  useEffect(() => {
-    if (!modalMounted) return;
-
-    progress.value = 0;
-    progress.value = withTiming(1, {
-      duration: 240,
-      easing: Easing.out(Easing.cubic),
-    });
-  }, [modalMounted, progress]);
 
   function openModal() {
     setModalMounted(true);
   }
 
   function closeModal() {
-    progress.value = withTiming(
-      0,
-      {
-        duration: 180,
-        easing: Easing.in(Easing.cubic),
-      },
-      (finished) => {
-        if (finished) {
-          runOnJS(setModalMounted)(false);
-        }
-      },
-    );
+    setModalMounted(false);
   }
 
-  const backdropStyle = useAnimatedStyle(() => ({
-    opacity: progress.value * 0.5,
-  }));
-
-  const contentStyle = useAnimatedStyle(() => ({
-    opacity: progress.value,
-    transform: [
-      { translateY: (1 - progress.value) * 10 },
-      { scale: 0.98 + progress.value * 0.02 },
-    ],
-  }));
-
-  const headerStyle = useAnimatedStyle(() => ({
-    opacity: progress.value,
-    transform: [
-      { translateY: (1 - progress.value) * 10 },
-      { scale: 0.95 + progress.value * 0.05 },
-    ],
-  }));
-
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.container}>
+    <>
+      <ScrollView
+        contentContainerStyle={{
+          ...styles.container,
+          paddingBottom: bottomInset,
+        }}
+      >
         <View style={{ padding: 20 }}>
           <Text style={styles.textTitle}>
-            Gained from{" "}
-            <Text style={{ color: "rgb(158, 213, 255)" }}>hard</Text> skills and{" "}
+            <Text style={{ color: "rgb(158, 213, 255)" }}>Hard</Text> skills and{" "}
             <Text style={{ color: "rgb(158, 213, 255)" }}>soft</Text> skills
           </Text>
           <Text style={{ color: "rgb(172, 193, 210)", textAlign: "center" }}>
@@ -106,137 +52,65 @@ export default function Skill() {
         </View>
       </ScrollView>
 
-      <Modal
-        animationType="none"
+      <ModalCustom
         visible={modalMounted}
-        transparent
-        onRequestClose={closeModal}
-      >
-        <View style={styles.modalContainer}>
-          <AnimatedPressable
-            style={[styles.modalBackdrop, backdropStyle]}
-            onPress={closeModal}
+        onClose={closeModal}
+        maxWidth={420}
+        maxContentHeight={480}
+        title="React Native CLI"
+        customHeaderInfoStart={
+          <Image
+            source={require("@/assets/images/firebase.png")}
+            style={{ width: "50%", height: "50%" }}
+            resizeMethod="resize"
+            resizeMode="contain"
           />
-
-          <Animated.View style={[styles.modalHeader, headerStyle]}>
-            <View style={{ flexDirection: "row", gap: 10 }}>
-              <View style={styles.btnCloseModal}>
-                <Image
-                  source={require("@/assets/images/firebase.png")}
-                  style={{ width: "50%", height: "50%" }}
-                  resizeMethod="resize"
-                  resizeMode="contain"
-                />
-              </View>
-              <View style={styles.modalHeaderTitle}>
-                <Text
-                  style={{ color: "rgb(175, 211, 244)", fontWeight: "bold" }}
-                >
-                  React Native CLI
-                </Text>
-              </View>
-            </View>
-
-            <ButtonCustom style={styles.btnCloseModal} onPress={closeModal}>
-              <MCIcons
-                name="close-circle-outline"
-                color={"rgb(172, 193, 210)"}
-                size={20}
-              />
-            </ButtonCustom>
-          </Animated.View>
-
-          <View style={{ height: 10 }} />
-
-          <Animated.View style={[styles.modalContent, contentStyle]}>
-            <ScrollView contentContainerStyle={{ padding: 25, gap: 20 }}>
-              <Text style={{ color: "rgb(224, 242, 255)" }}>
-                With this skill, I managed to do:
-              </Text>
-              {[...Array(7).keys()].map((v) => (
-                <View key={v} style={{ gap: 5 }}>
-                  <View style={{ alignSelf: "flex-start", gap: 2.5 }}>
-                    <Text
-                      style={{
-                        color: "rgb(158, 213, 255)",
-                        paddingHorizontal: 5,
-                      }}
-                    >
-                      Detail Title
-                    </Text>
-                    <View
-                      style={{ height: 1, backgroundColor: "rgb(55, 62, 78)" }}
-                    />
-                  </View>
+        }
+      >
+        <View style={{ padding: 20 }}>
+          <Text style={{ color: "rgb(224, 242, 255)" }}>
+            With this skill, I managed to do:
+          </Text>
+          <View style={{ gap: 20, marginTop: 20 }}>
+            {[...Array(7).keys()].map((v) => (
+              <View key={v} style={{ gap: 5 }}>
+                <View style={{ alignSelf: "flex-start", gap: 2.5 }}>
                   <Text
                     style={{
-                      color: "rgb(224, 242, 255)",
+                      color: "rgb(158, 213, 255)",
                       paddingHorizontal: 5,
                     }}
                   >
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Illum, itaque, molestias rem velit sequi animi magni aliquam
-                    cumque maxime minus nam labore natus sed earum omnis,
-                    reiciendis aspernatur nostrum eveniet.
+                    Detail Title
                   </Text>
                   <View
                     style={{ height: 1, backgroundColor: "rgb(55, 62, 78)" }}
                   />
                 </View>
-              ))}
-            </ScrollView>
-          </Animated.View>
+                <Text
+                  style={{
+                    color: "rgb(224, 242, 255)",
+                    paddingHorizontal: 5,
+                  }}
+                >
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Illum, itaque, molestias rem velit sequi animi magni aliquam
+                  cumque maxime minus nam labore natus sed earum omnis,
+                  reiciendis aspernatur nostrum eveniet.
+                </Text>
+                <View
+                  style={{ height: 1, backgroundColor: "rgb(55, 62, 78)" }}
+                />
+              </View>
+            ))}
+          </View>
         </View>
-      </Modal>
-    </View>
+      </ModalCustom>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  btnCloseModal: {
-    width: 50,
-    height: 50,
-    borderRadius: 50 / 2,
-    elevation: 3,
-    backgroundColor: "rgb(30, 31, 36)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalHeaderTitle: {
-    backgroundColor: "rgb(30, 31, 36)",
-    height: 50,
-    borderRadius: 50 / 2,
-    paddingHorizontal: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 3,
-  },
-  modalHeader: {
-    flexDirection: "row",
-    width: "80%",
-    maxWidth: 420,
-    justifyContent: "space-between",
-  },
-  modalContent: {
-    backgroundColor: "rgb(30, 31, 36)",
-    width: "80%",
-    maxWidth: 420,
-    borderRadius: 50 / 2,
-    elevation: 3,
-    maxHeight: 480,
-    overflow: "hidden",
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalBackdrop: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    backgroundColor: "black",
-  },
   textSkillName: {
     color: "rgb(224, 242, 255)",
     fontWeight: "500",
@@ -271,6 +145,5 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 720,
     alignSelf: "center",
-    flex: 1,
   },
 });

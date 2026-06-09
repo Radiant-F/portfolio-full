@@ -67,7 +67,7 @@ export default function HeroDescription() {
   }, [index, displayed]);
 
   return (
-    <Animated.Text style={[{ color: "rgb(224, 242, 255)" }, animatedStyle]}>
+    <Animated.Text style={[{ color: "rgb(172, 193, 210)" }, animatedStyle]}>
       {displayed}
     </Animated.Text>
   );

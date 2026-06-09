@@ -10,7 +10,7 @@ import DrawerContentPublic from "./DrawerContentPublic";
 import Flags from "./Flags";
 import ButtonCustom from "./ButtonCustom";
 import { WorkTag } from "./WorkTag";
-
+import ModalCustom from "./ModalCustom";
 export {
   Button,
   Header,
@@ -24,4 +24,5 @@ export {
   Flags,
   ButtonCustom,
   WorkTag,
+  ModalCustom,
 };

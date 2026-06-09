@@ -1,23 +1,15 @@
-import { ButtonCustom, WorkTag } from "@/components";
+import { ButtonCustom, ModalCustom, WorkTag } from "@/components";
 import {
   Image,
   ImageSourcePropType,
-  Modal,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MCIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-import { runOnJS } from "react-native-worklets";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const WORK_SCREENSHOT: ImageSourcePropType[] = [
   require("@/assets/images/qing/1.png"),
@@ -49,71 +41,34 @@ function getRandomTagName() {
   return TAG_NAMES[Math.floor(Math.random() * TAG_NAMES.length)];
 }
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
 export default function Work() {
+  const { bottom: bottomInset } = useSafeAreaInsets();
+
   const [modalMounted, setModalMounted] = useState(false);
-  const progress = useSharedValue(0);
-
-  useEffect(() => {
-    if (!modalMounted) return;
-
-    progress.value = 0;
-    progress.value = withTiming(1, {
-      duration: 240,
-      easing: Easing.out(Easing.cubic),
-    });
-  }, [modalMounted, progress]);
 
   function openModal() {
     setModalMounted(true);
   }
 
   function closeModal() {
-    progress.value = withTiming(
-      0,
-      {
-        duration: 180,
-        easing: Easing.in(Easing.cubic),
-      },
-      (finished) => {
-        if (finished) {
-          runOnJS(setModalMounted)(false);
-        }
-      },
-    );
+    setModalMounted(false);
   }
-
-  const backdropStyle = useAnimatedStyle(() => ({
-    opacity: progress.value * 0.5,
-  }));
-
-  const contentStyle = useAnimatedStyle(() => ({
-    opacity: progress.value,
-    transform: [
-      { translateY: (1 - progress.value) * 10 },
-      { scale: 0.98 + progress.value * 0.02 },
-    ],
-  }));
-
-  const headerStyle = useAnimatedStyle(() => ({
-    opacity: progress.value,
-    transform: [
-      { translateY: (1 - progress.value) * 10 },
-      { scale: 0.95 + progress.value * 0.05 },
-    ],
-  }));
 
   const [selectedWorkScreenshotIndex, setSelectedWorkScreenshotIndex] =
     useState(8);
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.container}>
+    <>
+      <ScrollView
+        contentContainerStyle={{
+          ...styles.container,
+          paddingBottom: bottomInset,
+        }}
+      >
         <View style={{ padding: 20 }}>
           <Text style={styles.textTitle}>
-            <Text style={{ color: "rgb(158, 213, 255)" }}>Cool</Text> stuff
-            ahead
+            <Text style={{ color: "rgb(158, 213, 255)" }}>Personal</Text> and{" "}
+            <Text style={{ color: "rgb(158, 213, 255)" }}>team</Text>
           </Text>
           <Text style={{ color: "rgb(172, 193, 210)", textAlign: "center" }}>
             Click for more details.
@@ -122,16 +77,28 @@ export default function Work() {
 
         <View style={styles.containerItem}>
           {[...Array(6).keys()].map((v) => {
+            const WORK_TAGS = [
+              ...Array(Math.floor(Math.random() * 4) + 3).keys(),
+            ];
+
             return (
               <ButtonCustom key={v} style={styles.btn} onPress={openModal}>
                 <Image
                   source={require("@/assets/images/qing/7.png")}
-                  style={{ width: 150, height: 150 }}
+                  style={{ width: 125, height: 125 }}
                   resizeMethod="resize"
                   resizeMode="cover"
                 />
-                <View style={{ padding: 20, flex: 1, gap: 20 }}>
-                  <Text style={styles.textWorkName}>Work Name</Text>
+                <View
+                  style={{
+                    flex: 1,
+                    padding: 15,
+                    gap: 10,
+                  }}
+                >
+                  <Text style={styles.textWorkName} numberOfLines={1}>
+                    Work Name
+                  </Text>
                   <View style={styles.viewTag}>
                     {WORK_TAGS.slice(0, 4).map((v) => {
                       return (
@@ -155,162 +122,115 @@ export default function Work() {
         </View>
       </ScrollView>
 
-      <Modal
-        animationType="none"
+      <ModalCustom
         visible={modalMounted}
-        transparent
-        onRequestClose={closeModal}
-      >
-        <View style={styles.modalContainer}>
-          <AnimatedPressable
-            style={[styles.modalBackdrop, backdropStyle]}
-            onPress={closeModal}
+        onClose={closeModal}
+        title="A Long Work Name"
+        customHeaderInfoStart={
+          <Image
+            source={require("@/assets/images/qing/7.png")}
+            style={{ width: "100%", height: "100%" }}
+            resizeMethod="resize"
+            resizeMode="contain"
           />
+        }
+      >
+        <View style={{ width: "100%", height: 280 }}>
+          <Image
+            source={WORK_SCREENSHOT[selectedWorkScreenshotIndex]}
+            style={styles.imgWorkScBackdrop}
+            resizeMethod="resize"
+            resizeMode="cover"
+            blurRadius={5}
+          />
+          <Image
+            source={WORK_SCREENSHOT[selectedWorkScreenshotIndex]}
+            style={styles.imgWorkSc}
+            resizeMethod="resize"
+            resizeMode="contain"
+          />
+        </View>
 
-          <Animated.View style={[styles.modalHeader, headerStyle]}>
-            <View style={{ flexDirection: "row", gap: 10 }}>
-              <View style={styles.btnCloseModal}>
-                <Image
-                  source={require("@/assets/images/qing/7.png")}
-                  style={{ width: "100%", height: "100%" }}
-                  resizeMethod="resize"
-                  resizeMode="contain"
-                />
-              </View>
-              <View style={styles.modalHeaderTitle}>
-                <Text
-                  style={{ color: "rgb(175, 211, 244)", fontWeight: "bold" }}
-                >
-                  Work Name • Personal • 2025
-                </Text>
-              </View>
-            </View>
-
-            <ButtonCustom style={styles.btnCloseModal} onPress={closeModal}>
+        <View style={{ padding: 20, gap: 20 }}>
+          <View style={styles.viewPagination}>
+            <ButtonCustom
+              style={{ ...styles.btnPagination, paddingRight: 20 }}
+              onPress={() =>
+                setSelectedWorkScreenshotIndex(
+                  selectedWorkScreenshotIndex != 0
+                    ? selectedWorkScreenshotIndex - 1
+                    : 0,
+                )
+              }
+            >
               <MCIcons
-                name="close-circle-outline"
+                name="chevron-left"
                 color={"rgb(172, 193, 210)"}
-                size={20}
+                size={25}
+              />
+              <Text selectable={false} style={{ color: "rgb(172, 193, 210)" }}>
+                Prev
+              </Text>
+            </ButtonCustom>
+            <Text style={{ color: "rgb(172, 193, 210)" }}>
+              {selectedWorkScreenshotIndex + 1}/{WORK_SCREENSHOT.length}
+            </Text>
+            <ButtonCustom
+              style={{ ...styles.btnPagination, paddingLeft: 20 }}
+              onPress={() =>
+                setSelectedWorkScreenshotIndex(
+                  selectedWorkScreenshotIndex != WORK_SCREENSHOT.length - 1
+                    ? selectedWorkScreenshotIndex + 1
+                    : 0,
+                )
+              }
+            >
+              <Text selectable={false} style={{ color: "rgb(172, 193, 210)" }}>
+                Next
+              </Text>
+              <MCIcons
+                name="chevron-right"
+                color={"rgb(172, 193, 210)"}
+                size={25}
               />
             </ButtonCustom>
-          </Animated.View>
-
-          <View style={{ height: 10 }} />
-
-          <Animated.View style={[styles.modalContent, contentStyle]}>
-            <ScrollView>
-              <View style={{ width: "100%", height: 280 }}>
-                <Image
-                  source={WORK_SCREENSHOT[selectedWorkScreenshotIndex]}
-                  style={styles.imgWorkScBackdrop}
-                  resizeMethod="resize"
-                  resizeMode="cover"
-                  blurRadius={5}
-                />
-                <Image
-                  source={WORK_SCREENSHOT[selectedWorkScreenshotIndex]}
-                  style={styles.imgWorkSc}
-                  resizeMethod="resize"
-                  resizeMode="contain"
-                />
-              </View>
-
-              <View style={{ padding: 20, gap: 20 }}>
-                <View style={styles.viewPagination}>
-                  <ButtonCustom
-                    style={{ ...styles.btnPagination, paddingRight: 20 }}
-                    onPress={() =>
-                      setSelectedWorkScreenshotIndex(
-                        selectedWorkScreenshotIndex != 0
-                          ? selectedWorkScreenshotIndex - 1
-                          : 0,
-                      )
-                    }
-                  >
-                    <MCIcons
-                      name="chevron-left"
-                      color={"rgb(172, 193, 210)"}
-                      size={25}
-                    />
-                    <Text style={{ color: "rgb(172, 193, 210)" }}>Prev</Text>
-                  </ButtonCustom>
-                  <Text style={{ color: "rgb(172, 193, 210)" }}>
-                    {selectedWorkScreenshotIndex + 1}/{WORK_SCREENSHOT.length}
-                  </Text>
-                  <ButtonCustom
-                    style={{ ...styles.btnPagination, paddingLeft: 20 }}
-                    onPress={() =>
-                      setSelectedWorkScreenshotIndex(
-                        selectedWorkScreenshotIndex !=
-                          WORK_SCREENSHOT.length - 1
-                          ? selectedWorkScreenshotIndex + 1
-                          : 0,
-                      )
-                    }
-                  >
-                    <Text style={{ color: "rgb(172, 193, 210)" }}>Next</Text>
-                    <MCIcons
-                      name="chevron-right"
-                      color={"rgb(172, 193, 210)"}
-                      size={25}
-                    />
-                  </ButtonCustom>
-                </View>
-                <Text style={{ color: "rgb(172, 193, 210)" }}>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Maxime dignissimos illo assumenda dolorem voluptas soluta
-                  omnis expedita iusto magni dolore harum, eveniet quisquam eius
-                  et ab, illum accusamus id facere!
-                </Text>
-                <View style={styles.viewWorkSocial}>
-                  <ButtonCustom style={styles.btnWorkSocial}>
-                    <MCIcons
-                      name="github"
-                      color={"rgb(224, 242, 255)"}
-                      size={25}
-                    />
-                    <Text style={{ color: "rgb(224, 242, 255)" }}>GitHub</Text>
-                  </ButtonCustom>
-                  <ButtonCustom style={styles.btnWorkSocial}>
-                    <MCIcons
-                      name="google-play"
-                      color={"rgb(224, 242, 255)"}
-                      size={25}
-                    />
-                    <Text style={{ color: "rgb(224, 242, 255)" }}>
-                      Play Store
-                    </Text>
-                  </ButtonCustom>
-                  <ButtonCustom style={styles.btnWorkSocial}>
-                    <MCIcons
-                      name="apple"
-                      color={"rgb(224, 242, 255)"}
-                      size={25}
-                    />
-                    <Text style={{ color: "rgb(224, 242, 255)" }}>
-                      App Store
-                    </Text>
-                  </ButtonCustom>
-                  <ButtonCustom style={styles.btnWorkSocial}>
-                    <MCIcons
-                      name="web"
-                      color={"rgb(224, 242, 255)"}
-                      size={25}
-                    />
-                    <Text style={{ color: "rgb(224, 242, 255)" }}>Website</Text>
-                  </ButtonCustom>
-                </View>
-                <View style={styles.viewTags}>
-                  {WORK_TAGS.map((v, i) => {
-                    return <WorkTag key={v} name={getRandomTagName()} />;
-                  })}
-                </View>
-              </View>
-            </ScrollView>
-          </Animated.View>
+          </View>
+          <Text style={{ color: "rgb(172, 193, 210)" }}>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime
+            dignissimos illo assumenda dolorem voluptas soluta omnis expedita
+            iusto magni dolore harum, eveniet quisquam eius et ab, illum
+            accusamus id facere!
+          </Text>
+          <View style={styles.viewWorkSocial}>
+            <ButtonCustom style={styles.btnWorkSocial}>
+              <MCIcons name="github" color={"rgb(224, 242, 255)"} size={25} />
+              <Text style={{ color: "rgb(224, 242, 255)" }}>GitHub</Text>
+            </ButtonCustom>
+            <ButtonCustom style={styles.btnWorkSocial}>
+              <MCIcons
+                name="google-play"
+                color={"rgb(224, 242, 255)"}
+                size={25}
+              />
+              <Text style={{ color: "rgb(224, 242, 255)" }}>Play Store</Text>
+            </ButtonCustom>
+            <ButtonCustom style={styles.btnWorkSocial}>
+              <MCIcons name="apple" color={"rgb(224, 242, 255)"} size={25} />
+              <Text style={{ color: "rgb(224, 242, 255)" }}>App Store</Text>
+            </ButtonCustom>
+            <ButtonCustom style={styles.btnWorkSocial}>
+              <MCIcons name="web" color={"rgb(224, 242, 255)"} size={25} />
+              <Text style={{ color: "rgb(224, 242, 255)" }}>Website</Text>
+            </ButtonCustom>
+          </View>
+          <View style={styles.viewTags}>
+            {WORK_TAGS.map((v, i) => {
+              return <WorkTag key={v} name={getRandomTagName()} />;
+            })}
+          </View>
         </View>
-      </Modal>
-    </View>
+      </ModalCustom>
+    </>
   );
 }
 
@@ -364,61 +284,21 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  btnCloseModal: {
-    width: 50,
-    height: 50,
-    borderRadius: 50 / 2,
-    elevation: 3,
-    backgroundColor: "rgb(30, 31, 36)",
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",
-  },
-  modalHeaderTitle: {
-    backgroundColor: "rgb(30, 31, 36)",
-    height: 50,
-    borderRadius: 50 / 2,
-    paddingHorizontal: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 3,
-  },
-  modalHeader: {
-    flexDirection: "row",
-    width: "80%",
-    maxWidth: 580,
-    justifyContent: "space-between",
-  },
-  modalContent: {
-    backgroundColor: "rgb(30, 31, 36)",
-    width: "80%",
-    maxWidth: 580,
-    borderRadius: 50 / 2,
-    elevation: 3,
-    maxHeight: 600,
-    overflow: "hidden",
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalBackdrop: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    backgroundColor: "black",
-  },
   viewTag: {
     flexDirection: "row",
     flexWrap: "wrap",
+    // backgroundColor: "tomato",
+    // height: "100%",
+    // flex: 1,
     gap: 5,
     alignItems: "center",
-    width: 135,
+    // width: 140,
+    // justifyContent: "space-evenly",
   },
   textWorkName: {
     color: "rgb(224, 242, 255)",
     fontWeight: "bold",
+    // padding: 15,
   },
   btn: {
     backgroundColor: "rgb(39, 48, 58)",
@@ -426,8 +306,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: "hidden",
     flexDirection: "row",
-    maxWidth: 325,
-    maxHeight: 150,
+    maxHeight: 125,
+    width: 125 + 175,
   },
   containerItem: {
     flexDirection: "row",
@@ -445,6 +325,5 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 720,
     alignSelf: "center",
-    flex: 1,
   },
 });

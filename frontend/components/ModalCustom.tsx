@@ -1,0 +1,240 @@
+import {
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import ButtonCustom from "./ButtonCustom";
+import { MaterialCommunityIcons as MCIcons } from "@expo/vector-icons";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { runOnJS } from "react-native-worklets";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+type MaterialCommunityIconName = keyof typeof MCIcons.glyphMap;
+
+type ModalCustomType = {
+  onClose?: () => void;
+  visible?: boolean;
+  maxWidth?: number;
+  maxContentHeight?: number;
+  title?: string;
+  customHeaderInfoStart?: React.ReactNode;
+  showHeaderInfoStart?: boolean;
+  iconHeaderInfoStart?: MaterialCommunityIconName;
+  children?: React.ReactNode;
+};
+
+export default function ModalCustom({
+  onClose,
+  visible = true,
+  maxWidth,
+  maxContentHeight,
+  title = "Header Title",
+  customHeaderInfoStart,
+  showHeaderInfoStart = true,
+  iconHeaderInfoStart = "ab-testing",
+  children,
+}: ModalCustomType) {
+  const [mounted, setMounted] = useState(visible);
+  const progress = useSharedValue(0);
+
+  useEffect(() => {
+    if (visible) {
+      if (!mounted) {
+        setMounted(true);
+      }
+
+      progress.value = 0;
+      progress.value = withTiming(1, {
+        duration: 240,
+        easing: Easing.out(Easing.cubic),
+      });
+      return;
+    }
+
+    if (!mounted) return;
+
+    progress.value = withTiming(
+      0,
+      {
+        duration: 180,
+        easing: Easing.in(Easing.cubic),
+      },
+      (finished) => {
+        if (finished) {
+          runOnJS(setMounted)(false);
+        }
+      },
+    );
+  }, [mounted, progress, visible]);
+
+  function handleClose() {
+    if (!mounted) return;
+
+    progress.value = withTiming(
+      0,
+      {
+        duration: 180,
+        easing: Easing.in(Easing.cubic),
+      },
+      (finished) => {
+        if (finished) {
+          runOnJS(setMounted)(false);
+          if (onClose) {
+            runOnJS(onClose)();
+          }
+        }
+      },
+    );
+  }
+
+  const backdropStyle = useAnimatedStyle(() => ({
+    opacity: progress.value * 0.5,
+  }));
+
+  const headerStyle = useAnimatedStyle(() => ({
+    opacity: progress.value,
+    transform: [
+      { translateY: (1 - progress.value) * 10 },
+      { scale: 0.95 + progress.value * 0.05 },
+    ],
+  }));
+
+  const contentStyle = useAnimatedStyle(() => ({
+    opacity: progress.value,
+    transform: [
+      { translateY: (1 - progress.value) * 10 },
+      { scale: 0.98 + progress.value * 0.02 },
+    ],
+  }));
+
+  if (!mounted) return null;
+
+  return (
+    <Modal
+      animationType="none"
+      visible={mounted}
+      transparent
+      onRequestClose={handleClose}
+    >
+      <View style={styles.container}>
+        <AnimatedPressable
+          style={[styles.backdrop, backdropStyle]}
+          onPress={handleClose}
+        />
+        <Animated.View
+          style={[
+            styles.content,
+            { ...(maxWidth ? { maxWidth } : null) },
+            contentStyle,
+          ]}
+        >
+          <Animated.View style={[styles.header, headerStyle]}>
+            {showHeaderInfoStart && (
+              <View style={styles.viewHeaderInfo}>
+                {customHeaderInfoStart ?? (
+                  <MCIcons
+                    name={iconHeaderInfoStart}
+                    size={20}
+                    color={"rgb(172, 193, 210)"}
+                  />
+                )}
+              </View>
+            )}
+            <View style={{ flex: 1 }}>
+              <View style={styles.viewHeaderTitle}>
+                <Text style={styles.textHeaderTitle} numberOfLines={1}>
+                  {title}
+                </Text>
+              </View>
+            </View>
+            <ButtonCustom style={styles.viewHeaderInfo} onPress={handleClose}>
+              <MCIcons
+                name="close-circle-outline"
+                size={20}
+                color={"rgb(172, 193, 210)"}
+              />
+            </ButtonCustom>
+          </Animated.View>
+          <View
+            style={[
+              styles.viewContent,
+              { maxHeight: maxContentHeight ? maxContentHeight : null },
+            ]}
+          >
+            <ScrollView style={{ width: "100%" }}>{children}</ScrollView>
+          </View>
+        </Animated.View>
+      </View>
+    </Modal>
+  );
+}
+
+const styles = StyleSheet.create({
+  viewContent: {
+    width: "100%",
+    flexShrink: 1,
+    minHeight: 120,
+    backgroundColor: "rgb(30, 31, 36)",
+    borderRadius: 50 / 2,
+    elevation: 5,
+    overflow: "hidden",
+  },
+  textHeaderTitle: {
+    color: "rgb(175, 211, 244)",
+    fontWeight: "bold",
+    textAlignVertical: "center",
+  },
+  viewHeaderTitle: {
+    backgroundColor: "rgb(30, 31, 36)",
+    height: 50,
+    borderRadius: 50 / 2,
+    paddingHorizontal: 20,
+    justifyContent: "center",
+    elevation: 3,
+    alignSelf: "flex-start",
+    maxWidth: "100%",
+  },
+  viewHeaderInfo: {
+    width: 50,
+    height: 50,
+    borderRadius: 50 / 2,
+    elevation: 3,
+    backgroundColor: "rgb(30, 31, 36)",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  header: {
+    flexDirection: "row",
+    gap: 5,
+  },
+  content: {
+    width: "80%",
+    maxWidth: 580,
+    maxHeight: "90%",
+    minHeight: 180,
+    gap: 10,
+  },
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+  },
+  backdrop: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "black",
+  },
+});
