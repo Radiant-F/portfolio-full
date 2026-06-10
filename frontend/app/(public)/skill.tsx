@@ -20,7 +20,7 @@ export default function Skill() {
       <ScrollView
         contentContainerStyle={{
           ...styles.container,
-          paddingBottom: bottomInset,
+          paddingBottom: bottomInset + 20,
         }}
       >
         <View style={{ padding: 20 }}>
@@ -88,10 +88,7 @@ export default function Skill() {
                   />
                 </View>
                 <Text
-                  style={{
-                    color: "rgb(224, 242, 255)",
-                    paddingHorizontal: 5,
-                  }}
+                  style={{ color: "rgb(224, 242, 255)", paddingHorizontal: 5 }}
                 >
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Illum, itaque, molestias rem velit sequi animi magni aliquam

@@ -62,7 +62,7 @@ export default function Work() {
       <ScrollView
         contentContainerStyle={{
           ...styles.container,
-          paddingBottom: bottomInset,
+          paddingBottom: bottomInset + 20,
         }}
       >
         <View style={{ padding: 20 }}>

@@ -20,44 +20,38 @@ export default function Experience() {
       <ScrollView
         contentContainerStyle={{
           ...styles.container,
-          paddingBottom: bottomInset,
+          paddingBottom: bottomInset + 20,
         }}
       >
-        <View style={{ padding: 20 }}>
-          <Text style={styles.textTitle}>
-            <Text style={{ color: "rgb(158, 213, 255)" }}>Hard</Text> skills and{" "}
-            <Text style={{ color: "rgb(158, 213, 255)" }}>soft</Text> skills
-          </Text>
-          <Text style={{ color: "rgb(172, 193, 210)", textAlign: "center" }}>
-            Click for more details.
-          </Text>
+        <View style={{ gap: 20, padding: 20 }}>
+          {[...Array(7).keys()].map((v) => (
+            <ButtonCustom key={v} style={styles.btn} onPress={openModal}>
+              <Image
+                source={require("@/assets/images/firebase-full.png")}
+                style={{ width: 150, height: 50 }}
+                resizeMethod="resize"
+                resizeMode="contain"
+              />
+              <View style={styles.line} />
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={styles.textCompanyName}
+                  selectable={false}
+                  numberOfLines={1}
+                >
+                  Google
+                </Text>
+                <Text
+                  style={styles.textCompanyRole}
+                  selectable={false}
+                  numberOfLines={1}
+                >
+                  Developer Developer Developer Developer Developer
+                </Text>
+              </View>
+            </ButtonCustom>
+          ))}
         </View>
-
-        <ButtonCustom style={styles.btn} onPress={openModal}>
-          <Image
-            source={require("@/assets/images/firebase-full.png")}
-            style={{ width: 150, height: 50 }}
-            resizeMethod="resize"
-            resizeMode="contain"
-          />
-          <View style={styles.line} />
-          <View style={{ flex: 1 }}>
-            <Text
-              style={styles.textCompanyName}
-              selectable={false}
-              numberOfLines={1}
-            >
-              Google
-            </Text>
-            <Text
-              style={styles.textCompanyRole}
-              selectable={false}
-              numberOfLines={1}
-            >
-              Developer Developer Developer Developer Developer
-            </Text>
-          </View>
-        </ButtonCustom>
       </ScrollView>
 
       <ModalCustom
@@ -73,7 +67,30 @@ export default function Experience() {
 
           <View style={{ height: 20 }} />
 
-          <View style={styles.content}>
+          <View style={{ alignSelf: "flex-start", gap: 2.5 }}>
+            <Text style={{ color: "rgb(158, 213, 255)", paddingHorizontal: 5 }}>
+              What I do:
+            </Text>
+            <View style={{ height: 1, backgroundColor: "rgb(55, 62, 78)" }} />
+          </View>
+          <View style={{ padding: 10, gap: 5 }}>
+            <View style={styles.impact}>
+              <Text style={{ color: "rgb(172, 193, 210)" }}>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Mollitia debitis sunt iure. Quis unde dolores quo tenetur
+                maxime, similique labore esse id iure harum expedita eligendi
+                vitae eius voluptate consequatur.
+              </Text>
+            </View>
+          </View>
+
+          <View style={{ alignSelf: "flex-start", gap: 2.5 }}>
+            <Text style={{ color: "rgb(158, 213, 255)", paddingHorizontal: 5 }}>
+              What I achieve:
+            </Text>
+            <View style={{ height: 1, backgroundColor: "rgb(55, 62, 78)" }} />
+          </View>
+          <View style={{ padding: 10, gap: 5 }}>
             {[...Array(10).keys()].map((v) => {
               return (
                 <View key={v} style={styles.impact}>
@@ -99,9 +116,6 @@ const styles = StyleSheet.create({
     borderBottomColor: "rgb(55, 62, 78)",
     paddingBottom: 10,
   },
-  content: {
-    gap: 10,
-  },
   textCompanyRole: {
     color: "rgb(172, 193, 210)",
   },
@@ -122,6 +136,9 @@ const styles = StyleSheet.create({
     padding: 20,
     elevation: 3,
     borderRadius: 20,
+    maxWidth: 480,
+    width: "100%",
+    alignSelf: "center",
   },
   container: {
     width: "100%",
