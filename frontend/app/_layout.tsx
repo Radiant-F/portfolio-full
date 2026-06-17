@@ -101,8 +101,17 @@ function RootNavigator() {
 
   if (!isReady) {
     return (
-      <View>
-        <Text>Hang in there, champ...</Text>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "rgb(26, 25, 31)",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ color: "rgb(172, 193, 210)", fontStyle: "italic" }}>
+          Hang in there, champ...
+        </Text>
       </View>
     );
   }
@@ -111,11 +120,6 @@ function RootNavigator() {
     <Stack screenOptions={{ headerShown: false }}>
       {/* Public routes */}
       <Stack.Screen name="(public)" />
-
-      {/* Only available when not logged in */}
-      <Stack.Protected guard={!isLoggedIn}>
-        <Stack.Screen name="sign-in" />
-      </Stack.Protected>
 
       {/* Only available when logged in */}
       <Stack.Protected guard={isLoggedIn}>

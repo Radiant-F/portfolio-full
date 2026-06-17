@@ -24,6 +24,7 @@ type MaterialCommunityIconName = keyof typeof MCIcons.glyphMap;
 type ModalCustomType = {
   onClose?: () => void;
   visible?: boolean;
+  showHeader?: boolean;
   maxWidth?: number;
   maxContentHeight?: number;
   title?: string;
@@ -43,6 +44,7 @@ export default function ModalCustom({
   showHeaderInfoStart = true,
   iconHeaderInfoStart = "ab-testing",
   children,
+  showHeader = true,
 }: ModalCustomType) {
   const [mounted, setMounted] = useState(visible);
   const progress = useSharedValue(0);
@@ -138,33 +140,35 @@ export default function ModalCustom({
             contentStyle,
           ]}
         >
-          <Animated.View style={[styles.header, headerStyle]}>
-            {showHeaderInfoStart && (
-              <View style={styles.viewHeaderInfo}>
-                {customHeaderInfoStart ?? (
-                  <MCIcons
-                    name={iconHeaderInfoStart}
-                    size={20}
-                    color={"rgb(172, 193, 210)"}
-                  />
-                )}
+          {showHeader && (
+            <Animated.View style={[styles.header, headerStyle]}>
+              {showHeaderInfoStart && (
+                <View style={styles.viewHeaderInfo}>
+                  {customHeaderInfoStart ?? (
+                    <MCIcons
+                      name={iconHeaderInfoStart}
+                      size={20}
+                      color={"rgb(172, 193, 210)"}
+                    />
+                  )}
+                </View>
+              )}
+              <View style={{ flex: 1 }}>
+                <View style={styles.viewHeaderTitle}>
+                  <Text style={styles.textHeaderTitle} numberOfLines={1}>
+                    {title}
+                  </Text>
+                </View>
               </View>
-            )}
-            <View style={{ flex: 1 }}>
-              <View style={styles.viewHeaderTitle}>
-                <Text style={styles.textHeaderTitle} numberOfLines={1}>
-                  {title}
-                </Text>
-              </View>
-            </View>
-            <ButtonCustom style={styles.viewHeaderInfo} onPress={handleClose}>
-              <MCIcons
-                name="close-circle-outline"
-                size={20}
-                color={"rgb(172, 193, 210)"}
-              />
-            </ButtonCustom>
-          </Animated.View>
+              <ButtonCustom style={styles.viewHeaderInfo} onPress={handleClose}>
+                <MCIcons
+                  name="close-circle-outline"
+                  size={20}
+                  color={"rgb(172, 193, 210)"}
+                />
+              </ButtonCustom>
+            </Animated.View>
+          )}
           <View
             style={[
               styles.viewContent,

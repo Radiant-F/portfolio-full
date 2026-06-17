@@ -1,17 +1,7 @@
 import { StyleSheet, View, Text } from "react-native";
 import type { ComponentProps } from "react";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-
-type WorkTagName =
-  | "Android"
-  | "iOS"
-  | "Web"
-  | "React Native"
-  | "React Native Expo"
-  | "Play Store"
-  | "Firebase"
-  | "Laravel"
-  | "MongoDB";
+import { WorkTagName } from "@/constants/twork-tag";
 
 type WorkTagProps = {
   name: WorkTagName;
@@ -51,7 +41,7 @@ const TAG_CONFIG: Record<
     borderColor: "rgb(98, 239, 255)",
     textColor: "rgb(224, 247, 250)",
   },
-  "React Native Expo": {
+  Expo: {
     icon: "react",
     backgroundColor: "rgb(28, 136, 160)",
     borderColor: "rgb(98, 239, 255)",
@@ -80,6 +70,18 @@ const TAG_CONFIG: Record<
     backgroundColor: "rgb(17, 75, 45)",
     borderColor: "rgb(38, 165, 106)",
     textColor: "rgb(200, 230, 201)",
+  },
+  Personal: {
+    icon: "account",
+    backgroundColor: "rgb(93, 64, 55)",
+    borderColor: "rgb(141, 110, 99)",
+    textColor: "rgb(239, 235, 233)",
+  },
+  Team: {
+    icon: "account-group",
+    backgroundColor: "rgb(49, 27, 146)",
+    borderColor: "rgb(124, 77, 255)",
+    textColor: "rgb(237, 231, 246)",
   },
 };
 

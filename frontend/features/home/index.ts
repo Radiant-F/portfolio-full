@@ -14,3 +14,7 @@
 export { default as WorkPreview } from "./components/WorkPreview";
 export { default as Wave } from "./components/Wave";
 export { default as HeroDescription } from "./components/HeroDescription";
+export { default as ButtonSocial } from "./components/ButtonSocial";
+export { default as LanguagePicker } from "./components/LanguagePicker";
+export { default as HeaderHome } from "./components/Header";
+export { default as DrawerContentHome } from "./components/DrawerContentHome";

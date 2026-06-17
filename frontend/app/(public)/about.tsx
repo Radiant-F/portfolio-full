@@ -6,7 +6,9 @@ export default function About() {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 30, color: "rgb(224, 242, 255)" }}>Meow</Text>
+      <Text
+        style={{ color: "rgb(224, 242, 255)", textAlign: "center" }}
+      >{`Work in progress 🏗️\nUnless if you already know about me :3`}</Text>
     </View>
   );
 }
