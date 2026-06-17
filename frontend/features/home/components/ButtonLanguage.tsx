@@ -1,5 +1,4 @@
-import { Image, ImageSourcePropType, StyleSheet } from "react-native";
-import Button from "../Button";
+import { StyleSheet } from "react-native";
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
@@ -7,8 +6,8 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useEffect } from "react";
-import Flags from "../Flags";
 import type { LocaleType } from "@/constants/language";
+import { ButtonCustom, Flags } from "@/components";
 
 type ButtonLangProps = {
   label: string;
@@ -54,7 +53,7 @@ export default function ButtonLanguage({
   });
 
   return (
-    <Button onPress={onPress}>
+    <ButtonCustom onPress={onPress}>
       <Animated.View style={[styles.container, containerStyle]}>
         <Flags locale={locale} />
         <Animated.Text
@@ -64,7 +63,7 @@ export default function ButtonLanguage({
           {label}
         </Animated.Text>
       </Animated.View>
-    </Button>
+    </ButtonCustom>
   );
 }
 

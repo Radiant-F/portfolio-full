@@ -1,15 +1,15 @@
 import { DrawerHeaderProps } from "@react-navigation/drawer";
 import { Image, StyleSheet, View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Button from "../Button";
 import MCIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { usePathname } from "expo-router";
 import { DrawerActions } from "@react-navigation/native";
-import AppSettings from "./AppSettings";
-import AppLanguagePicker from "./AppLanguagePicker";
+import { ButtonCustom } from "@/components";
+import LanguagePicker from "./LanguagePicker";
 import ButtonNavigation from "./ButtonNavigation";
+import AppSettings from "./AppSettings";
 
-export default function HeaderPublic(props: DrawerHeaderProps) {
+export default function HeaderHome(props: DrawerHeaderProps) {
   const { top } = useSafeAreaInsets();
 
   const pathname = usePathname();
@@ -30,12 +30,12 @@ export default function HeaderPublic(props: DrawerHeaderProps) {
   return (
     <View style={{ ...styles.container, paddingTop: top + 10 }}>
       {!isWide && (
-        <Button
+        <ButtonCustom
           style={styles.btnDrawer}
           onPress={() => props.navigation.toggleDrawer()}
         >
           <MCIcons name="menu-open" color={"rgb(172, 193, 210)"} size={25} />
-        </Button>
+        </ButtonCustom>
       )}
 
       <Image
@@ -62,7 +62,7 @@ export default function HeaderPublic(props: DrawerHeaderProps) {
 
       <View style={{ flex: 1 }} />
 
-      <AppLanguagePicker />
+      <LanguagePicker />
 
       <AppSettings />
     </View>

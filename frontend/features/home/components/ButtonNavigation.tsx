@@ -6,8 +6,8 @@ import Animated, {
   interpolateColor,
   AnimatedStyle,
 } from "react-native-reanimated";
-import Button from "../Button";
 import type { StyleProp, ViewStyle } from "react-native";
+import { ButtonCustom } from "@/components";
 
 type ButtonNavProps = {
   label: string;
@@ -59,7 +59,7 @@ export default function ButtonNavigation({
   });
 
   return (
-    <Button
+    <ButtonCustom
       onPress={onPress}
       onHoverIn={() => {
         hoverProgress.value = withTiming(1, { duration: 160 });
@@ -86,6 +86,6 @@ export default function ButtonNavigation({
           {label}
         </Animated.Text>
       </Animated.View>
-    </Button>
+    </ButtonCustom>
   );
 }

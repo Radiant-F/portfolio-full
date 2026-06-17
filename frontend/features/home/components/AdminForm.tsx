@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import InputForm from "./InputForm";
-import Button from "../Button";
+import { ButtonCustom } from "@/components";
+import InputForm from "./AdminFormInput";
 
 export default function AdminForm() {
   const [username, setUsername] = useState("");
@@ -25,9 +25,9 @@ export default function AdminForm() {
       <View style={{ height: 10 }} />
       <View style={{ flexDirection: "row" }}>
         <View style={{ flex: 1 }} />
-        <Button style={styles.btnLogin}>
+        <ButtonCustom style={styles.btnLogin}>
           <Text style={{ color: "rgb(158, 213, 255)" }}>Login</Text>
-        </Button>
+        </ButtonCustom>
       </View>
     </View>
   );

@@ -1,16 +1,16 @@
 import { Drawer } from "expo-router/drawer";
-import { DrawerContentPublic, HeaderPublic } from "@/components";
+import { DrawerContentHome, HeaderHome } from "@/features/home";
 
 export default function PublicLayout() {
   return (
     <Drawer
       screenOptions={{
         headerShown: true,
-        header: (props) => <HeaderPublic {...props} />,
+        header: (props) => <HeaderHome {...props} />,
         sceneStyle: { backgroundColor: "rgb(26, 25, 31)" },
         drawerStyle: { backgroundColor: "rgb(31, 31, 38)" },
       }}
-      drawerContent={(props) => <DrawerContentPublic {...props} />}
+      drawerContent={(props) => <DrawerContentHome {...props} />}
     >
       <Drawer.Screen name="index" options={{ drawerLabel: "Home" }} />
       <Drawer.Screen name="skill" options={{ drawerLabel: "Skill" }} />

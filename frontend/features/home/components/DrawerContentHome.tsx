@@ -2,12 +2,10 @@ import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { usePathname } from "expo-router";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ButtonNavigation from "./header-public/ButtonNavigation";
 import { DrawerActions } from "@react-navigation/native";
+import ButtonNavigation from "./ButtonNavigation";
 
-export default function DrawerContentPublic(
-  props: DrawerContentComponentProps,
-) {
+export default function DrawerContentHome(props: DrawerContentComponentProps) {
   const { top } = useSafeAreaInsets();
 
   const pathname = usePathname();
