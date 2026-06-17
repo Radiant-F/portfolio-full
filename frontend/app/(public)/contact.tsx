@@ -1,44 +1,26 @@
-import { ButtonCustom } from "@/components";
+import {
+  ButtonCustom,
+  ErrorIndicator,
+  LoadingIndicator,
+  Socials,
+} from "@/components";
 import { MaterialCommunityIcons as MCIcons } from "@expo/vector-icons";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Linking, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-type MCIconsType = keyof typeof MCIcons.glyphMap;
-
-const CONTACT_EXAMPLE: {
-  title: string;
-  platform: MCIconsType;
-  url: string;
-}[] = [
-  {
-    title: "Email",
-    platform: "ab-testing",
-    url: "mailto:radiantfadilah0@gmail.com",
-  },
-  {
-    title: "Telegram",
-    platform: "ab-testing",
-    url: "https://t.me/exkoi#",
-  },
-  {
-    title: "WhatsApp",
-    platform: "ab-testing",
-    url: "https://wa.me/6285157439660",
-  },
-  {
-    title: "GitHub",
-    platform: "ab-testing",
-    url: "https://github.com/Radiant-F",
-  },
-  {
-    title: "Discord",
-    platform: "ab-testing",
-    url: "mailto:radiantfadilah0@gmail.com",
-  },
-];
+import { useGetContactQuery } from "@/features/contact";
 
 export default function Contact() {
   const { bottom: bottomInset } = useSafeAreaInsets();
+  const { isError, isFetching, isSuccess, data, refetch } =
+    useGetContactQuery(null);
+
+  async function onVisit(url: string) {
+    try {
+      await Linking.openURL(url);
+    } catch (error) {
+      alert(`Cannot open url. Error detail: ${JSON.stringify(error)}`);
+    }
+  }
 
   return (
     <>
@@ -54,22 +36,28 @@ export default function Contact() {
         </Text>
 
         <View style={{ gap: 20, padding: 20 }}>
-          {CONTACT_EXAMPLE.map((v, i) => (
-            <View key={i} style={styles.item}>
-              <MCIcons
-                name={v.platform}
-                size={30}
-                color={"rgb(224, 242, 255)"}
-              />
-              <Text style={styles.textItem}>{v.title}</Text>
-              <ButtonCustom style={styles.btnVisit}>
-                <MCIcons color={"rgb(224, 242, 255)"} size={25} name="send" />
-                <Text selectable={false} style={styles.textVisit}>
-                  Visit
-                </Text>
-              </ButtonCustom>
-            </View>
-          ))}
+          {isFetching && <LoadingIndicator />}
+          {isError && <ErrorIndicator onPressRefresh={refetch} />}
+          {isSuccess &&
+            data.map((v) => (
+              <View key={v.id} style={styles.item}>
+                <Socials platform={v.platform} width={30} height={30} />
+                <Text style={styles.textItem}>{v.title}</Text>
+                <ButtonCustom
+                  style={styles.btnVisit}
+                  onPress={() => onVisit(v.url)}
+                >
+                  <MCIcons
+                    color={"rgb(224, 242, 255)"}
+                    size={20}
+                    name="open-in-new"
+                  />
+                  <Text selectable={false} style={styles.textVisit}>
+                    Visit
+                  </Text>
+                </ButtonCustom>
+              </View>
+            ))}
         </View>
       </ScrollView>
     </>

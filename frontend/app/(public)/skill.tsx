@@ -1,14 +1,29 @@
-import { ButtonCustom, ModalCustom } from "@/components";
+import {
+  ButtonCustom,
+  ErrorIndicator,
+  LoadingIndicator,
+  ModalCustom,
+} from "@/components";
+import { useGetSkillsQuery } from "@/features/skill";
+import { SkillResponse } from "@/features/skill/skill";
 import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Skill() {
+  const { isError, isFetching, isSuccess, data, refetch } =
+    useGetSkillsQuery(null);
+  const [selectedSkill, setSelectedSkill] = useState<SkillResponse | null>(
+    null,
+  );
+
   const { bottom: bottomInset } = useSafeAreaInsets();
+
   const [modalMounted, setModalMounted] = useState(false);
 
-  function openModal() {
+  function openModal(skill: SkillResponse) {
     setModalMounted(true);
+    setSelectedSkill(skill);
   }
 
   function closeModal() {
@@ -34,21 +49,28 @@ export default function Skill() {
         </View>
 
         <View style={styles.containerItem}>
-          {[...Array(20).keys()].map((v) => {
-            return (
-              <ButtonCustom key={v} style={styles.btn} onPress={openModal}>
-                <Image
-                  source={require("@/assets/images/firebase.png")}
-                  style={styles.img}
-                  resizeMethod="resize"
-                  resizeMode="contain"
-                />
-                <Text selectable={false} style={styles.textSkillName}>
-                  React Native CLI
-                </Text>
-              </ButtonCustom>
-            );
-          })}
+          {isFetching && <LoadingIndicator />}
+          {isError && <ErrorIndicator onPressRefresh={refetch} />}
+          {isSuccess &&
+            data.map((v) => {
+              return (
+                <ButtonCustom
+                  key={v.id}
+                  style={styles.btn}
+                  onPress={() => openModal(v)}
+                >
+                  <Image
+                    source={{ uri: v.imageUrl }}
+                    style={styles.img}
+                    resizeMethod="resize"
+                    resizeMode="contain"
+                  />
+                  <Text selectable={false} style={styles.textSkillName}>
+                    {v.title}
+                  </Text>
+                </ButtonCustom>
+              );
+            })}
         </View>
       </ScrollView>
 
@@ -57,23 +79,25 @@ export default function Skill() {
         onClose={closeModal}
         maxWidth={420}
         maxContentHeight={480}
-        title="React Native CLI"
+        title={selectedSkill?.title ?? "Skill Title"}
         customHeaderInfoStart={
-          <Image
-            source={require("@/assets/images/firebase.png")}
-            style={{ width: "50%", height: "50%" }}
-            resizeMethod="resize"
-            resizeMode="contain"
-          />
+          selectedSkill && (
+            <Image
+              source={{ uri: selectedSkill.imageUrl }}
+              style={{ width: "50%", height: "50%" }}
+              resizeMethod="resize"
+              resizeMode="contain"
+            />
+          )
         }
       >
         <View style={{ padding: 20 }}>
-          <Text style={{ color: "rgb(224, 242, 255)" }}>
+          <Text style={{ color: "rgb(172, 193, 210)" }}>
             With this skill, I managed to do:
           </Text>
           <View style={{ gap: 20, marginTop: 20 }}>
-            {[...Array(7).keys()].map((v) => (
-              <View key={v} style={{ gap: 5 }}>
+            {selectedSkill?.details.map((v) => (
+              <View key={v.id} style={{ gap: 5 }}>
                 <View style={{ alignSelf: "flex-start", gap: 2.5 }}>
                   <Text
                     style={{
@@ -81,19 +105,16 @@ export default function Skill() {
                       paddingHorizontal: 5,
                     }}
                   >
-                    Detail Title
+                    {v.name}
                   </Text>
                   <View
                     style={{ height: 1, backgroundColor: "rgb(55, 62, 78)" }}
                   />
                 </View>
                 <Text
-                  style={{ color: "rgb(224, 242, 255)", paddingHorizontal: 5 }}
+                  style={{ color: "rgb(172, 193, 210)", paddingHorizontal: 5 }}
                 >
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Illum, itaque, molestias rem velit sequi animi magni aliquam
-                  cumque maxime minus nam labore natus sed earum omnis,
-                  reiciendis aspernatur nostrum eveniet.
+                  {v.description}
                 </Text>
                 <View
                   style={{ height: 1, backgroundColor: "rgb(55, 62, 78)" }}

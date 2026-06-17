@@ -1,7 +1,14 @@
-import { ButtonCustom, ModalCustom, WorkTag } from "@/components";
+import {
+  ButtonCustom,
+  ErrorIndicator,
+  LoadingIndicator,
+  ModalCustom,
+  Socials,
+  WorkTag,
+} from "@/components";
 import {
   Image,
-  ImageSourcePropType,
+  Linking,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,52 +17,50 @@ import {
 import { useState } from "react";
 import MCIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-const WORK_SCREENSHOT: ImageSourcePropType[] = [
-  require("@/assets/images/qing/1.png"),
-  require("@/assets/images/qing/4.png"),
-  require("@/assets/images/qing/5.png"),
-  require("@/assets/images/qing/7.png"),
-  require("@/assets/images/qing/8.png"),
-  require("@/assets/images/qing/2.png"),
-  require("@/assets/images/qing/3.png"),
-  require("@/assets/images/qing/6.png"),
-  require("@/assets/images/qing.png"),
-];
-
-const WORK_TAGS = [...Array(Math.floor(Math.random() * 4) + 3).keys()];
-
-const TAG_NAMES = [
-  "Android",
-  "iOS",
-  "Web",
-  "React Native",
-  "React Native Expo",
-  "Play Store",
-  "Firebase",
-  "Laravel",
-  "MongoDB",
-] as const;
-
-function getRandomTagName() {
-  return TAG_NAMES[Math.floor(Math.random() * TAG_NAMES.length)];
-}
+import { useGetWorksQuery } from "@/features/work";
+import type { WorkResponse } from "@/features/work/work";
 
 export default function Work() {
+  const { isFetching, isError, isSuccess, refetch, data } =
+    useGetWorksQuery(null);
+  const [selectedWork, setSelectedWork] = useState<WorkResponse | null>(null);
+
+  const [selectedScreenshotIndex, setSelectedScreenshotIndex] = useState(0);
+  const onNextScreenshot = () => {
+    if (!selectedWork) return;
+    selectedScreenshotIndex + 1 === selectedWork.screenshots.length
+      ? setSelectedScreenshotIndex(0)
+      : setSelectedScreenshotIndex(selectedScreenshotIndex + 1);
+  };
+  const onPrevScreenshot = () => {
+    if (!selectedWork) return;
+    selectedScreenshotIndex === 0
+      ? setSelectedScreenshotIndex(selectedWork.screenshots.length - 1)
+      : setSelectedScreenshotIndex(selectedScreenshotIndex - 1);
+  };
+
   const { bottom: bottomInset } = useSafeAreaInsets();
 
   const [modalMounted, setModalMounted] = useState(false);
 
-  function openModal() {
+  function openModal(work: WorkResponse) {
     setModalMounted(true);
+    setSelectedWork(work);
   }
 
   function closeModal() {
     setModalMounted(false);
+    setSelectedWork(null);
+    selectedScreenshotIndex !== 0 && setSelectedScreenshotIndex(0);
   }
 
-  const [selectedWorkScreenshotIndex, setSelectedWorkScreenshotIndex] =
-    useState(8);
+  async function onVisit(url: string) {
+    try {
+      await Linking.openURL(url);
+    } catch (error) {
+      alert(`Cannot open url. Error detail: ${JSON.stringify(error)}`);
+    }
+  }
 
   return (
     <>
@@ -76,159 +81,156 @@ export default function Work() {
         </View>
 
         <View style={styles.containerItem}>
-          {[...Array(6).keys()].map((v) => {
-            const WORK_TAGS = [
-              ...Array(Math.floor(Math.random() * 4) + 3).keys(),
-            ];
-
-            return (
-              <ButtonCustom key={v} style={styles.btn} onPress={openModal}>
-                <Image
-                  source={require("@/assets/images/qing/7.png")}
-                  style={{ width: 125, height: 125 }}
-                  resizeMethod="resize"
-                  resizeMode="cover"
-                />
-                <View
-                  style={{
-                    flex: 1,
-                    padding: 15,
-                    gap: 10,
-                  }}
-                >
-                  <Text style={styles.textWorkName} numberOfLines={1}>
-                    Work Name
-                  </Text>
-                  <View style={styles.viewTag}>
-                    {WORK_TAGS.slice(0, 4).map((v) => {
-                      return (
-                        <WorkTag
-                          showName={false}
-                          key={v}
-                          name={getRandomTagName()}
-                        />
-                      );
-                    })}
-                    {WORK_TAGS.length > 4 && (
-                      <Text style={{ color: "rgb(158, 213, 255)" }}>
-                        +{WORK_TAGS.length - 4} more
+          {isFetching && <LoadingIndicator />}
+          {isError && <ErrorIndicator onPressRefresh={refetch} />}
+          {isSuccess && (
+            <>
+              {data.map((v) => {
+                return (
+                  <ButtonCustom
+                    key={v.id}
+                    style={styles.btn}
+                    onPress={() => openModal(v)}
+                  >
+                    <Image
+                      source={{ uri: v.iconUrl }}
+                      style={{ width: 125, height: 125 }}
+                      resizeMethod="resize"
+                      resizeMode="cover"
+                    />
+                    <View style={{ flex: 1, padding: 15, gap: 10 }}>
+                      <Text style={styles.textWorkName} numberOfLines={1}>
+                        {v.title}
                       </Text>
-                    )}
-                  </View>
-                </View>
-              </ButtonCustom>
-            );
-          })}
+                      <View style={styles.viewTag}>
+                        {v.tags.slice(0, 4).map((v) => {
+                          return (
+                            <WorkTag
+                              showName={false}
+                              key={v.id}
+                              name={v.name}
+                            />
+                          );
+                        })}
+                        {v.tags.length > 4 && (
+                          <Text style={{ color: "rgb(158, 213, 255)" }}>
+                            +{v.tags.length - 4} more
+                          </Text>
+                        )}
+                      </View>
+                    </View>
+                  </ButtonCustom>
+                );
+              })}
+            </>
+          )}
         </View>
       </ScrollView>
 
       <ModalCustom
         visible={modalMounted}
         onClose={closeModal}
-        title="A Long Work Name"
+        title={selectedWork?.title ?? "Work Title"}
         customHeaderInfoStart={
-          <Image
-            source={require("@/assets/images/qing/7.png")}
-            style={{ width: "100%", height: "100%" }}
-            resizeMethod="resize"
-            resizeMode="contain"
-          />
+          selectedWork?.iconUrl && (
+            <Image
+              source={{ uri: selectedWork.iconUrl }}
+              style={{ width: "100%", height: "100%" }}
+              resizeMethod="resize"
+              resizeMode="contain"
+            />
+          )
         }
       >
-        <View style={{ width: "100%", height: 280 }}>
-          <Image
-            source={WORK_SCREENSHOT[selectedWorkScreenshotIndex]}
-            style={styles.imgWorkScBackdrop}
-            resizeMethod="resize"
-            resizeMode="cover"
-            blurRadius={5}
-          />
-          <Image
-            source={WORK_SCREENSHOT[selectedWorkScreenshotIndex]}
-            style={styles.imgWorkSc}
-            resizeMethod="resize"
-            resizeMode="contain"
-          />
-        </View>
+        {selectedWork && (
+          <>
+            <View style={{ width: "100%", height: 280 }}>
+              <Image
+                source={{
+                  uri: selectedWork.screenshots[selectedScreenshotIndex]
+                    .imageUrl,
+                }}
+                style={styles.imgWorkScBackdrop}
+                resizeMethod="resize"
+                resizeMode="cover"
+                blurRadius={5}
+              />
+              <Image
+                source={{
+                  uri: selectedWork.screenshots[selectedScreenshotIndex]
+                    .imageUrl,
+                }}
+                style={styles.imgWorkSc}
+                resizeMethod="resize"
+                resizeMode="contain"
+              />
+            </View>
 
-        <View style={{ padding: 20, gap: 20 }}>
-          <View style={styles.viewPagination}>
-            <ButtonCustom
-              style={{ ...styles.btnPagination, paddingRight: 20 }}
-              onPress={() =>
-                setSelectedWorkScreenshotIndex(
-                  selectedWorkScreenshotIndex != 0
-                    ? selectedWorkScreenshotIndex - 1
-                    : 0,
-                )
-              }
-            >
-              <MCIcons
-                name="chevron-left"
-                color={"rgb(172, 193, 210)"}
-                size={25}
-              />
-              <Text selectable={false} style={{ color: "rgb(172, 193, 210)" }}>
-                Prev
+            <View style={{ padding: 20, gap: 20 }}>
+              <View style={styles.viewPagination}>
+                <ButtonCustom
+                  style={{ ...styles.btnPagination, paddingRight: 20 }}
+                  onPress={onPrevScreenshot}
+                >
+                  <MCIcons
+                    name="chevron-left"
+                    color={"rgb(172, 193, 210)"}
+                    size={25}
+                  />
+                  <Text
+                    selectable={false}
+                    style={{ color: "rgb(172, 193, 210)" }}
+                  >
+                    Prev
+                  </Text>
+                </ButtonCustom>
+                <Text style={{ color: "rgb(172, 193, 210)" }}>
+                  {selectedScreenshotIndex + 1}/
+                  {selectedWork.screenshots.length}
+                </Text>
+                <ButtonCustom
+                  style={{ ...styles.btnPagination, paddingLeft: 20 }}
+                  onPress={onNextScreenshot}
+                >
+                  <Text
+                    selectable={false}
+                    style={{ color: "rgb(172, 193, 210)" }}
+                  >
+                    Next
+                  </Text>
+                  <MCIcons
+                    name="chevron-right"
+                    color={"rgb(172, 193, 210)"}
+                    size={25}
+                  />
+                </ButtonCustom>
+              </View>
+              <Text style={{ color: "rgb(172, 193, 210)" }}>
+                {selectedWork.description}
               </Text>
-            </ButtonCustom>
-            <Text style={{ color: "rgb(172, 193, 210)" }}>
-              {selectedWorkScreenshotIndex + 1}/{WORK_SCREENSHOT.length}
-            </Text>
-            <ButtonCustom
-              style={{ ...styles.btnPagination, paddingLeft: 20 }}
-              onPress={() =>
-                setSelectedWorkScreenshotIndex(
-                  selectedWorkScreenshotIndex != WORK_SCREENSHOT.length - 1
-                    ? selectedWorkScreenshotIndex + 1
-                    : 0,
-                )
-              }
-            >
-              <Text selectable={false} style={{ color: "rgb(172, 193, 210)" }}>
-                Next
-              </Text>
-              <MCIcons
-                name="chevron-right"
-                color={"rgb(172, 193, 210)"}
-                size={25}
-              />
-            </ButtonCustom>
-          </View>
-          <Text style={{ color: "rgb(172, 193, 210)" }}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime
-            dignissimos illo assumenda dolorem voluptas soluta omnis expedita
-            iusto magni dolore harum, eveniet quisquam eius et ab, illum
-            accusamus id facere!
-          </Text>
-          <View style={styles.viewWorkSocial}>
-            <ButtonCustom style={styles.btnWorkSocial}>
-              <MCIcons name="github" color={"rgb(224, 242, 255)"} size={25} />
-              <Text style={{ color: "rgb(224, 242, 255)" }}>GitHub</Text>
-            </ButtonCustom>
-            <ButtonCustom style={styles.btnWorkSocial}>
-              <MCIcons
-                name="google-play"
-                color={"rgb(224, 242, 255)"}
-                size={25}
-              />
-              <Text style={{ color: "rgb(224, 242, 255)" }}>Play Store</Text>
-            </ButtonCustom>
-            <ButtonCustom style={styles.btnWorkSocial}>
-              <MCIcons name="apple" color={"rgb(224, 242, 255)"} size={25} />
-              <Text style={{ color: "rgb(224, 242, 255)" }}>App Store</Text>
-            </ButtonCustom>
-            <ButtonCustom style={styles.btnWorkSocial}>
-              <MCIcons name="web" color={"rgb(224, 242, 255)"} size={25} />
-              <Text style={{ color: "rgb(224, 242, 255)" }}>Website</Text>
-            </ButtonCustom>
-          </View>
-          <View style={styles.viewTags}>
-            {WORK_TAGS.map((v, i) => {
-              return <WorkTag key={v} name={getRandomTagName()} />;
-            })}
-          </View>
-        </View>
+
+              <View style={styles.viewWorkSocial}>
+                {selectedWork.links.map((v) => (
+                  <ButtonCustom
+                    key={v.id}
+                    style={styles.btnWorkSocial}
+                    onPress={() => onVisit(v.url)}
+                  >
+                    <Socials platform={v.platform} height={20} width={20} />
+                    <Text style={{ color: "rgb(224, 242, 255)" }}>
+                      {v.label}
+                    </Text>
+                  </ButtonCustom>
+                ))}
+              </View>
+              <View style={styles.viewTags}>
+                {selectedWork.tags.map((v) => {
+                  return <WorkTag key={v.id} name={v.name} />;
+                })}
+              </View>
+            </View>
+          </>
+        )}
       </ModalCustom>
     </>
   );
@@ -248,7 +250,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 50 / 2,
     elevation: 3,
-    gap: 5,
+    gap: 10,
     paddingHorizontal: 20,
   },
   viewTags: {

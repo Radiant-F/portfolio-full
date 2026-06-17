@@ -1,12 +1,17 @@
 import { ButtonCustom } from "@/components";
 import { Text, View, StyleSheet, useWindowDimensions } from "react-native";
 import MCIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { HeroDescription, Wave, WorkPreview } from "@/features/home";
+import {
+  ButtonSocial,
+  HeroDescription,
+  Wave,
+  WorkPreview,
+} from "@/features/home";
+import { router } from "expo-router";
 
 export default function Index() {
   const { width } = useWindowDimensions();
   const isWide = width >= 900;
-  const isWideSocial = width >= 450;
 
   return (
     <View style={{ flex: 1 }}>
@@ -35,6 +40,7 @@ export default function Index() {
               <ButtonCustom
                 style={styles.btnPrimary}
                 containerStyle={{ alignSelf: "flex-start" }}
+                onPress={() => router.navigate("/(public)/work")}
               >
                 <MCIcons
                   color={"rgb(24, 34, 68)"}
@@ -48,6 +54,7 @@ export default function Index() {
               <ButtonCustom
                 style={styles.btnSecondary}
                 containerStyle={{ alignSelf: "flex-start" }}
+                onPress={() => router.navigate("/(public)/contact")}
               >
                 <MCIcons
                   color={"rgb(224, 242, 255)"}
@@ -61,19 +68,11 @@ export default function Index() {
             </View>
           </View>
 
-          <View style={styles.viewSocial}>
-            {[...Array(5).keys()].slice(0, isWideSocial ? 5 : 4).map((i) => (
-              <ButtonCustom style={styles.btnSocial} key={i}>
-                <MCIcons
-                  name="ab-testing"
-                  color={"rgb(224, 242, 255)"}
-                  size={25}
-                />
-              </ButtonCustom>
-            ))}
-          </View>
+          {/* THE social button */}
+          <ButtonSocial />
         </View>
 
+        {/* Work screenshot preview */}
         <WorkPreview />
       </View>
     </View>
@@ -89,22 +88,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "aqua",
     paddingHorizontal: 25,
   },
-  viewSocial: {
-    flexDirection: "row",
-    paddingVertical: 40,
-    // backgroundColor: "tomato",
-    gap: 10,
-    paddingHorizontal: 25,
-  },
-  btnSocial: {
-    backgroundColor: "rgb(39, 48, 58)",
-    width: 60,
-    height: 60,
-    borderRadius: 60 / 2,
-    elevation: 3,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
   viewHero: {
     // backgroundColor: "dodgerblue",
     height: "100%",
