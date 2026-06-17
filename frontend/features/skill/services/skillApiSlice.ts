@@ -4,6 +4,7 @@ import {
   SkillDetail,
   SkillResponse,
   UpdateSkillDetail,
+  UpdateSkillDetailTranslation,
 } from "../skill";
 
 const skillApiSlice = apiSlice.injectEndpoints({
@@ -75,6 +76,17 @@ const skillApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Skills"],
     }),
+    updateSkillDetailTranslation: builder.mutation<
+      SkillDetail,
+      { skillId: string; detailId: string; body: UpdateSkillDetailTranslation }
+    >({
+      query: ({ skillId, detailId, body }) => ({
+        url: `/skills/${skillId}/details/${detailId}/translations`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Skills"],
+    }),
   }),
 });
 
@@ -87,4 +99,5 @@ export const {
   useCreateSkillDetailMutation,
   useUpdateSkillDetailMutation,
   useDeleteSkillDetailMutation,
+  useUpdateSkillDetailTranslationMutation,
 } = skillApiSlice;

@@ -16,6 +16,8 @@ export {
   useCreateAchievementMutation,
   useUpdateAchievementMutation,
   useDeleteAchievementMutation,
+  useUpdateExperienceTranslationMutation,
+  useUpdateAchievementTranslationMutation,
 } from "./services/experienceApiSlice";
 
 // Reducer

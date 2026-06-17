@@ -20,6 +20,8 @@ export {
   useDeleteWorkScreenshotMutation,
   useAttachWorkTagMutation,
   useDetachWorkTagMutation,
+  useUpdateWorkTranslationMutation,
+  useGetWorkScreenshotPreviewQuery,
 } from "./services/workApiSlice";
 
 // Reducer

@@ -16,6 +16,7 @@ export {
   useCreateSkillDetailMutation,
   useUpdateSkillDetailMutation,
   useDeleteSkillDetailMutation,
+  useUpdateSkillDetailTranslationMutation,
 } from "./services/skillApiSlice";
 
 // Reducer

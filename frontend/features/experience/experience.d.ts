@@ -1,7 +1,10 @@
+import { LocaleType } from "@/constants/language";
+
 export type Achievement = {
   id: string;
   experienceId: string;
   description: string;
+  descriptionI18n: Record<string, string>;
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
@@ -15,10 +18,21 @@ export type ExperienceResponse = {
   endDate: string | null;
   position: string;
   responsibility: string;
+  responsibilityI18n: Record<string, string>;
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
   achievements: Achievement[];
+};
+
+export type UpdateExperienceTranslation = {
+  lang: LocaleType;
+  responsibility: string;
+};
+
+export type UpdateAchievementTranslation = {
+  lang: LocaleType;
+  description: string;
 };
 
 export type CreateAchievement = {

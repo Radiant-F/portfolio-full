@@ -20,6 +20,7 @@ import {
   useCreateSkillDetailMutation,
   useUpdateSkillDetailMutation,
   useDeleteSkillDetailMutation,
+  useUpdateSkillDetailTranslationMutation,
 } from "@/features/skill";
 import type { SkillDetail } from "@/features/skill/skill";
 import {
@@ -34,6 +35,14 @@ import { MaterialCommunityIcons as MCIcons } from "@expo/vector-icons";
 type SkillForm = { title: string; sortOrder: string };
 type DetailForm = { name: string; description: string };
 
+const LANGS: { key: "ar" | "id" | "cn" | "jp" | "ru"; label: string }[] = [
+  { key: "ar", label: "العربية" },
+  { key: "id", label: "Bahasa" },
+  { key: "cn", label: "中文" },
+  { key: "jp", label: "日本語" },
+  { key: "ru", label: "Русский" },
+];
+
 function DetailRow({
   detail,
   skillId,
@@ -46,7 +55,12 @@ function DetailRow({
   const { colors } = useTheme();
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
+  const [showTranslations, setShowTranslations] = useState(false);
+  const [editingLang, setEditingLang] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState("");
   const [updateDetail, { isLoading }] = useUpdateSkillDetailMutation();
+  const [updateTranslation, { isLoading: isSavingTranslation }] =
+    useUpdateSkillDetailTranslationMutation();
   const { control, handleSubmit, reset } = useForm<DetailForm>({
     defaultValues: { name: detail.name, description: detail.description },
   });
@@ -58,6 +72,15 @@ function DetailRow({
       body: { name: values.name, description: values.description },
     }).unwrap();
     setIsEditing(false);
+  }
+
+  async function saveTranslation(lang: "ar" | "id" | "cn" | "jp" | "ru") {
+    await updateTranslation({
+      skillId,
+      detailId: detail.id,
+      body: { lang, description: editValue },
+    }).unwrap();
+    setEditingLang(null);
   }
 
   if (isEditing) {
@@ -138,45 +161,200 @@ function DetailRow({
   }
 
   return (
-    <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8 }}>
-      <View style={{ flex: 1 }}>
-        <Text
-          style={{ fontFamily: "LexendBold", fontSize: 14, color: colors.text }}
-        >
-          {detail.name}
-        </Text>
-        <Text
-          style={{
-            fontFamily: "LexendRegular",
-            fontSize: 13,
-            color: colors.textSecondary,
-            marginTop: 2,
-          }}
-        >
-          {detail.description}
-        </Text>
-      </View>
-      <Button
-        onPress={() => setIsEditing(true)}
-        style={[styles.iconBtn, { backgroundColor: colors.surfaceAlt }]}
-      >
-        <MCIcons name="pencil" size={14} color={colors.textSecondary} />
-      </Button>
-      <Button
-        onPress={() =>
-          Alert.alert(t("cms.confirm"), t("cms.confirm-delete"), [
-            { text: t("cms.cancel"), style: "cancel" },
+    <View style={{ gap: 6 }}>
+      <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8 }}>
+        <View style={{ flex: 1 }}>
+          <Text
+            style={{
+              fontFamily: "LexendBold",
+              fontSize: 14,
+              color: colors.text,
+            }}
+          >
+            {detail.name}
+          </Text>
+          <Text
+            style={{
+              fontFamily: "LexendRegular",
+              fontSize: 13,
+              color: colors.textSecondary,
+              marginTop: 2,
+            }}
+          >
+            {detail.description}
+          </Text>
+        </View>
+        <Button
+          onPress={() => setShowTranslations((v) => !v)}
+          style={[
+            styles.iconBtn,
             {
-              text: t("cms.delete"),
-              style: "destructive",
-              onPress: () => onDelete(detail.id),
+              backgroundColor: showTranslations
+                ? colors.primaryLight
+                : colors.surfaceAlt,
             },
-          ])
-        }
-        style={[styles.iconBtn, { backgroundColor: colors.errorLight }]}
-      >
-        <MCIcons name="trash-can-outline" size={14} color={colors.error} />
-      </Button>
+          ]}
+        >
+          <MCIcons
+            name="translate"
+            size={14}
+            color={showTranslations ? colors.primary : colors.textSecondary}
+          />
+        </Button>
+        <Button
+          onPress={() => setIsEditing(true)}
+          style={[styles.iconBtn, { backgroundColor: colors.surfaceAlt }]}
+        >
+          <MCIcons name="pencil" size={14} color={colors.textSecondary} />
+        </Button>
+        <Button
+          onPress={() =>
+            Alert.alert(t("cms.confirm"), t("cms.confirm-delete"), [
+              { text: t("cms.cancel"), style: "cancel" },
+              {
+                text: t("cms.delete"),
+                style: "destructive",
+                onPress: () => onDelete(detail.id),
+              },
+            ])
+          }
+          style={[styles.iconBtn, { backgroundColor: colors.errorLight }]}
+        >
+          <MCIcons name="trash-can-outline" size={14} color={colors.error} />
+        </Button>
+      </View>
+      {showTranslations && (
+        <View
+          style={[
+            styles.translationPanel,
+            { backgroundColor: colors.surface, borderColor: colors.border },
+          ]}
+        >
+          <Text
+            style={{
+              fontFamily: "LexendBold",
+              fontSize: 12,
+              color: colors.textMuted,
+              marginBottom: 8,
+            }}
+          >
+            {t("cms.translations")}
+          </Text>
+          {LANGS.map(({ key, label }) => (
+            <View key={key} style={{ marginBottom: 8 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 6,
+                  marginBottom: 2,
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "LexendBold",
+                    fontSize: 12,
+                    color: colors.primary,
+                    minWidth: 56,
+                  }}
+                >
+                  {label}
+                </Text>
+                {editingLang !== key && (
+                  <Button
+                    onPress={() => {
+                      setEditingLang(key);
+                      setEditValue(detail.descriptionI18n?.[key] ?? "");
+                    }}
+                    style={[
+                      styles.iconBtn,
+                      {
+                        backgroundColor: colors.surfaceAlt,
+                        width: 24,
+                        height: 24,
+                      },
+                    ]}
+                  >
+                    <MCIcons
+                      name="pencil"
+                      size={12}
+                      color={colors.textSecondary}
+                    />
+                  </Button>
+                )}
+              </View>
+              {editingLang === key ? (
+                <View style={{ gap: 6 }}>
+                  <FormInput
+                    label={t("cms.translation-description")}
+                    value={editValue}
+                    onChangeText={setEditValue}
+                    multiline
+                    containerStyle={{ marginBottom: 0 }}
+                  />
+                  <View style={{ flexDirection: "row", gap: 6 }}>
+                    <Button
+                      onPress={() => saveTranslation(key)}
+                      disabled={isSavingTranslation || !editValue.trim()}
+                      style={[
+                        styles.detailActionBtn,
+                        { backgroundColor: colors.primaryLight, flex: 1 },
+                      ]}
+                    >
+                      {isSavingTranslation ? (
+                        <ActivityIndicator
+                          size="small"
+                          color={colors.primary}
+                        />
+                      ) : (
+                        <Text
+                          style={{
+                            fontFamily: "LexendBold",
+                            fontSize: 12,
+                            color: colors.primary,
+                          }}
+                        >
+                          {t("cms.save")}
+                        </Text>
+                      )}
+                    </Button>
+                    <Button
+                      onPress={() => setEditingLang(null)}
+                      style={[
+                        styles.detailActionBtn,
+                        { backgroundColor: colors.surfaceAlt, flex: 1 },
+                      ]}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "LexendRegular",
+                          fontSize: 12,
+                          color: colors.textSecondary,
+                        }}
+                      >
+                        {t("cms.cancel")}
+                      </Text>
+                    </Button>
+                  </View>
+                </View>
+              ) : (
+                <Text
+                  style={{
+                    fontFamily: "LexendRegular",
+                    fontSize: 12,
+                    color: detail.descriptionI18n?.[key]
+                      ? colors.text
+                      : colors.textMuted,
+                  }}
+                  numberOfLines={2}
+                >
+                  {detail.descriptionI18n?.[key] || t("cms.no-translation")}
+                </Text>
+              )}
+            </View>
+          ))}
+        </View>
+      )}
     </View>
   );
 }
@@ -545,5 +723,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
     marginTop: 16,
+  },
+  translationPanel: {
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 12,
+    marginTop: 6,
   },
 });

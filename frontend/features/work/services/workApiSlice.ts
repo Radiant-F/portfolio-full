@@ -3,6 +3,7 @@ import {
   AttachWorkTag,
   CreateWorkLink,
   UpdateWorkLink,
+  UpdateWorkTranslation,
   WorkLink,
   WorkResponse,
   WorkScreenshot,
@@ -19,6 +20,9 @@ const workApiSlice = apiSlice.injectEndpoints({
     getWork: builder.query<WorkResponse, string>({
       query: (id) => `/works/${id}`,
       providesTags: ["Works"],
+    }),
+    getWorkScreenshotPreview: builder.query<WorkScreenshot[], null>({
+      query: () => "/works/screenshots/preview",
     }),
     createWork: builder.mutation<WorkResponse, FormData>({
       query: (formData) => ({
@@ -117,6 +121,17 @@ const workApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Works"],
     }),
+    updateWorkTranslation: builder.mutation<
+      WorkResponse,
+      { workId: string; body: UpdateWorkTranslation }
+    >({
+      query: ({ workId, body }) => ({
+        url: `/works/${workId}/translations`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Works"],
+    }),
   }),
 });
 
@@ -133,4 +148,6 @@ export const {
   useDeleteWorkScreenshotMutation,
   useAttachWorkTagMutation,
   useDetachWorkTagMutation,
+  useUpdateWorkTranslationMutation,
+  useGetWorkScreenshotPreviewQuery,
 } = workApiSlice;

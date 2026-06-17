@@ -27,6 +27,7 @@ import {
   useDeleteWorkScreenshotMutation,
   useAttachWorkTagMutation,
   useDetachWorkTagMutation,
+  useUpdateWorkTranslationMutation,
 } from "@/features/work";
 import { useGetTagsQuery } from "@/features/tag";
 import type { WorkLink, WorkScreenshot, WorkTag } from "@/features/work/work";
@@ -38,9 +39,227 @@ import {
 } from "@/components";
 import { useTheme } from "@/hooks";
 import { MaterialCommunityIcons as MCIcons } from "@expo/vector-icons";
+import { WorkPlatformName } from "@/constants/twork-tag";
 
 type WorkForm = { title: string; description: string; sortOrder: string };
-type LinkForm = { label: string; url: string };
+type LinkForm = { label: string; platform: WorkPlatformName; url: string };
+
+const LINK_PLATFORMS: {
+  value: WorkPlatformName;
+  label: string;
+  icon: React.ComponentProps<typeof MCIcons>["name"];
+}[] = [
+  { value: "github", label: "GitHub", icon: "github" },
+  { value: "play-store", label: "Play Store", icon: "google-play" },
+  { value: "app-store", label: "App Store", icon: "apple" },
+  { value: "web", label: "Web", icon: "web" },
+  { value: "desktop", label: "Desktop", icon: "laptop" },
+];
+
+const LANGS: { key: "ar" | "id" | "cn" | "jp" | "ru"; label: string }[] = [
+  { key: "ar", label: "العربية" },
+  { key: "id", label: "Bahasa" },
+  { key: "cn", label: "中文" },
+  { key: "jp", label: "日本語" },
+  { key: "ru", label: "Русский" },
+];
+
+// ─── Translation card ─────────────────────────────────────────────────────────
+function TranslationCard({
+  workId,
+  i18n,
+}: {
+  workId: string;
+  i18n: Record<string, string>;
+}) {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const [editingLang, setEditingLang] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState("");
+  const [updateTranslation, { isLoading }] = useUpdateWorkTranslationMutation();
+
+  async function save(lang: "ar" | "id" | "cn" | "jp" | "ru") {
+    await updateTranslation({
+      workId,
+      body: { lang, description: editValue },
+    }).unwrap();
+    setEditingLang(null);
+  }
+
+  return (
+    <View
+      style={[
+        styles.addCard,
+        { backgroundColor: colors.surface, borderColor: colors.border },
+      ]}
+    >
+      {LANGS.map(({ key, label }) => (
+        <View key={key} style={{ marginBottom: 10 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 4,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: "LexendBold",
+                fontSize: 13,
+                color: colors.primary,
+                minWidth: 60,
+              }}
+            >
+              {label}
+            </Text>
+            {editingLang !== key && (
+              <Button
+                onPress={() => {
+                  setEditingLang(key);
+                  setEditValue(i18n[key] ?? "");
+                }}
+                style={[styles.iconBtn, { backgroundColor: colors.surfaceAlt }]}
+              >
+                <MCIcons name="pencil" size={13} color={colors.textSecondary} />
+              </Button>
+            )}
+          </View>
+          {editingLang === key ? (
+            <View style={{ gap: 6 }}>
+              <FormInput
+                label={t("cms.translation-description")}
+                value={editValue}
+                onChangeText={setEditValue}
+                multiline
+                containerStyle={{ marginBottom: 0 }}
+              />
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <Button
+                  onPress={() => save(key)}
+                  disabled={isLoading || !editValue.trim()}
+                  style={[
+                    styles.subBtn,
+                    { backgroundColor: colors.primaryLight, flex: 1 },
+                  ]}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator size="small" color={colors.primary} />
+                  ) : (
+                    <Text
+                      style={{
+                        fontFamily: "LexendBold",
+                        fontSize: 13,
+                        color: colors.primary,
+                      }}
+                    >
+                      {t("cms.save")}
+                    </Text>
+                  )}
+                </Button>
+                <Button
+                  onPress={() => setEditingLang(null)}
+                  style={[
+                    styles.subBtn,
+                    { backgroundColor: colors.surfaceAlt, flex: 1 },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "LexendRegular",
+                      fontSize: 13,
+                      color: colors.textSecondary,
+                    }}
+                  >
+                    {t("cms.cancel")}
+                  </Text>
+                </Button>
+              </View>
+            </View>
+          ) : (
+            <Text
+              style={{
+                fontFamily: "LexendRegular",
+                fontSize: 13,
+                color: i18n[key] ? colors.text : colors.textMuted,
+              }}
+              numberOfLines={2}
+            >
+              {i18n[key] || t("cms.no-translation")}
+            </Text>
+          )}
+        </View>
+      ))}
+    </View>
+  );
+}
+
+function PlatformPicker({
+  value,
+  onChange,
+}: {
+  value: WorkPlatformName;
+  onChange: (value: WorkPlatformName) => void;
+}) {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+
+  return (
+    <View style={{ gap: 8 }}>
+      <Text
+        style={{
+          fontFamily: "LexendBold",
+          fontSize: 13,
+          color: colors.primary,
+        }}
+      >
+        {t("cms.contact.platform")}
+      </Text>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+        {LINK_PLATFORMS.map((platform) => {
+          const selected = platform.value === value;
+
+          return (
+            <TouchableOpacity
+              key={platform.value}
+              onPress={() => onChange(platform.value)}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 6,
+                paddingHorizontal: 12,
+                paddingVertical: 8,
+                borderRadius: 999,
+                borderWidth: 1,
+                backgroundColor: selected ? colors.primary : colors.surfaceAlt,
+                borderColor: selected ? colors.primary : colors.border,
+              }}
+            >
+              <MCIcons
+                name={platform.icon}
+                size={14}
+                color={
+                  selected ? colors.primaryForeground : colors.textSecondary
+                }
+              />
+              <Text
+                style={{
+                  fontFamily: "LexendRegular",
+                  fontSize: 12,
+                  color: selected
+                    ? colors.primaryForeground
+                    : colors.textSecondary,
+                }}
+              >
+                {platform.label}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
 
 // ─── Link row ────────────────────────────────────────────────────────────────
 function LinkRow({
@@ -57,14 +276,18 @@ function LinkRow({
   const [editing, setEditing] = useState(false);
   const [updateLink, { isLoading }] = useUpdateWorkLinkMutation();
   const { control, handleSubmit, reset } = useForm<LinkForm>({
-    defaultValues: { label: link.label, url: link.url },
+    defaultValues: {
+      label: link.label,
+      platform: link.platform,
+      url: link.url,
+    },
   });
 
   async function save(v: LinkForm) {
     await updateLink({
       workId,
       linkId: link.id,
-      body: { label: v.label, url: v.url },
+      body: { label: v.label, platform: v.platform, url: v.url },
     }).unwrap();
     setEditing(false);
   }
@@ -98,6 +321,14 @@ function LinkRow({
               keyboardType="url"
               containerStyle={{ marginBottom: 0 }}
             />
+          )}
+        />
+        <Controller
+          control={control}
+          name="platform"
+          rules={{ required: true }}
+          render={({ field: { value, onChange } }) => (
+            <PlatformPicker value={value} onChange={onChange} />
           )}
         />
         <View style={{ flexDirection: "row", gap: 8 }}>
@@ -270,7 +501,9 @@ export default function WorkDetail() {
     handleSubmit: handleLinkSubmit,
     reset: resetLink,
     formState: { errors: linkErrors },
-  } = useForm<LinkForm>({ defaultValues: { label: "", url: "" } });
+  } = useForm<LinkForm>({
+    defaultValues: { label: "", platform: "github", url: "" },
+  });
 
   useEffect(() => {
     if (work) {
@@ -301,7 +534,11 @@ export default function WorkDetail() {
   async function onAddLink(values: LinkForm) {
     await createLink({
       workId: id!,
-      body: { label: values.label, url: values.url },
+      body: {
+        label: values.label,
+        platform: values.platform,
+        url: values.url,
+      },
     }).unwrap();
     resetLink();
   }
@@ -477,7 +714,18 @@ export default function WorkDetail() {
               </Text>
             </Button>
 
-            {/* ── Section 2: Links ── */}
+            {/* ── Section 2: Translations ── */}
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                {t("cms.translations")}
+              </Text>
+            </View>
+
+            {work && (
+              <TranslationCard workId={id!} i18n={work.descriptionI18n} />
+            )}
+
+            {/* ── Section 3: Links ── */}
             <View style={styles.sectionHeader}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>
                 {t("cms.work.links")}
@@ -520,6 +768,14 @@ export default function WorkDetail() {
                     error={linkErrors.url ? t("cms.work.link-url") : undefined}
                     containerStyle={{ marginBottom: 8 }}
                   />
+                )}
+              />
+              <Controller
+                control={linkControl}
+                name="platform"
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <PlatformPicker value={value} onChange={onChange} />
                 )}
               />
               <Button

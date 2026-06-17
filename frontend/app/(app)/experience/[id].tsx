@@ -20,6 +20,8 @@ import {
   useCreateAchievementMutation,
   useUpdateAchievementMutation,
   useDeleteAchievementMutation,
+  useUpdateExperienceTranslationMutation,
+  useUpdateAchievementTranslationMutation,
 } from "@/features/experience";
 import type { Achievement } from "@/features/experience/experience";
 import {
@@ -39,6 +41,14 @@ type ExpForm = {
   sortOrder: string;
 };
 
+const LANGS: { key: "ar" | "id" | "cn" | "jp" | "ru"; label: string }[] = [
+  { key: "ar", label: "العربية" },
+  { key: "id", label: "Bahasa" },
+  { key: "cn", label: "中文" },
+  { key: "jp", label: "日本語" },
+  { key: "ru", label: "Русский" },
+];
+
 function AchievementRow({
   item,
   experienceId,
@@ -51,7 +61,12 @@ function AchievementRow({
   const { colors } = useTheme();
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
+  const [showTranslations, setShowTranslations] = useState(false);
+  const [editingLang, setEditingLang] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState("");
   const [updateAchievement, { isLoading }] = useUpdateAchievementMutation();
+  const [updateTranslation, { isLoading: isSavingTranslation }] =
+    useUpdateAchievementTranslationMutation();
   const { control, handleSubmit, reset } = useForm({
     defaultValues: { description: item.description },
   });
@@ -63,6 +78,15 @@ function AchievementRow({
       body: { description: values.description },
     }).unwrap();
     setIsEditing(false);
+  }
+
+  async function saveTranslation(lang: "ar" | "id" | "cn" | "jp" | "ru") {
+    await updateTranslation({
+      experienceId,
+      achievementId: item.id,
+      body: { lang, description: editValue },
+    }).unwrap();
+    setEditingLang(null);
   }
 
   if (isEditing) {
@@ -130,41 +154,192 @@ function AchievementRow({
   }
 
   return (
-    <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8 }}>
-      <Text style={{ fontSize: 16, color: colors.primary, marginTop: 1 }}>
-        •
-      </Text>
-      <Text
-        style={{
-          flex: 1,
-          fontFamily: "LexendRegular",
-          fontSize: 14,
-          color: colors.text,
-        }}
-      >
-        {item.description}
-      </Text>
-      <Button
-        onPress={() => setIsEditing(true)}
-        style={[styles.iconBtn, { backgroundColor: colors.surfaceAlt }]}
-      >
-        <MCIcons name="pencil" size={14} color={colors.textSecondary} />
-      </Button>
-      <Button
-        onPress={() =>
-          Alert.alert(t("cms.confirm"), t("cms.confirm-delete"), [
-            { text: t("cms.cancel"), style: "cancel" },
+    <View style={{ gap: 6 }}>
+      <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 8 }}>
+        <Text style={{ fontSize: 16, color: colors.primary, marginTop: 1 }}>
+          •
+        </Text>
+        <Text
+          style={{
+            flex: 1,
+            fontFamily: "LexendRegular",
+            fontSize: 14,
+            color: colors.text,
+          }}
+        >
+          {item.description}
+        </Text>
+        <Button
+          onPress={() => setShowTranslations((v) => !v)}
+          style={[
+            styles.iconBtn,
             {
-              text: t("cms.delete"),
-              style: "destructive",
-              onPress: () => onDelete(item.id),
+              backgroundColor: showTranslations
+                ? colors.primaryLight
+                : colors.surfaceAlt,
             },
-          ])
-        }
-        style={[styles.iconBtn, { backgroundColor: colors.errorLight }]}
-      >
-        <MCIcons name="trash-can-outline" size={14} color={colors.error} />
-      </Button>
+          ]}
+        >
+          <MCIcons
+            name="translate"
+            size={14}
+            color={showTranslations ? colors.primary : colors.textSecondary}
+          />
+        </Button>
+        <Button
+          onPress={() => setIsEditing(true)}
+          style={[styles.iconBtn, { backgroundColor: colors.surfaceAlt }]}
+        >
+          <MCIcons name="pencil" size={14} color={colors.textSecondary} />
+        </Button>
+        <Button
+          onPress={() =>
+            Alert.alert(t("cms.confirm"), t("cms.confirm-delete"), [
+              { text: t("cms.cancel"), style: "cancel" },
+              {
+                text: t("cms.delete"),
+                style: "destructive",
+                onPress: () => onDelete(item.id),
+              },
+            ])
+          }
+          style={[styles.iconBtn, { backgroundColor: colors.errorLight }]}
+        >
+          <MCIcons name="trash-can-outline" size={14} color={colors.error} />
+        </Button>
+      </View>
+      {showTranslations && (
+        <View
+          style={[
+            styles.translationPanel,
+            { backgroundColor: colors.surface, borderColor: colors.border },
+          ]}
+        >
+          <Text
+            style={{
+              fontFamily: "LexendBold",
+              fontSize: 12,
+              color: colors.textMuted,
+              marginBottom: 8,
+            }}
+          >
+            {t("cms.translations")}
+          </Text>
+          {LANGS.map(({ key, label }) => (
+            <View key={key} style={{ marginBottom: 8 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 6,
+                  marginBottom: 2,
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: "LexendBold",
+                    fontSize: 12,
+                    color: colors.primary,
+                    minWidth: 56,
+                  }}
+                >
+                  {label}
+                </Text>
+                {editingLang !== key && (
+                  <Button
+                    onPress={() => {
+                      setEditingLang(key);
+                      setEditValue(item.descriptionI18n?.[key] ?? "");
+                    }}
+                    style={[
+                      styles.iconBtn,
+                      {
+                        backgroundColor: colors.surfaceAlt,
+                        width: 24,
+                        height: 24,
+                      },
+                    ]}
+                  >
+                    <MCIcons
+                      name="pencil"
+                      size={12}
+                      color={colors.textSecondary}
+                    />
+                  </Button>
+                )}
+              </View>
+              {editingLang === key ? (
+                <View style={{ gap: 6 }}>
+                  <FormInput
+                    label={t("cms.translation-description")}
+                    value={editValue}
+                    onChangeText={setEditValue}
+                    multiline
+                    containerStyle={{ marginBottom: 0 }}
+                  />
+                  <View style={{ flexDirection: "row", gap: 6 }}>
+                    <Button
+                      onPress={() => saveTranslation(key)}
+                      disabled={isSavingTranslation || !editValue.trim()}
+                      style={[
+                        styles.detailBtn,
+                        { backgroundColor: colors.primaryLight, flex: 1 },
+                      ]}
+                    >
+                      {isSavingTranslation ? (
+                        <ActivityIndicator
+                          size="small"
+                          color={colors.primary}
+                        />
+                      ) : (
+                        <Text
+                          style={{
+                            fontFamily: "LexendBold",
+                            fontSize: 12,
+                            color: colors.primary,
+                          }}
+                        >
+                          {t("cms.save")}
+                        </Text>
+                      )}
+                    </Button>
+                    <Button
+                      onPress={() => setEditingLang(null)}
+                      style={[
+                        styles.detailBtn,
+                        { backgroundColor: colors.surfaceAlt, flex: 1 },
+                      ]}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "LexendRegular",
+                          fontSize: 12,
+                          color: colors.textSecondary,
+                        }}
+                      >
+                        {t("cms.cancel")}
+                      </Text>
+                    </Button>
+                  </View>
+                </View>
+              ) : (
+                <Text
+                  style={{
+                    fontFamily: "LexendRegular",
+                    fontSize: 12,
+                    color: item.descriptionI18n?.[key]
+                      ? colors.text
+                      : colors.textMuted,
+                  }}
+                  numberOfLines={2}
+                >
+                  {item.descriptionI18n?.[key] || t("cms.no-translation")}
+                </Text>
+              )}
+            </View>
+          ))}
+        </View>
+      )}
     </View>
   );
 }
@@ -176,6 +351,8 @@ export default function ExperienceDetail() {
   const { data: experience, isLoading } = useGetExperienceQuery(id!);
   const [updateExperience, { isLoading: isSaving }] =
     useUpdateExperienceMutation();
+  const [updateExperienceTranslation] =
+    useUpdateExperienceTranslationMutation();
   const [createAchievement, { isLoading: isCreatingAchievement }] =
     useCreateAchievementMutation();
   const [deleteAchievement] = useDeleteAchievementMutation();
@@ -192,6 +369,9 @@ export default function ExperienceDetail() {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [saved, setSaved] = useState(false);
   const [newAchievement, setNewAchievement] = useState("");
+  const [showRespTranslations, setShowRespTranslations] = useState(false);
+  const [editingRespLang, setEditingRespLang] = useState<string | null>(null);
+  const [editRespValue, setEditRespValue] = useState("");
 
   const {
     control,
@@ -423,6 +603,169 @@ export default function ExperienceDetail() {
               </Text>
             </Button>
 
+            {/* Responsibility Translations */}
+            <View style={[styles.sectionHeader, { marginTop: 4 }]}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                {t("cms.translations")}
+              </Text>
+              <Button
+                onPress={() => setShowRespTranslations((v) => !v)}
+                style={[
+                  styles.iconBtn,
+                  {
+                    backgroundColor: showRespTranslations
+                      ? colors.primaryLight
+                      : colors.surfaceAlt,
+                  },
+                ]}
+              >
+                <MCIcons
+                  name="translate"
+                  size={16}
+                  color={
+                    showRespTranslations ? colors.primary : colors.textSecondary
+                  }
+                />
+              </Button>
+            </View>
+
+            {showRespTranslations && experience && (
+              <View
+                style={[
+                  styles.addCard,
+                  {
+                    backgroundColor: colors.surface,
+                    borderColor: colors.border,
+                  },
+                ]}
+              >
+                <Text
+                  style={{
+                    fontFamily: "LexendRegular",
+                    fontSize: 12,
+                    color: colors.textMuted,
+                    marginBottom: 10,
+                  }}
+                >
+                  {t("cms.experience.responsibility")}
+                </Text>
+                {LANGS.map(({ key, label }) => (
+                  <View key={key} style={{ marginBottom: 10 }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 8,
+                        marginBottom: 4,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "LexendBold",
+                          fontSize: 13,
+                          color: colors.primary,
+                          minWidth: 60,
+                        }}
+                      >
+                        {label}
+                      </Text>
+                      {editingRespLang !== key && (
+                        <Button
+                          onPress={() => {
+                            setEditingRespLang(key);
+                            setEditRespValue(
+                              experience.responsibilityI18n?.[key] ?? "",
+                            );
+                          }}
+                          style={[
+                            styles.iconBtn,
+                            { backgroundColor: colors.surfaceAlt },
+                          ]}
+                        >
+                          <MCIcons
+                            name="pencil"
+                            size={13}
+                            color={colors.textSecondary}
+                          />
+                        </Button>
+                      )}
+                    </View>
+                    {editingRespLang === key ? (
+                      <View style={{ gap: 6 }}>
+                        <FormInput
+                          label={t("cms.translation-description")}
+                          value={editRespValue}
+                          onChangeText={setEditRespValue}
+                          multiline
+                          containerStyle={{ marginBottom: 0 }}
+                        />
+                        <View style={{ flexDirection: "row", gap: 8 }}>
+                          <Button
+                            onPress={async () => {
+                              await updateExperienceTranslation({
+                                experienceId: id!,
+                                body: {
+                                  lang: key,
+                                  responsibility: editRespValue,
+                                },
+                              }).unwrap();
+                              setEditingRespLang(null);
+                            }}
+                            disabled={!editRespValue.trim()}
+                            style={[
+                              styles.detailBtn,
+                              { backgroundColor: colors.primaryLight, flex: 1 },
+                            ]}
+                          >
+                            <Text
+                              style={{
+                                fontFamily: "LexendBold",
+                                fontSize: 13,
+                                color: colors.primary,
+                              }}
+                            >
+                              {t("cms.save")}
+                            </Text>
+                          </Button>
+                          <Button
+                            onPress={() => setEditingRespLang(null)}
+                            style={[
+                              styles.detailBtn,
+                              { backgroundColor: colors.surfaceAlt, flex: 1 },
+                            ]}
+                          >
+                            <Text
+                              style={{
+                                fontFamily: "LexendRegular",
+                                fontSize: 13,
+                                color: colors.textSecondary,
+                              }}
+                            >
+                              {t("cms.cancel")}
+                            </Text>
+                          </Button>
+                        </View>
+                      </View>
+                    ) : (
+                      <Text
+                        style={{
+                          fontFamily: "LexendRegular",
+                          fontSize: 13,
+                          color: experience.responsibilityI18n?.[key]
+                            ? colors.text
+                            : colors.textMuted,
+                        }}
+                        numberOfLines={2}
+                      >
+                        {experience.responsibilityI18n?.[key] ||
+                          t("cms.no-translation")}
+                      </Text>
+                    )}
+                  </View>
+                ))}
+              </View>
+            )}
+
             {/* Achievements */}
             <View style={styles.sectionHeader}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>
@@ -562,5 +905,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
     marginTop: 16,
+  },
+  translationPanel: {
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 12,
+    marginTop: 6,
   },
 });

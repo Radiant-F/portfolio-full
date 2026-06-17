@@ -4,6 +4,8 @@ import {
   CreateAchievement,
   ExperienceResponse,
   UpdateAchievement,
+  UpdateAchievementTranslation,
+  UpdateExperienceTranslation,
 } from "../experience";
 
 const experienceApiSlice = apiSlice.injectEndpoints({
@@ -75,6 +77,32 @@ const experienceApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Experiences"],
     }),
+    updateExperienceTranslation: builder.mutation<
+      ExperienceResponse,
+      { experienceId: string; body: UpdateExperienceTranslation }
+    >({
+      query: ({ experienceId, body }) => ({
+        url: `/experiences/${experienceId}/translations`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Experiences"],
+    }),
+    updateAchievementTranslation: builder.mutation<
+      Achievement,
+      {
+        experienceId: string;
+        achievementId: string;
+        body: UpdateAchievementTranslation;
+      }
+    >({
+      query: ({ experienceId, achievementId, body }) => ({
+        url: `/experiences/${experienceId}/achievements/${achievementId}/translations`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Experiences"],
+    }),
   }),
 });
 
@@ -87,4 +115,6 @@ export const {
   useCreateAchievementMutation,
   useUpdateAchievementMutation,
   useDeleteAchievementMutation,
+  useUpdateExperienceTranslationMutation,
+  useUpdateAchievementTranslationMutation,
 } = experienceApiSlice;

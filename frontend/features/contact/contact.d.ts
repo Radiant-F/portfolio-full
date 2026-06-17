@@ -1,6 +1,8 @@
+import { SocialType } from "@/constants/social";
+
 export type ResponseContact = {
   id: string;
-  platform: string;
+  platform: SocialType;
   title: string;
   url: string;
   sortOrder: number;
