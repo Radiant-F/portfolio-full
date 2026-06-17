@@ -6,6 +6,20 @@
   "form-placeholder-password": "Your password...",
   "change-language-to": "Change language to",
   "change-language": "Change Language",
+  "home": {
+    "hero": {
+      "description-list": [
+        "Инженер-программист широкого профиля!",
+        "Все обо мне!",
+        "Предлагаю множество решений для ваших профессиональных задач.",
+        "Универсальный разработчик с широкими навыками.",
+        "Большой поклонник здравого смысла.",
+        "Бисексуал.",
+        "Прогрессивный.",
+        "Настоящий гик!"
+      ]
+    }
+  },
   "cms": {
     "title": "CMS",
     "create": "Create",

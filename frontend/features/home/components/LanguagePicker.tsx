@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { StyleSheet, Text, View } from "react-native";
+import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
 import { useState } from "react";
 import { setLanguage } from "@/locale/i18n";
 import { LANGUAGES } from "@/constants/language";
@@ -52,6 +52,28 @@ export default function LanguagePicker() {
               selected={lang.locale === selectedLanguage}
             />
           ))}
+          <View style={{ height: 10 }} />
+          <Text style={{ color: "rgb(172, 193, 210)", textAlign: "center" }}>
+            Powered by{" "}
+            <Pressable
+              onPress={async () => {
+                try {
+                  await Linking.openURL("https://docs.libretranslate.com/");
+                } catch (error) {
+                  alert(
+                    `Cannot open url. Error detail: ${JSON.stringify(error)}`,
+                  );
+                }
+              }}
+            >
+              <Text
+                style={{ textDecorationLine: "underline", fontWeight: "bold" }}
+              >
+                LibreTranslate
+              </Text>
+            </Pressable>
+            . English is much prefered.
+          </Text>
         </View>
       </ModalCustom>
     </View>

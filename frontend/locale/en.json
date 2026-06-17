@@ -6,6 +6,20 @@
   "form-placeholder-password": "Your password...",
   "change-language-to": "Change language to",
   "change-language": "Change Language",
+  "home": {
+    "hero": {
+      "description-list": [
+        "Software engineer of all kind!",
+        "Everything about me!",
+        "Offer many solutions for your professional needs.",
+        "Skilled all-rounder developer.",
+        "Big fan of common sense.",
+        "Bi.",
+        "Progressive.",
+        "A dork!"
+      ]
+    }
+  },
   "cms": {
     "title": "CMS",
     "create": "Create",

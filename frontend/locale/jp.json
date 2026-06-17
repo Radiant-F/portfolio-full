@@ -6,6 +6,20 @@
   "form-placeholder-password": "Your password...",
   "change-language-to": "Change language to",
   "change-language": "Change Language",
+  "home": {
+    "hero": {
+      "description-list": [
+        "あらゆる分野をこなすソフトウェアエンジニア！",
+        "僕のすべてをここで！",
+        "あなたのプロフェッショナルな課題に多彩な解決策を提供します。",
+        "幅広く対応できるスキル豊富な開発者。",
+        "常識をとても大切にしています。",
+        "バイセクシュアル。",
+        "進歩的。",
+        "筋金入りのオタク！"
+      ]
+    }
+  },
   "cms": {
     "title": "CMS",
     "create": "Create",

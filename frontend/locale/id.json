@@ -6,6 +6,20 @@
   "form-placeholder-password": "Masukan kata sandi...",
   "change-language-to": "Ganti bahasa ke",
   "change-language": "Ganti Bahasa",
+  "home": {
+    "hero": {
+      "description-list": [
+        "Insinyur perangkat lunak serba bisa!",
+        "Semua hal tentang saya!",
+        "Menawarkan banyak solusi untuk kebutuhan profesional Anda.",
+        "Pengembang serba bisa yang terampil.",
+        "Penggemar berat akal sehat.",
+        "Biseksual.",
+        "Progresif.",
+        "Seorang kutu buku!"
+      ]
+    }
+  },
   "cms": {
     "title": "CMS",
     "create": "Buat",

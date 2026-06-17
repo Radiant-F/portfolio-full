@@ -6,6 +6,20 @@
   "form-placeholder-password": "Your password...",
   "change-language-to": "Change language to",
   "change-language": "Change Language",
+  "home": {
+    "hero": {
+      "description-list": [
+        "全栈软件工程师！",
+        "关于我的一切！",
+        "为你的专业需求提供多种解决方案。",
+        "技术全面的开发者。",
+        "非常推崇常识。",
+        "双性恋。",
+        "进步派。",
+        "一个技术宅！"
+      ]
+    }
+  },
   "cms": {
     "title": "CMS",
     "create": "Create",
