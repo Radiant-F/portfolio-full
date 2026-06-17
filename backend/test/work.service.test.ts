@@ -24,6 +24,8 @@ describe("WorkService", () => {
     expect(work.links).toEqual([]);
     expect(work.screenshots).toEqual([]);
     expect(work.tags).toEqual([]);
+    expect(work.descriptionI18n).toBeDefined();
+    expect(typeof work.descriptionI18n).toBe("object");
 
     workId = work.id;
   });
@@ -57,6 +59,25 @@ describe("WorkService", () => {
     expect(work).not.toBeNull();
     expect(work!.title).toBe("Updated Portfolio App");
     expect(work!.description).toBe("Updated description");
+    expect(work!.descriptionI18n).toBeDefined();
+    expect(typeof work!.descriptionI18n).toBe("object");
+  });
+
+  it("should manually override translation via updateTranslations", async () => {
+    const work = await WorkService.updateTranslations(workId, "jp", "手動翻訳");
+    expect(work).not.toBeNull();
+    expect((work!.descriptionI18n as Record<string, string>).jp).toBe(
+      "手動翻訳",
+    );
+  });
+
+  it("should return null from updateTranslations for non-existent work", async () => {
+    const work = await WorkService.updateTranslations(
+      "non-existent",
+      "jp",
+      "test",
+    );
+    expect(work).toBeNull();
   });
 
   // ─── Links ────────────────────────────────────────────────

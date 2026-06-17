@@ -61,6 +61,8 @@ describe("SkillService", () => {
     expect(detail).not.toBeNull();
     expect(detail!.name).toBe("Testing Phase");
     expect(detail!.skillId).toBe(skillId);
+    expect(detail!.descriptionI18n).toBeDefined();
+    expect(typeof detail!.descriptionI18n).toBe("object");
 
     detailId = detail!.id;
   });
@@ -86,6 +88,31 @@ describe("SkillService", () => {
     expect(updated).not.toBeNull();
     expect(updated!.name).toBe("Production Phase");
     expect(updated!.description).toBe("Manage testing releases.");
+    expect(updated!.descriptionI18n).toBeDefined();
+    expect(typeof updated!.descriptionI18n).toBe("object");
+  });
+
+  it("should manually override detail translation", async () => {
+    const updated = await SkillService.updateDetailTranslations(
+      skillId,
+      detailId,
+      "jp",
+      "日本語テスト",
+    );
+    expect(updated).not.toBeNull();
+    expect((updated!.descriptionI18n as Record<string, string>).jp).toBe(
+      "日本語テスト",
+    );
+  });
+
+  it("should return null from updateDetailTranslations for non-existent detail", async () => {
+    const updated = await SkillService.updateDetailTranslations(
+      skillId,
+      "non-existent",
+      "jp",
+      "test",
+    );
+    expect(updated).toBeNull();
   });
 
   it("should delete a detail", async () => {

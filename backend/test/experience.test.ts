@@ -54,7 +54,7 @@ beforeAll(async () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: TEST_EMAIL, password: TEST_PASSWORD }),
-    })
+    }),
   );
   const data = await res.json();
   accessToken = data.accessToken;
@@ -63,9 +63,7 @@ beforeAll(async () => {
 describe("Experience Endpoints", () => {
   describe("GET /experiences (public)", () => {
     it("should return empty list initially", async () => {
-      const res = await app.handle(
-        new Request("http://localhost/experiences")
-      );
+      const res = await app.handle(new Request("http://localhost/experiences"));
       expect(res.status).toBe(200);
       const data = await res.json();
       expect(data).toBeArray();
@@ -85,7 +83,7 @@ describe("Experience Endpoints", () => {
         new Request("http://localhost/experiences", {
           method: "POST",
           body: formData,
-        })
+        }),
       );
       expect(res.status).toBe(401);
     });
@@ -104,7 +102,7 @@ describe("Experience Endpoints", () => {
           method: "POST",
           headers: { Authorization: `Bearer ${accessToken}` },
           body: formData,
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -115,6 +113,8 @@ describe("Experience Endpoints", () => {
       expect(data.endDate).toBeNull();
       expect(data.sortOrder).toBe(1);
       expect(data.achievements).toEqual([]);
+      expect(data.responsibilityI18n).toBeDefined();
+      expect(typeof data.responsibilityI18n).toBe("object");
 
       experienceId = data.id;
     });
@@ -122,9 +122,7 @@ describe("Experience Endpoints", () => {
 
   describe("GET /experiences (after create)", () => {
     it("should return the created experience", async () => {
-      const res = await app.handle(
-        new Request("http://localhost/experiences")
-      );
+      const res = await app.handle(new Request("http://localhost/experiences"));
       expect(res.status).toBe(200);
       const data = await res.json();
       const found = data.find((e: any) => e.id === experienceId);
@@ -136,7 +134,7 @@ describe("Experience Endpoints", () => {
   describe("GET /experiences/:id", () => {
     it("should return experience with achievements", async () => {
       const res = await app.handle(
-        new Request(`http://localhost/experiences/${experienceId}`)
+        new Request(`http://localhost/experiences/${experienceId}`),
       );
       expect(res.status).toBe(200);
       const data = await res.json();
@@ -146,7 +144,7 @@ describe("Experience Endpoints", () => {
 
     it("should return 404 for non-existent experience", async () => {
       const res = await app.handle(
-        new Request("http://localhost/experiences/non-existent-id")
+        new Request("http://localhost/experiences/non-existent-id"),
       );
       expect(res.status).toBe(404);
     });
@@ -162,7 +160,7 @@ describe("Experience Endpoints", () => {
           method: "PUT",
           headers: { Authorization: `Bearer ${accessToken}` },
           body: formData,
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -180,7 +178,7 @@ describe("Experience Endpoints", () => {
           method: "PUT",
           headers: { Authorization: `Bearer ${accessToken}` },
           body: formData,
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -204,33 +202,32 @@ describe("Experience Endpoints", () => {
               description: "Shipped v2.0 ahead of schedule",
               sortOrder: 0,
             }),
-          }
-        )
+          },
+        ),
       );
 
       expect(res.status).toBe(200);
       const data = await res.json();
       expect(data.description).toBe("Shipped v2.0 ahead of schedule");
       expect(data.experienceId).toBe(experienceId);
+      expect(data.descriptionI18n).toBeDefined();
+      expect(typeof data.descriptionI18n).toBe("object");
 
       achievementId = data.id;
     });
 
     it("should reject achievement for non-existent experience", async () => {
       const res = await app.handle(
-        new Request(
-          "http://localhost/experiences/non-existent/achievements",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify({
-              description: "Test",
-            }),
-          }
-        )
+        new Request("http://localhost/experiences/non-existent/achievements", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            description: "Test",
+          }),
+        }),
       );
       expect(res.status).toBe(404);
     });
@@ -250,15 +247,128 @@ describe("Experience Endpoints", () => {
             body: JSON.stringify({
               description: "Shipped v2.0 two weeks ahead of schedule",
             }),
-          }
-        )
+          },
+        ),
       );
 
       expect(res.status).toBe(200);
       const data = await res.json();
-      expect(data.description).toBe(
-        "Shipped v2.0 two weeks ahead of schedule"
+      expect(data.description).toBe("Shipped v2.0 two weeks ahead of schedule");
+    });
+  });
+
+  describe("PATCH /experiences/:id/translations", () => {
+    it("should manually override responsibility translation", async () => {
+      const res = await app.handle(
+        new Request(
+          `http://localhost/experiences/${experienceId}/translations`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({
+              lang: "jp",
+              responsibility: "貿任範囲の翻訳",
+            }),
+          },
+        ),
       );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      expect(data.responsibilityI18n.jp).toBe("貿任範囲の翻訳");
+    });
+
+    it("should return 404 for non-existent experience", async () => {
+      const res = await app.handle(
+        new Request("http://localhost/experiences/non-existent/translations", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ lang: "jp", responsibility: "test" }),
+        }),
+      );
+      expect(res.status).toBe(404);
+    });
+
+    it("should reject unauthenticated translation override", async () => {
+      const res = await app.handle(
+        new Request(
+          `http://localhost/experiences/${experienceId}/translations`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ lang: "jp", responsibility: "test" }),
+          },
+        ),
+      );
+      expect(res.status).toBe(401);
+    });
+  });
+
+  describe("PATCH /experiences/:id/achievements/:achievementId/translations", () => {
+    it("should manually override achievement description translation", async () => {
+      const res = await app.handle(
+        new Request(
+          `http://localhost/experiences/${experienceId}/achievements/${achievementId}/translations`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({
+              lang: "ru",
+              description: "Русская достижение",
+            }),
+          },
+        ),
+      );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      expect(data.descriptionI18n.ru).toBe("Русская достижение");
+    });
+
+    it("should return 404 for non-existent achievement", async () => {
+      const res = await app.handle(
+        new Request(
+          `http://localhost/experiences/${experienceId}/achievements/non-existent/translations`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({ lang: "ru", description: "test" }),
+          },
+        ),
+      );
+      expect(res.status).toBe(404);
+    });
+  });
+
+  describe("GET /experiences?lang= (translation)", () => {
+    it("should return translated responsibility when translation is set", async () => {
+      const res = await app.handle(
+        new Request(`http://localhost/experiences?lang=jp`),
+      );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      const found = data.find((e: any) => e.id === experienceId);
+      expect(found).toBeDefined();
+      expect(found.responsibility).toBe("貿任範囲の翻訳");
+    });
+
+    it("GET /experiences/:id?lang should apply translation", async () => {
+      const res = await app.handle(
+        new Request(`http://localhost/experiences/${experienceId}?lang=jp`),
+      );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      expect(data.responsibility).toBe("貿任範囲の翻訳");
     });
   });
 
@@ -270,8 +380,8 @@ describe("Experience Endpoints", () => {
           {
             method: "DELETE",
             headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        )
+          },
+        ),
       );
 
       expect(res.status).toBe(200);
@@ -286,7 +396,7 @@ describe("Experience Endpoints", () => {
         new Request(`http://localhost/experiences/${experienceId}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${accessToken}` },
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -296,7 +406,7 @@ describe("Experience Endpoints", () => {
 
     it("should return 404 after deletion", async () => {
       const res = await app.handle(
-        new Request(`http://localhost/experiences/${experienceId}`)
+        new Request(`http://localhost/experiences/${experienceId}`),
       );
       expect(res.status).toBe(404);
     });

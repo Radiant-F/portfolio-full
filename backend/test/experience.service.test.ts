@@ -24,6 +24,8 @@ describe("ExperienceService", () => {
     expect(exp.endDate).toBeNull();
     expect(exp.sortOrder).toBe(1);
     expect(exp.achievements).toEqual([]);
+    expect(exp.responsibilityI18n).toBeDefined();
+    expect(typeof exp.responsibilityI18n).toBe("object");
 
     experienceId = exp.id;
   });
@@ -68,6 +70,8 @@ describe("ExperienceService", () => {
     expect(achievement).not.toBeNull();
     expect(achievement!.description).toBe("Shipped v2.0 ahead of schedule");
     expect(achievement!.experienceId).toBe(experienceId);
+    expect(achievement!.descriptionI18n).toBeDefined();
+    expect(typeof achievement!.descriptionI18n).toBe("object");
 
     achievementId = achievement!.id;
   });
@@ -77,7 +81,7 @@ describe("ExperienceService", () => {
       "non-existent-id",
       {
         description: "Test",
-      }
+      },
     );
     expect(achievement).toBeNull();
   });
@@ -86,7 +90,7 @@ describe("ExperienceService", () => {
     const exp = await ExperienceService.getById(experienceId);
     expect(exp!.achievements.length).toBe(1);
     expect(exp!.achievements[0].description).toBe(
-      "Shipped v2.0 ahead of schedule"
+      "Shipped v2.0 ahead of schedule",
     );
   });
 
@@ -96,7 +100,7 @@ describe("ExperienceService", () => {
     });
     expect(updated).not.toBeNull();
     expect(updated!.description).toBe(
-      "Shipped v2.0 two weeks ahead of schedule"
+      "Shipped v2.0 two weeks ahead of schedule",
     );
   });
 
@@ -104,6 +108,27 @@ describe("ExperienceService", () => {
     const deleted = await ExperienceService.deleteAchievement(achievementId);
     expect(deleted).not.toBeNull();
     expect(deleted!.id).toBe(achievementId);
+  });
+
+  it("should manually override experience translation", async () => {
+    const updated = await ExperienceService.updateTranslations(
+      experienceId,
+      "jp",
+      "貿任範囲の翻訳",
+    );
+    expect(updated).not.toBeNull();
+    expect((updated!.responsibilityI18n as Record<string, string>).jp).toBe(
+      "貿任範囲の翻訳",
+    );
+  });
+
+  it("should return null from updateTranslations for non-existent experience", async () => {
+    const updated = await ExperienceService.updateTranslations(
+      "non-existent",
+      "jp",
+      "test",
+    );
+    expect(updated).toBeNull();
   });
 
   it("should delete an experience", async () => {

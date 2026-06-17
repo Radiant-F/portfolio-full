@@ -137,8 +137,104 @@ describe("Work Endpoints", () => {
       expect(data.links).toEqual([]);
       expect(data.screenshots).toEqual([]);
       expect(data.tags).toEqual([]);
+      expect(data.descriptionI18n).toBeDefined();
+      expect(typeof data.descriptionI18n).toBe("object");
 
       workId = data.id;
+    });
+  });
+
+  describe("PATCH /works/:id/translations (authenticated)", () => {
+    it("should manually override a translation", async () => {
+      const res = await app.handle(
+        new Request(`http://localhost/works/${workId}/translations`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ lang: "jp", description: "手動テスト" }),
+        }),
+      );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      expect(data.descriptionI18n.jp).toBe("手動テスト");
+    });
+
+    it("should not affect other language translations", async () => {
+      const res = await app.handle(
+        new Request(`http://localhost/works/${workId}/translations`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ lang: "ru", description: "Русский тест" }),
+        }),
+      );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      expect(data.descriptionI18n.ru).toBe("Русский тест");
+      expect(data.descriptionI18n.jp).toBe("手動テスト"); // still intact
+    });
+
+    it("should return 404 for non-existent work", async () => {
+      const res = await app.handle(
+        new Request("http://localhost/works/non-existent/translations", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ lang: "jp", description: "test" }),
+        }),
+      );
+      expect(res.status).toBe(404);
+    });
+
+    it("should reject unauthenticated translation override", async () => {
+      const res = await app.handle(
+        new Request(`http://localhost/works/${workId}/translations`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lang: "jp", description: "test" }),
+        }),
+      );
+      expect(res.status).toBe(401);
+    });
+  });
+
+  describe("GET /works?lang= (translation)", () => {
+    it("should return translated description when lang matches stored translation", async () => {
+      const res = await app.handle(
+        new Request(`http://localhost/works?lang=jp`),
+      );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      const found = data.find((w: any) => w.id === workId);
+      expect(found).toBeDefined();
+      expect(found.description).toBe("手動テスト");
+    });
+
+    it("should fall back to English when lang has no translation", async () => {
+      const res = await app.handle(
+        new Request(`http://localhost/works?lang=id`),
+      );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      const found = data.find((w: any) => w.id === workId);
+      expect(found).toBeDefined();
+      // No id translation was set, falls back to original English
+      expect(typeof found.description).toBe("string");
+    });
+
+    it("GET /works/:id?lang should return translated description", async () => {
+      const res = await app.handle(
+        new Request(`http://localhost/works/${workId}?lang=jp`),
+      );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      expect(data.description).toBe("手動テスト");
     });
   });
 
@@ -223,6 +319,7 @@ describe("Work Endpoints", () => {
           },
           body: JSON.stringify({
             label: "GitHub",
+            platform: "github",
             url: "https://github.com/example/portfolio",
             sortOrder: 0,
           }),
@@ -232,6 +329,7 @@ describe("Work Endpoints", () => {
       expect(res.status).toBe(200);
       const data = await res.json();
       expect(data.label).toBe("GitHub");
+      expect(data.platform).toBe("github");
       expect(data.url).toBe("https://github.com/example/portfolio");
       expect(data.workId).toBe(workId);
 
@@ -248,11 +346,31 @@ describe("Work Endpoints", () => {
           },
           body: JSON.stringify({
             label: "Test",
+            platform: "web",
             url: "https://example.com",
           }),
         }),
       );
       expect(res.status).toBe(404);
+    });
+
+    it("should reject an invalid platform", async () => {
+      const res = await app.handle(
+        new Request(`http://localhost/works/${workId}/links`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            label: "Bad Link",
+            platform: "youtube",
+            url: "https://example.com",
+          }),
+        }),
+      );
+
+      expect(res.status).toBe(422);
     });
   });
 
@@ -265,13 +383,14 @@ describe("Work Endpoints", () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
-          body: JSON.stringify({ label: "Source Code" }),
+          body: JSON.stringify({ label: "Source Code", platform: "web" }),
         }),
       );
 
       expect(res.status).toBe(200);
       const data = await res.json();
       expect(data.label).toBe("Source Code");
+      expect(data.platform).toBe("web");
     });
   });
 

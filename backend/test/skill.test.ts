@@ -21,10 +21,7 @@ spyOn(CloudinaryService, "deleteImage").mockImplementation(async () => ({
   result: "ok",
 }));
 
-const app = new Elysia()
-  .use(cors())
-  .use(authController)
-  .use(skillController);
+const app = new Elysia().use(cors()).use(authController).use(skillController);
 
 const TEST_EMAIL = process.env.DEFAULT_USER_EMAIL!;
 const TEST_PASSWORD = process.env.DEFAULT_USER_PASSWORD!;
@@ -56,7 +53,7 @@ beforeAll(async () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: TEST_EMAIL, password: TEST_PASSWORD }),
-    })
+    }),
   );
   const data = await res.json();
   accessToken = data.accessToken;
@@ -65,9 +62,7 @@ beforeAll(async () => {
 describe("Skill Endpoints", () => {
   describe("GET /skills (public)", () => {
     it("should return empty list initially", async () => {
-      const res = await app.handle(
-        new Request("http://localhost/skills")
-      );
+      const res = await app.handle(new Request("http://localhost/skills"));
       expect(res.status).toBe(200);
       const data = await res.json();
       expect(data).toBeArray();
@@ -84,7 +79,7 @@ describe("Skill Endpoints", () => {
         new Request("http://localhost/skills", {
           method: "POST",
           body: formData,
-        })
+        }),
       );
       expect(res.status).toBe(401);
     });
@@ -102,7 +97,7 @@ describe("Skill Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: formData,
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -118,9 +113,7 @@ describe("Skill Endpoints", () => {
 
   describe("GET /skills (after create)", () => {
     it("should return the created skill", async () => {
-      const res = await app.handle(
-        new Request("http://localhost/skills")
-      );
+      const res = await app.handle(new Request("http://localhost/skills"));
 
       expect(res.status).toBe(200);
       const data = await res.json();
@@ -133,7 +126,7 @@ describe("Skill Endpoints", () => {
   describe("GET /skills/:id", () => {
     it("should return skill with details", async () => {
       const res = await app.handle(
-        new Request(`http://localhost/skills/${skillId}`)
+        new Request(`http://localhost/skills/${skillId}`),
       );
 
       expect(res.status).toBe(200);
@@ -144,7 +137,7 @@ describe("Skill Endpoints", () => {
 
     it("should return 404 for non-existent skill", async () => {
       const res = await app.handle(
-        new Request("http://localhost/skills/non-existent-id")
+        new Request("http://localhost/skills/non-existent-id"),
       );
       expect(res.status).toBe(404);
     });
@@ -162,7 +155,7 @@ describe("Skill Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: formData,
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -182,7 +175,7 @@ describe("Skill Endpoints", () => {
             Authorization: `Bearer ${accessToken}`,
           },
           body: formData,
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -206,13 +199,15 @@ describe("Skill Endpoints", () => {
               "Create and manage open, closed and internal testing releases.",
             sortOrder: 0,
           }),
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
       const data = await res.json();
       expect(data.name).toBe("Testing Phase");
       expect(data.skillId).toBe(skillId);
+      expect(data.descriptionI18n).toBeDefined();
+      expect(typeof data.descriptionI18n).toBe("object");
 
       detailId = data.id;
     });
@@ -229,7 +224,7 @@ describe("Skill Endpoints", () => {
             name: "Test",
             description: "Test",
           }),
-        })
+        }),
       );
       expect(res.status).toBe(404);
     });
@@ -238,17 +233,14 @@ describe("Skill Endpoints", () => {
   describe("PUT /skills/:skillId/details/:id", () => {
     it("should update detail", async () => {
       const res = await app.handle(
-        new Request(
-          `http://localhost/skills/${skillId}/details/${detailId}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify({ name: "Production Phase" }),
-          }
-        )
+        new Request(`http://localhost/skills/${skillId}/details/${detailId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ name: "Production Phase" }),
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -257,16 +249,91 @@ describe("Skill Endpoints", () => {
     });
   });
 
+  describe("PATCH /skills/:id/details/:detailId/translations", () => {
+    it("should manually override detail translation", async () => {
+      const res = await app.handle(
+        new Request(
+          `http://localhost/skills/${skillId}/details/${detailId}/translations`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({ lang: "jp", description: "日本語の詳細" }),
+          },
+        ),
+      );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      expect(data.descriptionI18n.jp).toBe("日本語の詳細");
+    });
+
+    it("should return 404 for non-existent detail", async () => {
+      const res = await app.handle(
+        new Request(
+          `http://localhost/skills/${skillId}/details/non-existent/translations`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({ lang: "jp", description: "test" }),
+          },
+        ),
+      );
+      expect(res.status).toBe(404);
+    });
+
+    it("should reject unauthenticated translation override", async () => {
+      const res = await app.handle(
+        new Request(
+          `http://localhost/skills/${skillId}/details/${detailId}/translations`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ lang: "jp", description: "test" }),
+          },
+        ),
+      );
+      expect(res.status).toBe(401);
+    });
+  });
+
+  describe("GET /skills?lang= (translation)", () => {
+    it("should return translated description when translation is set", async () => {
+      const res = await app.handle(
+        new Request(`http://localhost/skills?lang=jp`),
+      );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      const found = data.find((s: any) => s.id === skillId);
+      expect(found).toBeDefined();
+      const detail = found.details.find((d: any) => d.id === detailId);
+      expect(detail).toBeDefined();
+      expect(detail.description).toBe("日本語の詳細");
+    });
+
+    it("GET /skills/:id?lang should apply translation", async () => {
+      const res = await app.handle(
+        new Request(`http://localhost/skills/${skillId}?lang=jp`),
+      );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      const detail = data.details.find((d: any) => d.id === detailId);
+      expect(detail).toBeDefined();
+      expect(detail.description).toBe("日本語の詳細");
+    });
+  });
+
   describe("DELETE /skills/:skillId/details/:id", () => {
     it("should delete detail", async () => {
       const res = await app.handle(
-        new Request(
-          `http://localhost/skills/${skillId}/details/${detailId}`,
-          {
-            method: "DELETE",
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        )
+        new Request(`http://localhost/skills/${skillId}/details/${detailId}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -281,7 +348,7 @@ describe("Skill Endpoints", () => {
         new Request(`http://localhost/skills/${skillId}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${accessToken}` },
-        })
+        }),
       );
 
       expect(res.status).toBe(200);
@@ -291,7 +358,7 @@ describe("Skill Endpoints", () => {
 
     it("should return 404 after deletion", async () => {
       const res = await app.handle(
-        new Request(`http://localhost/skills/${skillId}`)
+        new Request(`http://localhost/skills/${skillId}`),
       );
       expect(res.status).toBe(404);
     });
