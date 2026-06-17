@@ -32,11 +32,25 @@ export const detailResponse = t.Object({
   skillId: t.String(),
   name: t.String(),
   description: t.String(),
+  descriptionI18n: t.Record(t.String(), t.String()),
   sortOrder: t.Number(),
   createdAt: t.Date(),
   updatedAt: t.Date(),
 });
 export type DetailResponse = typeof detailResponse.static;
+
+export const updateDetailTranslationBody = t.Object({
+  lang: t.Union([
+    t.Literal("ar"),
+    t.Literal("id"),
+    t.Literal("cn"),
+    t.Literal("jp"),
+    t.Literal("ru"),
+  ]),
+  description: t.String({ minLength: 1 }),
+});
+export type UpdateDetailTranslationBody =
+  typeof updateDetailTranslationBody.static;
 
 export const skillResponse = t.Object({
   id: t.String(),

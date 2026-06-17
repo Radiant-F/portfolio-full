@@ -47,6 +47,7 @@ export const achievementResponse = t.Object({
   id: t.String(),
   experienceId: t.String(),
   description: t.String(),
+  descriptionI18n: t.Record(t.String(), t.String()),
   sortOrder: t.Number(),
   createdAt: t.Date(),
   updatedAt: t.Date(),
@@ -61,6 +62,7 @@ export const experienceResponse = t.Object({
   endDate: t.Nullable(t.Date()),
   position: t.String(),
   responsibility: t.String(),
+  responsibilityI18n: t.Record(t.String(), t.String()),
   sortOrder: t.Number(),
   createdAt: t.Date(),
   updatedAt: t.Date(),
@@ -69,6 +71,32 @@ export const experienceResponse = t.Object({
 export type ExperienceResponse = typeof experienceResponse.static;
 
 export const experienceListResponse = t.Array(experienceResponse);
+
+export const updateExperienceTranslationBody = t.Object({
+  lang: t.Union([
+    t.Literal("ar"),
+    t.Literal("id"),
+    t.Literal("cn"),
+    t.Literal("jp"),
+    t.Literal("ru"),
+  ]),
+  responsibility: t.String({ minLength: 1 }),
+});
+export type UpdateExperienceTranslationBody =
+  typeof updateExperienceTranslationBody.static;
+
+export const updateAchievementTranslationBody = t.Object({
+  lang: t.Union([
+    t.Literal("ar"),
+    t.Literal("id"),
+    t.Literal("cn"),
+    t.Literal("jp"),
+    t.Literal("ru"),
+  ]),
+  description: t.String({ minLength: 1 }),
+});
+export type UpdateAchievementTranslationBody =
+  typeof updateAchievementTranslationBody.static;
 
 export const createAchievementBody = t.Object({
   description: t.String({ minLength: 1 }),

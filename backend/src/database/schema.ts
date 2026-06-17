@@ -5,6 +5,7 @@ import {
   integer,
   text,
   primaryKey,
+  jsonb,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
@@ -45,6 +46,10 @@ export const skillDetails = pgTable("skill_details", {
     .references(() => skills.id, { onDelete: "cascade" }),
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description").notNull(),
+  descriptionI18n: jsonb("description_i18n")
+    .$type<Record<string, string>>()
+    .notNull()
+    .default({}),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
@@ -74,6 +79,10 @@ export const experiences = pgTable("experiences", {
   endDate: timestamp("end_date"),
   position: varchar("position", { length: 255 }).notNull(),
   responsibility: text("responsibility").notNull(),
+  responsibilityI18n: jsonb("responsibility_i18n")
+    .$type<Record<string, string>>()
+    .notNull()
+    .default({}),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
@@ -90,6 +99,10 @@ export const experienceAchievements = pgTable("experience_achievements", {
     .notNull()
     .references(() => experiences.id, { onDelete: "cascade" }),
   description: text("description").notNull(),
+  descriptionI18n: jsonb("description_i18n")
+    .$type<Record<string, string>>()
+    .notNull()
+    .default({}),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
@@ -109,7 +122,7 @@ export const experienceAchievementsRelations = relations(
       fields: [experienceAchievements.experienceId],
       references: [experiences.id],
     }),
-  })
+  }),
 );
 
 // ─── Tags ──────────────────────────────────────────────────
@@ -134,6 +147,10 @@ export const works = pgTable("works", {
     .primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description").notNull(),
+  descriptionI18n: jsonb("description_i18n")
+    .$type<Record<string, string>>()
+    .notNull()
+    .default({}),
   iconUrl: varchar("icon_url", { length: 512 }).notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -151,6 +168,7 @@ export const workLinks = pgTable("work_links", {
     .notNull()
     .references(() => works.id, { onDelete: "cascade" }),
   label: varchar("label", { length: 100 }).notNull(),
+  platform: varchar("platform", { length: 50 }).notNull().default("web"),
   url: varchar("url", { length: 500 }).notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -187,7 +205,7 @@ export const workTags = pgTable(
       .references(() => tags.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (table) => [primaryKey({ columns: [table.workId, table.tagId] })]
+  (table) => [primaryKey({ columns: [table.workId, table.tagId] })],
 );
 
 // ─── Work Relations ────────────────────────────────────────
@@ -212,7 +230,7 @@ export const workScreenshotsRelations = relations(
       fields: [workScreenshots.workId],
       references: [works.id],
     }),
-  })
+  }),
 );
 
 export const workTagsRelations = relations(workTags, ({ one }) => ({

@@ -2,6 +2,7 @@ import { Elysia, t } from "elysia";
 import { authPlugin } from "../../plugins/auth";
 import { WorkService } from "./service";
 import { CloudinaryService } from "../upload/service";
+import { resolveTranslation } from "../../services/translation";
 import {
   createWorkBody,
   updateWorkBody,
@@ -13,6 +14,7 @@ import {
   syncTagsBody,
   bulkScreenshotBody,
   reorderScreenshotsBody,
+  updateWorkTranslationBody,
   workResponse,
   workListResponse,
   workLinkResponse,
@@ -33,17 +35,26 @@ export const workController = new Elysia({
   // --- Public endpoints ---
   .get(
     "/",
-    async () => {
-      return WorkService.getAll();
+    async ({ query }) => {
+      const works = await WorkService.getAll();
+      return works.map((w) => ({
+        ...w,
+        description: resolveTranslation(
+          w.description,
+          w.descriptionI18n,
+          query.lang,
+        ),
+      }));
     },
     {
+      query: t.Object({ lang: t.Optional(t.String()) }),
       response: {
         200: workListResponse,
       },
       detail: {
         summary: "List all works",
         description:
-          "Returns all works with links, screenshots, and tags, ordered by sortOrder. Public endpoint.",
+          "Returns all works with links, screenshots, and tags, ordered by sortOrder. Accepts optional `lang` query param (ar, id, cn, jp, ru) to return translated description. Public endpoint.",
       },
     },
   )
@@ -65,15 +76,23 @@ export const workController = new Elysia({
   )
   .get(
     "/:id",
-    async ({ params, status }) => {
+    async ({ params, query, status }) => {
       const work = await WorkService.getById(params.id);
       if (!work) {
         return status(404, { message: "Work not found" });
       }
-      return work;
+      return {
+        ...work,
+        description: resolveTranslation(
+          work.description,
+          work.descriptionI18n,
+          query.lang,
+        ),
+      };
     },
     {
       params: t.Object({ id: t.String() }),
+      query: t.Object({ lang: t.Optional(t.String()) }),
       response: {
         200: workResponse,
         404: notFoundError,
@@ -201,6 +220,36 @@ export const workController = new Elysia({
         summary: "Delete work",
         description:
           "Delete a work, its children (cascade), and all Cloudinary images (icon + screenshots).",
+        security: [{ bearerAuth: [] }],
+      },
+    },
+  )
+  // --- Translations ---
+  .patch(
+    "/:id/translations",
+    async ({ params, body, status }) => {
+      const work = await WorkService.updateTranslations(
+        params.id,
+        body.lang,
+        body.description,
+      );
+      if (!work) {
+        return status(404, { message: "Work not found" });
+      }
+      return work;
+    },
+    {
+      isAuth: true,
+      params: t.Object({ id: t.String() }),
+      body: updateWorkTranslationBody,
+      response: {
+        200: workResponse,
+        404: notFoundError,
+      },
+      detail: {
+        summary: "Override work translation",
+        description:
+          "Manually override the description translation for a specific language. Only updates the specified language; other translations remain unchanged.",
         security: [{ bearerAuth: [] }],
       },
     },

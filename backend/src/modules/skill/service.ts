@@ -1,7 +1,17 @@
 import { eq, asc } from "drizzle-orm";
 import { db } from "../../database";
 import { skills, skillDetails } from "../../database/schema";
-import type { CreateSkillData, UpdateSkillData, CreateDetailBody, UpdateDetailBody } from "./model";
+import {
+  translateToAll,
+  mergeTranslation,
+  type SupportedLang,
+} from "../../services/translation";
+import type {
+  CreateSkillData,
+  UpdateSkillData,
+  CreateDetailBody,
+  UpdateDetailBody,
+} from "./model";
 
 export abstract class SkillService {
   static async getAll() {
@@ -97,12 +107,15 @@ export abstract class SkillService {
 
     if (!skill) return null;
 
+    const descriptionI18n = await translateToAll(data.description);
+
     const [detail] = await db
       .insert(skillDetails)
       .values({
         skillId,
         name: data.name,
         description: data.description,
+        descriptionI18n,
         sortOrder: data.sortOrder ?? 0,
       })
       .returning();
@@ -113,7 +126,10 @@ export abstract class SkillService {
   static async updateDetail(id: string, data: UpdateDetailBody) {
     const values: Record<string, unknown> = {};
     if (data.name !== undefined) values.name = data.name;
-    if (data.description !== undefined) values.description = data.description;
+    if (data.description !== undefined) {
+      values.description = data.description;
+      values.descriptionI18n = await translateToAll(data.description);
+    }
     if (data.sortOrder !== undefined) values.sortOrder = data.sortOrder;
 
     if (Object.keys(values).length === 0) {
@@ -141,5 +157,34 @@ export abstract class SkillService {
       .returning();
 
     return deleted ?? null;
+  }
+
+  static async updateDetailTranslations(
+    skillId: string,
+    detailId: string,
+    lang: SupportedLang,
+    description: string,
+  ) {
+    const [detail] = await db
+      .select({ descriptionI18n: skillDetails.descriptionI18n })
+      .from(skillDetails)
+      .where(eq(skillDetails.id, detailId))
+      .limit(1);
+
+    if (!detail) return null;
+
+    const updatedI18n = mergeTranslation(
+      (detail.descriptionI18n as Record<string, string>) ?? {},
+      lang,
+      description,
+    );
+
+    const [updated] = await db
+      .update(skillDetails)
+      .set({ descriptionI18n: updatedI18n })
+      .where(eq(skillDetails.id, detailId))
+      .returning();
+
+    return updated ?? null;
   }
 }

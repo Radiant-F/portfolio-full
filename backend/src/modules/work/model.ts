@@ -1,5 +1,13 @@
 import { t } from "elysia";
 
+const workLinkPlatform = t.Union([
+  t.Literal("github"),
+  t.Literal("play-store"),
+  t.Literal("app-store"),
+  t.Literal("web"),
+  t.Literal("desktop"),
+]);
+
 // ─── Work Body Schemas (request) ───────────────────────────
 
 export const createWorkBody = t.Object({
@@ -37,6 +45,7 @@ export type UpdateWorkData = {
 
 export const createWorkLinkBody = t.Object({
   label: t.String({ minLength: 1, maxLength: 100 }),
+  platform: workLinkPlatform,
   url: t.String({ format: "uri" }),
   sortOrder: t.Optional(t.Number({ default: 0 })),
 });
@@ -44,6 +53,7 @@ export type CreateWorkLinkBody = typeof createWorkLinkBody.static;
 
 export const updateWorkLinkBody = t.Object({
   label: t.Optional(t.String({ minLength: 1, maxLength: 100 })),
+  platform: t.Optional(workLinkPlatform),
   url: t.Optional(t.String({ format: "uri" })),
   sortOrder: t.Optional(t.Number()),
 });
@@ -70,6 +80,7 @@ export const workLinkResponse = t.Object({
   id: t.String(),
   workId: t.String(),
   label: t.String(),
+  platform: workLinkPlatform,
   url: t.String(),
   sortOrder: t.Number(),
   createdAt: t.Date(),
@@ -94,6 +105,7 @@ export const workResponse = t.Object({
   id: t.String(),
   title: t.String(),
   description: t.String(),
+  descriptionI18n: t.Record(t.String(), t.String()),
   iconUrl: t.String(),
   sortOrder: t.Number(),
   createdAt: t.Date(),
@@ -103,6 +115,18 @@ export const workResponse = t.Object({
   tags: t.Array(workTagResponse),
 });
 export type WorkResponse = typeof workResponse.static;
+
+export const updateWorkTranslationBody = t.Object({
+  lang: t.Union([
+    t.Literal("ar"),
+    t.Literal("id"),
+    t.Literal("cn"),
+    t.Literal("jp"),
+    t.Literal("ru"),
+  ]),
+  description: t.String({ minLength: 1 }),
+});
+export type UpdateWorkTranslationBody = typeof updateWorkTranslationBody.static;
 
 export const workListResponse = t.Array(workResponse);
 
@@ -145,7 +169,7 @@ export const reorderScreenshotsBody = t.Object({
       id: t.String({ minLength: 1 }),
       sortOrder: t.Number(),
     }),
-    { minItems: 1 }
+    { minItems: 1 },
   ),
 });
 export type ReorderScreenshotsBody = typeof reorderScreenshotsBody.static;

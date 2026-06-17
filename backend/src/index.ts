@@ -9,6 +9,7 @@ import { workController } from "./modules/work";
 import { contactController } from "./modules/contact";
 import { aboutController } from "./modules/about";
 import { seedDefaultUser } from "./database/seed";
+import { seedDemoData } from "./database/seed";
 
 const app = new Elysia()
   .use(cors())
@@ -54,6 +55,7 @@ const app = new Elysia()
   .listen(3000);
 
 seedDefaultUser().catch(console.error);
+seedDemoData().catch(console.error);
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,

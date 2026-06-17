@@ -1,9 +1,11 @@
 import { eq, asc } from "drizzle-orm";
 import { db } from "../../database";
+import { experiences, experienceAchievements } from "../../database/schema";
 import {
-  experiences,
-  experienceAchievements,
-} from "../../database/schema";
+  translateToAll,
+  mergeTranslation,
+  type SupportedLang,
+} from "../../services/translation";
 import type {
   CreateExperienceData,
   UpdateExperienceData,
@@ -48,6 +50,8 @@ export abstract class ExperienceService {
   }
 
   static async create(data: CreateExperienceData) {
+    const responsibilityI18n = await translateToAll(data.responsibility);
+
     const [exp] = await db
       .insert(experiences)
       .values({
@@ -57,6 +61,7 @@ export abstract class ExperienceService {
         endDate: data.endDate,
         position: data.position,
         responsibility: data.responsibility,
+        responsibilityI18n,
         sortOrder: data.sortOrder ?? 0,
       })
       .returning();
@@ -66,14 +71,17 @@ export abstract class ExperienceService {
 
   static async update(id: string, data: UpdateExperienceData) {
     const values: Record<string, unknown> = {};
-    if (data.companyTitle !== undefined) values.companyTitle = data.companyTitle;
+    if (data.companyTitle !== undefined)
+      values.companyTitle = data.companyTitle;
     if (data.companyLogoUrl !== undefined)
       values.companyLogoUrl = data.companyLogoUrl;
     if (data.startDate !== undefined) values.startDate = data.startDate;
     if (data.endDate !== undefined) values.endDate = data.endDate;
     if (data.position !== undefined) values.position = data.position;
-    if (data.responsibility !== undefined)
+    if (data.responsibility !== undefined) {
       values.responsibility = data.responsibility;
+      values.responsibilityI18n = await translateToAll(data.responsibility);
+    }
     if (data.sortOrder !== undefined) values.sortOrder = data.sortOrder;
 
     if (Object.keys(values).length === 0) {
@@ -106,7 +114,10 @@ export abstract class ExperienceService {
     return deleted ?? null;
   }
 
-  static async addAchievement(experienceId: string, data: CreateAchievementBody) {
+  static async addAchievement(
+    experienceId: string,
+    data: CreateAchievementBody,
+  ) {
     const [exp] = await db
       .select({ id: experiences.id })
       .from(experiences)
@@ -115,11 +126,14 @@ export abstract class ExperienceService {
 
     if (!exp) return null;
 
+    const descriptionI18n = await translateToAll(data.description);
+
     const [achievement] = await db
       .insert(experienceAchievements)
       .values({
         experienceId,
         description: data.description,
+        descriptionI18n,
         sortOrder: data.sortOrder ?? 0,
       })
       .returning();
@@ -129,7 +143,10 @@ export abstract class ExperienceService {
 
   static async updateAchievement(id: string, data: UpdateAchievementBody) {
     const values: Record<string, unknown> = {};
-    if (data.description !== undefined) values.description = data.description;
+    if (data.description !== undefined) {
+      values.description = data.description;
+      values.descriptionI18n = await translateToAll(data.description);
+    }
     if (data.sortOrder !== undefined) values.sortOrder = data.sortOrder;
 
     if (Object.keys(values).length === 0) {
@@ -157,5 +174,61 @@ export abstract class ExperienceService {
       .returning();
 
     return deleted ?? null;
+  }
+
+  static async updateTranslations(
+    id: string,
+    lang: SupportedLang,
+    responsibility: string,
+  ) {
+    const [exp] = await db
+      .select({ responsibilityI18n: experiences.responsibilityI18n })
+      .from(experiences)
+      .where(eq(experiences.id, id))
+      .limit(1);
+
+    if (!exp) return null;
+
+    const updatedI18n = mergeTranslation(
+      (exp.responsibilityI18n as Record<string, string>) ?? {},
+      lang,
+      responsibility,
+    );
+
+    await db
+      .update(experiences)
+      .set({ responsibilityI18n: updatedI18n })
+      .where(eq(experiences.id, id));
+
+    return ExperienceService.getById(id);
+  }
+
+  static async updateAchievementTranslations(
+    experienceId: string,
+    achievementId: string,
+    lang: SupportedLang,
+    description: string,
+  ) {
+    const [achievement] = await db
+      .select({ descriptionI18n: experienceAchievements.descriptionI18n })
+      .from(experienceAchievements)
+      .where(eq(experienceAchievements.id, achievementId))
+      .limit(1);
+
+    if (!achievement) return null;
+
+    const updatedI18n = mergeTranslation(
+      (achievement.descriptionI18n as Record<string, string>) ?? {},
+      lang,
+      description,
+    );
+
+    const [updated] = await db
+      .update(experienceAchievements)
+      .set({ descriptionI18n: updatedI18n })
+      .where(eq(experienceAchievements.id, achievementId))
+      .returning();
+
+    return updated ?? null;
   }
 }

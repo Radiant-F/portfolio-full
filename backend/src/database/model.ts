@@ -3,6 +3,14 @@ import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
 import { table } from "./schema";
 import { spreads } from "./utils";
 
+const workLinkPlatform = t.Union([
+  t.Literal("github"),
+  t.Literal("play-store"),
+  t.Literal("app-store"),
+  t.Literal("web"),
+  t.Literal("desktop"),
+]);
+
 const _insertUser = createInsertSchema(table.users, {
   email: t.String({ format: "email" }),
 });
@@ -31,10 +39,10 @@ const _selectExperience = createSelectSchema(table.experiences, {
 });
 
 const _insertExperienceAchievement = createInsertSchema(
-  table.experienceAchievements
+  table.experienceAchievements,
 );
 const _selectExperienceAchievement = createSelectSchema(
-  table.experienceAchievements
+  table.experienceAchievements,
 );
 
 const _insertTag = createInsertSchema(table.tags);
@@ -48,9 +56,11 @@ const _selectWork = createSelectSchema(table.works, {
 });
 
 const _insertWorkLink = createInsertSchema(table.workLinks, {
+  platform: workLinkPlatform,
   url: t.String({ format: "uri" }),
 });
 const _selectWorkLink = createSelectSchema(table.workLinks, {
+  platform: workLinkPlatform,
   url: t.String({ format: "uri" }),
 });
 

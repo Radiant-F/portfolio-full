@@ -7,6 +7,11 @@ import {
   workTags,
   tags,
 } from "../../database/schema";
+import {
+  translateToAll,
+  mergeTranslation,
+  type SupportedLang,
+} from "../../services/translation";
 import type {
   CreateWorkData,
   UpdateWorkData,
@@ -123,11 +128,14 @@ export abstract class WorkService {
   }
 
   static async create(data: CreateWorkData) {
+    const descriptionI18n = await translateToAll(data.description);
+
     const [work] = await db
       .insert(works)
       .values({
         title: data.title,
         description: data.description,
+        descriptionI18n,
         iconUrl: data.iconUrl,
         sortOrder: data.sortOrder ?? 0,
       })
@@ -139,7 +147,10 @@ export abstract class WorkService {
   static async update(id: string, data: UpdateWorkData) {
     const values: Record<string, unknown> = {};
     if (data.title !== undefined) values.title = data.title;
-    if (data.description !== undefined) values.description = data.description;
+    if (data.description !== undefined) {
+      values.description = data.description;
+      values.descriptionI18n = await translateToAll(data.description);
+    }
     if (data.iconUrl !== undefined) values.iconUrl = data.iconUrl;
     if (data.sortOrder !== undefined) values.sortOrder = data.sortOrder;
 
@@ -188,6 +199,33 @@ export abstract class WorkService {
     return deleted ?? null;
   }
 
+  static async updateTranslations(
+    id: string,
+    lang: SupportedLang,
+    description: string,
+  ) {
+    const [work] = await db
+      .select({ descriptionI18n: works.descriptionI18n })
+      .from(works)
+      .where(eq(works.id, id))
+      .limit(1);
+
+    if (!work) return null;
+
+    const updated18n = mergeTranslation(
+      (work.descriptionI18n as Record<string, string>) ?? {},
+      lang,
+      description,
+    );
+
+    await db
+      .update(works)
+      .set({ descriptionI18n: updated18n })
+      .where(eq(works.id, id));
+
+    return WorkService.getById(id);
+  }
+
   // ─── Links ────────────────────────────────────────────────
 
   static async addLink(workId: string, data: CreateWorkLinkBody) {
@@ -204,6 +242,7 @@ export abstract class WorkService {
       .values({
         workId,
         label: data.label,
+        platform: data.platform,
         url: data.url,
         sortOrder: data.sortOrder ?? 0,
       })
@@ -215,6 +254,7 @@ export abstract class WorkService {
   static async updateLink(id: string, data: UpdateWorkLinkBody) {
     const values: Record<string, unknown> = {};
     if (data.label !== undefined) values.label = data.label;
+    if (data.platform !== undefined) values.platform = data.platform;
     if (data.url !== undefined) values.url = data.url;
     if (data.sortOrder !== undefined) values.sortOrder = data.sortOrder;
 

@@ -2,6 +2,7 @@ import { Elysia, t } from "elysia";
 import { authPlugin } from "../../plugins/auth";
 import { SkillService } from "./service";
 import { CloudinaryService } from "../upload/service";
+import { resolveTranslation } from "../../services/translation";
 import {
   createSkillBody,
   updateSkillBody,
@@ -9,6 +10,7 @@ import {
   skillListResponse,
   createDetailBody,
   updateDetailBody,
+  updateDetailTranslationBody,
   detailResponse,
   notFoundError,
   messageResponse,
@@ -22,31 +24,54 @@ export const skillController = new Elysia({
   // --- Public endpoints ---
   .get(
     "/",
-    async () => {
-      return SkillService.getAll();
+    async ({ query }) => {
+      const allSkills = await SkillService.getAll();
+      return allSkills.map((skill) => ({
+        ...skill,
+        details: skill.details.map((d) => ({
+          ...d,
+          description: resolveTranslation(
+            d.description,
+            d.descriptionI18n,
+            query.lang,
+          ),
+        })),
+      }));
     },
     {
+      query: t.Object({ lang: t.Optional(t.String()) }),
       response: {
         200: skillListResponse,
       },
       detail: {
         summary: "List all skills",
         description:
-          "Returns all skills with their details, ordered by sortOrder. Public endpoint.",
+          "Returns all skills with their details, ordered by sortOrder. Accepts optional `lang` query param (ar, id, cn, jp, ru) to return translated descriptions. Public endpoint.",
       },
-    }
+    },
   )
   .get(
     "/:id",
-    async ({ params, status }) => {
+    async ({ params, query, status }) => {
       const skill = await SkillService.getById(params.id);
       if (!skill) {
         return status(404, { message: "Skill not found" });
       }
-      return skill;
+      return {
+        ...skill,
+        details: skill.details.map((d) => ({
+          ...d,
+          description: resolveTranslation(
+            d.description,
+            d.descriptionI18n,
+            query.lang,
+          ),
+        })),
+      };
     },
     {
       params: t.Object({ id: t.String() }),
+      query: t.Object({ lang: t.Optional(t.String()) }),
       response: {
         200: skillResponse,
         404: notFoundError,
@@ -54,9 +79,9 @@ export const skillController = new Elysia({
       detail: {
         summary: "Get skill by ID",
         description:
-          "Returns a single skill with its details. Public endpoint.",
+          "Returns a single skill with its details. Accepts optional `lang` query param to return translated descriptions. Public endpoint.",
       },
-    }
+    },
   )
   // --- Authenticated endpoints ---
   .post(
@@ -81,7 +106,7 @@ export const skillController = new Elysia({
           "Create a new skill entry. Accepts multipart form with image file upload.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   .put(
     "/:id",
@@ -99,7 +124,7 @@ export const skillController = new Elysia({
 
         // Delete old image from Cloudinary
         const oldPublicId = CloudinaryService.extractPublicId(
-          existing.imageUrl
+          existing.imageUrl,
         );
         if (oldPublicId) {
           CloudinaryService.deleteImage(oldPublicId).catch(console.error);
@@ -130,7 +155,7 @@ export const skillController = new Elysia({
           "Update an existing skill. If image is provided, replaces the old image on Cloudinary.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   .delete(
     "/:id",
@@ -161,7 +186,7 @@ export const skillController = new Elysia({
           "Delete a skill, its details (cascade), and its Cloudinary image.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   // --- Skill Details ---
   .post(
@@ -186,7 +211,7 @@ export const skillController = new Elysia({
         description: "Add a name/description detail entry to a skill.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   .put(
     "/:id/details/:detailId",
@@ -210,7 +235,7 @@ export const skillController = new Elysia({
         description: "Update a specific detail entry.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
   )
   .delete(
     "/:id/details/:detailId",
@@ -233,5 +258,36 @@ export const skillController = new Elysia({
         description: "Delete a specific detail entry.",
         security: [{ bearerAuth: [] }],
       },
-    }
+    },
+  )
+  // --- Translations ---
+  .patch(
+    "/:id/details/:detailId/translations",
+    async ({ params, body, status }) => {
+      const detail = await SkillService.updateDetailTranslations(
+        params.id,
+        params.detailId,
+        body.lang,
+        body.description,
+      );
+      if (!detail) {
+        return status(404, { message: "Detail not found" });
+      }
+      return detail;
+    },
+    {
+      isAuth: true,
+      params: t.Object({ id: t.String(), detailId: t.String() }),
+      body: updateDetailTranslationBody,
+      response: {
+        200: detailResponse,
+        404: notFoundError,
+      },
+      detail: {
+        summary: "Override skill detail translation",
+        description:
+          "Manually override the description translation for a specific language. Only the specified language is updated; others remain unchanged.",
+        security: [{ bearerAuth: [] }],
+      },
+    },
   );
