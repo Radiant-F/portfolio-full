@@ -44,3 +44,5 @@ package-lock.json
 .env
 
 .agents
+
+data-example/*
