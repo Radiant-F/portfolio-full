@@ -4,18 +4,24 @@ import {
   LoadingIndicator,
   ModalCustom,
 } from "@/components";
+import { LocaleType } from "@/constants/language";
 import { useGetExperiencesQuery } from "@/features/experience";
 import { ExperienceResponse } from "@/features/experience/experience";
 import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Experience() {
   const { isError, isFetching, isSuccess, data, refetch } =
     useGetExperiencesQuery(null);
+  const { i18n, t } = useTranslation();
 
   const { bottom: bottomInset } = useSafeAreaInsets();
   const [modalMounted, setModalMounted] = useState(false);
+  const activeLanguage = (i18n.resolvedLanguage ?? i18n.language).split(
+    "-",
+  )[0] as LocaleType;
 
   const [selectedExp, setSelectedExp] = useState<ExperienceResponse | null>(
     null,
@@ -88,7 +94,7 @@ export default function Experience() {
               {new Date(selectedExp.startDate).toLocaleDateString()} -{" "}
               {selectedExp.endDate
                 ? new Date(selectedExp.endDate).toLocaleDateString()
-                : "Present"}
+                : t("public.experience.present")}
             </Text>
 
             <View style={{ height: 20 }} />
@@ -97,14 +103,16 @@ export default function Experience() {
               <Text
                 style={{ color: "rgb(158, 213, 255)", paddingHorizontal: 5 }}
               >
-                What I do:
+                {t("public.experience.responsibility-title")}
               </Text>
               <View style={{ height: 1, backgroundColor: "rgb(55, 62, 78)" }} />
             </View>
             <View style={{ padding: 10, gap: 5 }}>
               <View style={styles.impact}>
                 <Text style={{ color: "rgb(172, 193, 210)" }}>
-                  {selectedExp.responsibility}
+                  {selectedExp.responsibilityI18n?.[activeLanguage] ??
+                    selectedExp.responsibilityI18n?.en ??
+                    selectedExp.responsibility}
                 </Text>
               </View>
             </View>
@@ -113,7 +121,7 @@ export default function Experience() {
               <Text
                 style={{ color: "rgb(158, 213, 255)", paddingHorizontal: 5 }}
               >
-                What I achieve:
+                {t("public.experience.achievements-title")}
               </Text>
               <View style={{ height: 1, backgroundColor: "rgb(55, 62, 78)" }} />
             </View>
@@ -122,7 +130,9 @@ export default function Experience() {
                 return (
                   <View key={v.id} style={styles.impact}>
                     <Text style={{ color: "rgb(172, 193, 210)" }}>
-                      {v.description}
+                      {v.descriptionI18n?.[activeLanguage] ??
+                        v.descriptionI18n?.en ??
+                        v.description}
                     </Text>
                   </View>
                 );

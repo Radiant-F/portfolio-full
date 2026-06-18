@@ -8,9 +8,11 @@ import {
   WorkPreview,
 } from "@/features/home";
 import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 export default function Index() {
   const { width } = useWindowDimensions();
+  const { t } = useTranslation();
   const isWide = width >= 900;
 
   return (
@@ -27,7 +29,9 @@ export default function Index() {
           {/* Hero Section */}
           <View style={styles.viewHeroText}>
             <Text style={styles.textHero}>
-              {`Heya!\nThe name is `}
+              {t("home.hero.greeting")}
+              {"\n"}
+              {t("home.hero.intro")}{" "}
               <Text style={{ color: "rgb(158, 213, 255)" }}>Radiant</Text>.
             </Text>
 
@@ -48,7 +52,7 @@ export default function Index() {
                   name="shape-outline"
                 />
                 <Text selectable={false} style={styles.textBtnPrimary}>
-                  My works
+                  {t("home.hero.actions.work")}
                 </Text>
               </ButtonCustom>
               <ButtonCustom
@@ -62,7 +66,7 @@ export default function Index() {
                   name="message-text-fast"
                 />
                 <Text selectable={false} style={styles.textBtnSecondary}>
-                  Contact
+                  {t("home.hero.actions.contact")}
                 </Text>
               </ButtonCustom>
             </View>

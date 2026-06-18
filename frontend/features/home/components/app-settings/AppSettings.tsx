@@ -3,6 +3,8 @@ import { View, StyleSheet } from "react-native";
 import MCIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { ButtonCustom, ModalCustom } from "@/components";
 import AdminForm from "./AdminForm";
+import LanguagePicker from "./LanguagePicker";
+import Theme from "./Theme";
 
 export default function AppSettings() {
   const [modalMounted, setModalMounted] = useState(false);
@@ -28,7 +30,9 @@ export default function AppSettings() {
         iconHeaderInfoStart="cog"
         maxWidth={420}
       >
-        <View style={{ padding: 20 }}>
+        <View style={{ padding: 20, gap: 20 }}>
+          <Theme />
+          <LanguagePicker />
           <AdminForm />
         </View>
       </ModalCustom>

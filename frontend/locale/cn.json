@@ -8,6 +8,12 @@
   "change-language": "Change Language",
   "home": {
     "hero": {
+      "greeting": "你好！",
+      "intro": "我的名字是",
+      "actions": {
+        "work": "我的作品",
+        "contact": "联系我"
+      },
       "description-list": [
         "全栈软件工程师！",
         "关于我的一切！",
@@ -18,6 +24,37 @@
         "进步派。",
         "一个技术宅！"
       ]
+    }
+  },
+  "public": {
+    "common": {
+      "open-details": "点击查看详情。",
+      "previous": "上一张",
+      "next": "下一张"
+    },
+    "skill": {
+      "title-prefix": "",
+      "title-highlight-hard": "硬",
+      "title-middle": "技能和",
+      "title-highlight-soft": "软",
+      "title-suffix": "技能",
+      "modal-intro": "通过这项技能，我完成了："
+    },
+    "work": {
+      "title-highlight-personal": "个人",
+      "title-middle": "和",
+      "title-highlight-team": "团队",
+      "more": "更多"
+    },
+    "experience": {
+      "present": "至今",
+      "responsibility-title": "我负责的内容：",
+      "achievements-title": "我取得的成果："
+    },
+    "contact": {
+      "title-prefix": "保持",
+      "title-highlight": "联系",
+      "visit": "访问"
     }
   },
   "cms": {

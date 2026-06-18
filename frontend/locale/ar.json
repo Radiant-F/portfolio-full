@@ -8,6 +8,12 @@
   "change-language": "تغيير اللغة",
   "home": {
     "hero": {
+      "greeting": "مرحباً!",
+      "intro": "الاسم هو",
+      "actions": {
+        "work": "أعمالي",
+        "contact": "تواصل"
+      },
       "description-list": [
         "مهندس برمجيات متعدد المجالات!",
         "كل شيء عني!",
@@ -18,6 +24,37 @@
         "تقدمي.",
         "مهووس تقني!"
       ]
+    }
+  },
+  "public": {
+    "common": {
+      "open-details": "اضغط لمزيد من التفاصيل.",
+      "previous": "السابق",
+      "next": "التالي"
+    },
+    "skill": {
+      "title-prefix": "",
+      "title-highlight-hard": "المهارات الصلبة",
+      "title-middle": "و",
+      "title-highlight-soft": "المهارات الناعمة",
+      "title-suffix": "",
+      "modal-intro": "باستخدام هذه المهارة، تمكنت من القيام بما يلي:"
+    },
+    "work": {
+      "title-highlight-personal": "الشخصية",
+      "title-middle": "و",
+      "title-highlight-team": "الجماعية",
+      "more": "أخرى"
+    },
+    "experience": {
+      "present": "حتى الآن",
+      "responsibility-title": "ما الذي أفعله:",
+      "achievements-title": "ما الذي أنجزته:"
+    },
+    "contact": {
+      "title-prefix": "ابقَ على",
+      "title-highlight": "تواصل",
+      "visit": "زيارة"
     }
   },
   "cms": {

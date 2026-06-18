@@ -8,6 +8,12 @@
   "change-language": "Change Language",
   "home": {
     "hero": {
+      "greeting": "やあ！",
+      "intro": "名前は",
+      "actions": {
+        "work": "作品を見る",
+        "contact": "連絡する"
+      },
       "description-list": [
         "あらゆる分野をこなすソフトウェアエンジニア！",
         "僕のすべてをここで！",
@@ -18,6 +24,37 @@
         "進歩的。",
         "筋金入りのオタク！"
       ]
+    }
+  },
+  "public": {
+    "common": {
+      "open-details": "クリックして詳細を見る。",
+      "previous": "前へ",
+      "next": "次へ"
+    },
+    "skill": {
+      "title-prefix": "",
+      "title-highlight-hard": "ハード",
+      "title-middle": "スキルと",
+      "title-highlight-soft": "ソフト",
+      "title-suffix": "スキル",
+      "modal-intro": "このスキルで実現してきたこと:"
+    },
+    "work": {
+      "title-highlight-personal": "個人",
+      "title-middle": "と",
+      "title-highlight-team": "チーム",
+      "more": "件もっと"
+    },
+    "experience": {
+      "present": "現在",
+      "responsibility-title": "担当していること:",
+      "achievements-title": "達成してきたこと:"
+    },
+    "contact": {
+      "title-prefix": "気軽に",
+      "title-highlight": "連絡して",
+      "visit": "開く"
     }
   },
   "cms": {

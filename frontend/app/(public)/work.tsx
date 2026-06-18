@@ -6,6 +6,7 @@ import {
   Socials,
   WorkTag,
 } from "@/components";
+import { LocaleType } from "@/constants/language";
 import {
   Image,
   Linking,
@@ -16,6 +17,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 import MCIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useGetWorksQuery } from "@/features/work";
 import type { WorkResponse } from "@/features/work/work";
@@ -23,7 +25,11 @@ import type { WorkResponse } from "@/features/work/work";
 export default function Work() {
   const { isFetching, isError, isSuccess, refetch, data } =
     useGetWorksQuery(null);
+  const { i18n, t } = useTranslation();
   const [selectedWork, setSelectedWork] = useState<WorkResponse | null>(null);
+  const activeLanguage = (i18n.resolvedLanguage ?? i18n.language).split(
+    "-",
+  )[0] as LocaleType;
 
   const [selectedScreenshotIndex, setSelectedScreenshotIndex] = useState(0);
   const onNextScreenshot = () => {
@@ -72,11 +78,16 @@ export default function Work() {
       >
         <View style={{ padding: 20 }}>
           <Text style={styles.textTitle}>
-            <Text style={{ color: "rgb(158, 213, 255)" }}>Personal</Text> and{" "}
-            <Text style={{ color: "rgb(158, 213, 255)" }}>team</Text>
+            <Text style={{ color: "rgb(158, 213, 255)" }}>
+              {t("public.work.title-highlight-personal")}
+            </Text>{" "}
+            {t("public.work.title-middle")}{" "}
+            <Text style={{ color: "rgb(158, 213, 255)" }}>
+              {t("public.work.title-highlight-team")}
+            </Text>
           </Text>
           <Text style={{ color: "rgb(172, 193, 210)", textAlign: "center" }}>
-            Click for more details.
+            {t("public.common.open-details")}
           </Text>
         </View>
 
@@ -114,7 +125,7 @@ export default function Work() {
                         })}
                         {v.tags.length > 4 && (
                           <Text style={{ color: "rgb(158, 213, 255)" }}>
-                            +{v.tags.length - 4} more
+                            +{v.tags.length - 4} {t("public.work.more")}
                           </Text>
                         )}
                       </View>
@@ -181,7 +192,7 @@ export default function Work() {
                     selectable={false}
                     style={{ color: "rgb(172, 193, 210)" }}
                   >
-                    Prev
+                    {t("public.common.previous")}
                   </Text>
                 </ButtonCustom>
                 <Text style={{ color: "rgb(172, 193, 210)" }}>
@@ -196,7 +207,7 @@ export default function Work() {
                     selectable={false}
                     style={{ color: "rgb(172, 193, 210)" }}
                   >
-                    Next
+                    {t("public.common.next")}
                   </Text>
                   <MCIcons
                     name="chevron-right"
@@ -206,7 +217,9 @@ export default function Work() {
                 </ButtonCustom>
               </View>
               <Text style={{ color: "rgb(172, 193, 210)" }}>
-                {selectedWork.description}
+                {selectedWork.descriptionI18n?.[activeLanguage] ??
+                  selectedWork.descriptionI18n?.en ??
+                  selectedWork.description}
               </Text>
 
               <View style={styles.viewWorkSocial}>

@@ -8,6 +8,12 @@
   "change-language": "Ganti Bahasa",
   "home": {
     "hero": {
+      "greeting": "Hai!",
+      "intro": "Namanya",
+      "actions": {
+        "work": "Karya saya",
+        "contact": "Kontak"
+      },
       "description-list": [
         "Insinyur perangkat lunak serba bisa!",
         "Semua hal tentang saya!",
@@ -18,6 +24,37 @@
         "Progresif.",
         "Seorang kutu buku!"
       ]
+    }
+  },
+  "public": {
+    "common": {
+      "open-details": "Klik untuk detail lebih lanjut.",
+      "previous": "Sebelumnya",
+      "next": "Berikutnya"
+    },
+    "skill": {
+      "title-prefix": "",
+      "title-highlight-hard": "Hard",
+      "title-middle": "skill dan",
+      "title-highlight-soft": "soft",
+      "title-suffix": "skill",
+      "modal-intro": "Dengan skill ini, saya berhasil melakukan:"
+    },
+    "work": {
+      "title-highlight-personal": "Personal",
+      "title-middle": "dan",
+      "title-highlight-team": "tim",
+      "more": "lainnya"
+    },
+    "experience": {
+      "present": "Sekarang",
+      "responsibility-title": "Yang saya kerjakan:",
+      "achievements-title": "Yang saya capai:"
+    },
+    "contact": {
+      "title-prefix": "Mari",
+      "title-highlight": "terhubung",
+      "visit": "Kunjungi"
     }
   },
   "cms": {

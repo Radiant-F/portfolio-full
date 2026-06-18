@@ -7,7 +7,7 @@ import { DrawerActions } from "@react-navigation/native";
 import { ButtonCustom } from "@/components";
 import LanguagePicker from "./LanguagePicker";
 import ButtonNavigation from "./ButtonNavigation";
-import AppSettings from "./AppSettings";
+import AppSettings from "./app-settings/AppSettings";
 
 export default function HeaderHome(props: DrawerHeaderProps) {
   const { top } = useSafeAreaInsets();

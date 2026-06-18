@@ -8,6 +8,12 @@
   "change-language": "Change Language",
   "home": {
     "hero": {
+      "greeting": "Heya!",
+      "intro": "The name is",
+      "actions": {
+        "work": "My works",
+        "contact": "Contact"
+      },
       "description-list": [
         "Software engineer of all kind!",
         "Everything about me!",
@@ -18,6 +24,37 @@
         "Progressive.",
         "A dork!"
       ]
+    }
+  },
+  "public": {
+    "common": {
+      "open-details": "Click for more details.",
+      "previous": "Prev",
+      "next": "Next"
+    },
+    "skill": {
+      "title-prefix": "",
+      "title-highlight-hard": "Hard",
+      "title-middle": "skills and",
+      "title-highlight-soft": "soft",
+      "title-suffix": "skills",
+      "modal-intro": "With this skill, I managed to do:"
+    },
+    "work": {
+      "title-highlight-personal": "Personal",
+      "title-middle": "and",
+      "title-highlight-team": "team",
+      "more": "more"
+    },
+    "experience": {
+      "present": "Present",
+      "responsibility-title": "What I do:",
+      "achievements-title": "What I achieve:"
+    },
+    "contact": {
+      "title-prefix": "Get in",
+      "title-highlight": "touch",
+      "visit": "Visit"
     }
   },
   "cms": {

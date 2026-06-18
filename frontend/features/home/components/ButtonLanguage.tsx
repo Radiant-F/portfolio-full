@@ -56,10 +56,7 @@ export default function ButtonLanguage({
     <ButtonCustom onPress={onPress}>
       <Animated.View style={[styles.container, containerStyle]}>
         <Flags locale={locale} />
-        <Animated.Text
-          selectable={false}
-          style={[{ marginHorizontal: 10 }, labelStyle]}
-        >
+        <Animated.Text selectable={false} style={[{}, labelStyle]}>
           {label}
         </Animated.Text>
       </Animated.View>
@@ -74,5 +71,6 @@ const styles = StyleSheet.create({
     height: 50,
     paddingHorizontal: 20,
     borderRadius: 50 / 2,
+    gap: 10,
   },
 });

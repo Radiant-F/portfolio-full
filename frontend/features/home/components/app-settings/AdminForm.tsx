@@ -9,11 +9,9 @@ export default function AdminForm() {
 
   return (
     <View>
-      <Text style={{ color: "rgb(172, 193, 210)" }}>
-        Site administrator access requires login.
-      </Text>
+      <Text style={{ color: "rgb(172, 193, 210)" }}>Site administrator</Text>
 
-      <View style={{ height: 20 }} />
+      <View style={{ height: 10 }} />
 
       <InputForm onChangeText={setUsername} title="Username" value={username} />
       <View style={{ height: 15 }} />

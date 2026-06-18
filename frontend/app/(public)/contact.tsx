@@ -6,11 +6,13 @@ import {
 } from "@/components";
 import { MaterialCommunityIcons as MCIcons } from "@expo/vector-icons";
 import { Linking, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useGetContactQuery } from "@/features/contact";
 
 export default function Contact() {
   const { bottom: bottomInset } = useSafeAreaInsets();
+  const { t } = useTranslation();
   const { isError, isFetching, isSuccess, data, refetch } =
     useGetContactQuery(null);
 
@@ -32,7 +34,10 @@ export default function Contact() {
         }}
       >
         <Text style={styles.textTitle}>
-          Get in <Text style={{ color: "rgb(158, 213, 255)" }}>touch</Text>
+          {t("public.contact.title-prefix")}{" "}
+          <Text style={{ color: "rgb(158, 213, 255)" }}>
+            {t("public.contact.title-highlight")}
+          </Text>
         </Text>
 
         <View style={{ gap: 20, padding: 20 }}>
@@ -53,7 +58,7 @@ export default function Contact() {
                     name="open-in-new"
                   />
                   <Text selectable={false} style={styles.textVisit}>
-                    Visit
+                    {t("public.contact.visit")}
                   </Text>
                 </ButtonCustom>
               </View>

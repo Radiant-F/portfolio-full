@@ -8,6 +8,12 @@
   "change-language": "Change Language",
   "home": {
     "hero": {
+      "greeting": "Привет!",
+      "intro": "Меня зовут",
+      "actions": {
+        "work": "Мои работы",
+        "contact": "Связаться"
+      },
       "description-list": [
         "Инженер-программист широкого профиля!",
         "Все обо мне!",
@@ -18,6 +24,37 @@
         "Прогрессивный.",
         "Настоящий гик!"
       ]
+    }
+  },
+  "public": {
+    "common": {
+      "open-details": "Нажмите, чтобы узнать подробнее.",
+      "previous": "Назад",
+      "next": "Далее"
+    },
+    "skill": {
+      "title-prefix": "",
+      "title-highlight-hard": "Hard",
+      "title-middle": "skills и",
+      "title-highlight-soft": "soft",
+      "title-suffix": "skills",
+      "modal-intro": "С помощью этого навыка я смог сделать следующее:"
+    },
+    "work": {
+      "title-highlight-personal": "Личные",
+      "title-middle": "и",
+      "title-highlight-team": "командные",
+      "more": "ещё"
+    },
+    "experience": {
+      "present": "По настоящее время",
+      "responsibility-title": "Что я делаю:",
+      "achievements-title": "Чего я достиг:"
+    },
+    "contact": {
+      "title-prefix": "Оставайтесь на",
+      "title-highlight": "связи",
+      "visit": "Открыть"
     }
   },
   "cms": {

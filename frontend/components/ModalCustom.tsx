@@ -1,11 +1,4 @@
-import {
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import ButtonCustom from "./ButtonCustom";
 import { MaterialCommunityIcons as MCIcons } from "@expo/vector-icons";
@@ -16,6 +9,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { runOnJS } from "react-native-worklets";
+import { ScrollView } from "react-native-gesture-handler";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -220,7 +214,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    gap: 5,
+    gap: 10,
   },
   content: {
     width: "80%",
