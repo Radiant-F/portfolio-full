@@ -5,6 +5,7 @@ import { setLanguage } from "@/locale/i18n";
 import { LANGUAGES } from "@/constants/language";
 import { ButtonCustom, Flags, ModalCustom } from "@/components";
 import ButtonLanguage from "./ButtonLanguage";
+import { MaterialCommunityIcons as MCIcons } from "@expo/vector-icons";
 
 export default function LanguagePicker() {
   const { i18n } = useTranslation();
@@ -69,6 +70,11 @@ export default function LanguagePicker() {
               <Text
                 style={{ textDecorationLine: "underline", fontWeight: "bold" }}
               >
+                <MCIcons
+                  color={"rgb(172, 193, 210)"}
+                  name="open-in-new"
+                  size={13}
+                />{" "}
                 LibreTranslate
               </Text>
             </Pressable>
