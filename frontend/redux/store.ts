@@ -8,6 +8,7 @@ import { workReducer } from "@/features/work";
 import { experienceReducer } from "@/features/experience";
 import { tagReducer } from "@/features/tag";
 import { appSettingsReducer } from "@/features/app-settings";
+import { publicThemeReducer } from "@/features/home/services/publicThemeSlice";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     experience: experienceReducer,
     tag: tagReducer,
     appSettings: appSettingsReducer,
+    publicTheme: publicThemeReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (defaultMiddleware) =>

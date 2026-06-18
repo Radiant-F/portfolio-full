@@ -5,9 +5,11 @@ import { ButtonCustom, ModalCustom } from "@/components";
 import AdminForm from "./AdminForm";
 import LanguagePicker from "./LanguagePicker";
 import Theme from "./Theme";
+import { usePublicTheme } from "@/hooks";
 
 export default function AppSettings() {
   const [modalMounted, setModalMounted] = useState(false);
+  const theme = usePublicTheme();
 
   function openModal() {
     setModalMounted(true);
@@ -20,7 +22,7 @@ export default function AppSettings() {
   return (
     <View>
       <ButtonCustom style={styles.btnDrawer} onPress={openModal}>
-        <MCIcons name="cog" color={"rgb(172, 193, 210)"} size={20} />
+        <MCIcons name="cog" color={theme.textSecondary} size={20} />
       </ButtonCustom>
 
       <ModalCustom

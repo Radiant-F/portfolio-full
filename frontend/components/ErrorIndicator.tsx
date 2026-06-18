@@ -2,24 +2,39 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import ButtonCustom from "./ButtonCustom";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { usePublicTheme } from "@/hooks";
 
 export default function ErrorIndicator({
   onPressRefresh,
 }: {
   onPressRefresh: () => void;
 }) {
+  const theme = usePublicTheme();
+
   return (
     <View style={{ gap: 10, alignItems: "center" }}>
-      <Text style={{ color: "rgb(172, 193, 210)" }}>
+      <Text style={{ color: theme.textSecondary }}>
         Failed to fetch data! {"o(><；)oo"}
       </Text>
-      <ButtonCustom style={styles.btnSecondary} onPress={onPressRefresh}>
+      <ButtonCustom
+        style={{
+          ...styles.btnSecondary,
+          backgroundColor: theme.buttonSecondaryBackground,
+        }}
+        onPress={onPressRefresh}
+      >
         <MaterialCommunityIcons
-          color={"rgb(224, 242, 255)"}
+          color={theme.buttonSecondaryText}
           size={25}
           name="refresh"
         />
-        <Text selectable={false} style={styles.textBtnSecondary}>
+        <Text
+          selectable={false}
+          style={{
+            ...styles.textBtnSecondary,
+            color: theme.buttonSecondaryText,
+          }}
+        >
           Retry
         </Text>
       </ButtonCustom>
@@ -29,12 +44,10 @@ export default function ErrorIndicator({
 
 const styles = StyleSheet.create({
   textBtnSecondary: {
-    color: "rgb(224, 242, 255)",
     fontWeight: "600",
     paddingRight: 5,
   },
   btnSecondary: {
-    backgroundColor: "rgb(39, 48, 58)",
     height: 50,
     justifyContent: "center",
     alignItems: "center",

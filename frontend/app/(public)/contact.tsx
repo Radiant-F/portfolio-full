@@ -9,10 +9,12 @@ import { Linking, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useGetContactQuery } from "@/features/contact";
+import { usePublicTheme } from "@/hooks";
 
 export default function Contact() {
   const { bottom: bottomInset } = useSafeAreaInsets();
   const { t } = useTranslation();
+  const theme = usePublicTheme();
   const { isError, isFetching, isSuccess, data, refetch } =
     useGetContactQuery(null);
 
@@ -33,9 +35,9 @@ export default function Contact() {
           paddingTop: 20,
         }}
       >
-        <Text style={styles.textTitle}>
+        <Text style={{ ...styles.textTitle, color: theme.text }}>
           {t("public.contact.title-prefix")}{" "}
-          <Text style={{ color: "rgb(158, 213, 255)" }}>
+          <Text style={{ color: theme.accentContrastText }}>
             {t("public.contact.title-highlight")}
           </Text>
         </Text>
@@ -45,19 +47,33 @@ export default function Contact() {
           {isError && <ErrorIndicator onPressRefresh={refetch} />}
           {isSuccess &&
             data.map((v) => (
-              <View key={v.id} style={styles.item}>
+              <View
+                key={v.id}
+                style={{ ...styles.item, backgroundColor: theme.surface }}
+              >
                 <Socials platform={v.platform} width={30} height={30} />
-                <Text style={styles.textItem}>{v.title}</Text>
+                <Text style={{ ...styles.textItem, color: theme.text }}>
+                  {v.title}
+                </Text>
                 <ButtonCustom
-                  style={styles.btnVisit}
+                  style={{
+                    ...styles.btnVisit,
+                    backgroundColor: theme.buttonSecondaryBackground,
+                  }}
                   onPress={() => onVisit(v.url)}
                 >
                   <MCIcons
-                    color={"rgb(224, 242, 255)"}
+                    color={theme.buttonSecondaryText}
                     size={20}
                     name="open-in-new"
                   />
-                  <Text selectable={false} style={styles.textVisit}>
+                  <Text
+                    selectable={false}
+                    style={{
+                      ...styles.textVisit,
+                      color: theme.buttonSecondaryText,
+                    }}
+                  >
                     {t("public.contact.visit")}
                   </Text>
                 </ButtonCustom>
@@ -71,16 +87,13 @@ export default function Contact() {
 
 const styles = StyleSheet.create({
   textItem: {
-    color: "rgb(224, 242, 255)",
     fontWeight: "600",
     fontSize: 20,
   },
   textVisit: {
-    color: "rgb(224, 242, 255)",
     fontWeight: "600",
   },
   btnVisit: {
-    backgroundColor: "rgb(39, 48, 58)",
     height: 50,
     justifyContent: "center",
     alignItems: "center",
@@ -91,7 +104,6 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   item: {
-    backgroundColor: "rgb(30, 31, 36)",
     elevation: 5,
     borderRadius: 20,
     maxWidth: 480,
@@ -104,7 +116,6 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     fontWeight: "bold",
-    color: "rgb(224, 242, 255)",
     textAlign: "center",
     fontSize: 27,
   },

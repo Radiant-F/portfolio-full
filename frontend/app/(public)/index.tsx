@@ -9,10 +9,12 @@ import {
 } from "@/features/home";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { usePublicTheme } from "@/hooks";
 
 export default function Index() {
   const { width } = useWindowDimensions();
   const { t } = useTranslation();
+  const theme = usePublicTheme();
   const isWide = width >= 900;
 
   return (
@@ -28,11 +30,11 @@ export default function Index() {
         <View style={styles.viewHero}>
           {/* Hero Section */}
           <View style={styles.viewHeroText}>
-            <Text style={styles.textHero}>
+            <Text style={{ ...styles.textHero, color: theme.text }}>
               {t("home.hero.greeting")}
               {"\n"}
               {t("home.hero.intro")}{" "}
-              <Text style={{ color: "rgb(158, 213, 255)" }}>Radiant</Text>.
+              <Text style={{ color: theme.accentContrastText }}>Radiant</Text>.
             </Text>
 
             {/* Hero Description component (incase your derpy eyes missed it) */}
@@ -42,30 +44,45 @@ export default function Index() {
 
             <View style={{ gap: 10 }}>
               <ButtonCustom
-                style={styles.btnPrimary}
+                style={{ ...styles.btnPrimary, backgroundColor: theme.accent }}
                 containerStyle={{ alignSelf: "flex-start" }}
                 onPress={() => router.navigate("/(public)/work")}
               >
                 <MCIcons
-                  color={"rgb(24, 34, 68)"}
+                  color={theme.accentForeground}
                   size={25}
                   name="shape-outline"
                 />
-                <Text selectable={false} style={styles.textBtnPrimary}>
+                <Text
+                  selectable={false}
+                  style={{
+                    ...styles.textBtnPrimary,
+                    color: theme.accentForeground,
+                  }}
+                >
                   {t("home.hero.actions.work")}
                 </Text>
               </ButtonCustom>
               <ButtonCustom
-                style={styles.btnSecondary}
+                style={{
+                  ...styles.btnSecondary,
+                  backgroundColor: theme.buttonSecondaryBackground,
+                }}
                 containerStyle={{ alignSelf: "flex-start" }}
                 onPress={() => router.navigate("/(public)/contact")}
               >
                 <MCIcons
-                  color={"rgb(224, 242, 255)"}
+                  color={theme.buttonSecondaryText}
                   size={25}
                   name="message-text-fast"
                 />
-                <Text selectable={false} style={styles.textBtnSecondary}>
+                <Text
+                  selectable={false}
+                  style={{
+                    ...styles.textBtnSecondary,
+                    color: theme.buttonSecondaryText,
+                  }}
+                >
                   {t("home.hero.actions.contact")}
                 </Text>
               </ButtonCustom>
@@ -106,11 +123,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textBtnSecondary: {
-    color: "rgb(224, 242, 255)",
     fontWeight: "600",
   },
   btnSecondary: {
-    backgroundColor: "rgb(39, 48, 58)",
     height: 50,
     justifyContent: "center",
     alignItems: "center",
@@ -121,11 +136,9 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   textBtnPrimary: {
-    color: "rgb(24, 34, 68)",
     fontWeight: "600",
   },
   btnPrimary: {
-    backgroundColor: "rgb(158, 213, 255)",
     height: 50,
     justifyContent: "center",
     alignItems: "center",
@@ -136,7 +149,6 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   textHero: {
-    color: "rgb(224, 242, 255)",
     fontWeight: "600",
     fontSize: 55,
     // backgroundColor: "dodgerblue",

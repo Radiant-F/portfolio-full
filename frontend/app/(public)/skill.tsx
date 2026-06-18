@@ -11,11 +11,13 @@ import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { usePublicTheme } from "@/hooks";
 
 export default function Skill() {
   const { isError, isFetching, isSuccess, data, refetch } =
     useGetSkillsQuery(null);
   const { i18n, t } = useTranslation();
+  const theme = usePublicTheme();
   const [selectedSkill, setSelectedSkill] = useState<SkillResponse | null>(
     null,
   );
@@ -45,18 +47,18 @@ export default function Skill() {
         }}
       >
         <View style={{ padding: 20 }}>
-          <Text style={styles.textTitle}>
+          <Text style={{ ...styles.textTitle, color: theme.text }}>
             {t("public.skill.title-prefix")}{" "}
-            <Text style={{ color: "rgb(158, 213, 255)" }}>
+            <Text style={{ color: theme.accentContrastText }}>
               {t("public.skill.title-highlight-hard")}
             </Text>{" "}
             {t("public.skill.title-middle")}{" "}
-            <Text style={{ color: "rgb(158, 213, 255)" }}>
+            <Text style={{ color: theme.accentContrastText }}>
               {t("public.skill.title-highlight-soft")}
             </Text>{" "}
             {t("public.skill.title-suffix")}
           </Text>
-          <Text style={{ color: "rgb(172, 193, 210)", textAlign: "center" }}>
+          <Text style={{ color: theme.textSecondary, textAlign: "center" }}>
             {t("public.common.open-details")}
           </Text>
         </View>
@@ -69,7 +71,10 @@ export default function Skill() {
               return (
                 <ButtonCustom
                   key={v.id}
-                  style={styles.btn}
+                  style={{
+                    ...styles.btn,
+                    backgroundColor: theme.buttonSecondaryBackground,
+                  }}
                   onPress={() => openModal(v)}
                 >
                   <Image
@@ -78,7 +83,10 @@ export default function Skill() {
                     resizeMethod="resize"
                     resizeMode="contain"
                   />
-                  <Text selectable={false} style={styles.textSkillName}>
+                  <Text
+                    selectable={false}
+                    style={{ ...styles.textSkillName, color: theme.text }}
+                  >
                     {v.title}
                   </Text>
                 </ButtonCustom>
@@ -105,7 +113,7 @@ export default function Skill() {
         }
       >
         <View style={{ padding: 20 }}>
-          <Text style={{ color: "rgb(172, 193, 210)" }}>
+          <Text style={{ color: theme.textSecondary }}>
             {t("public.skill.modal-intro")}
           </Text>
           <View style={{ gap: 20, marginTop: 20 }}>
@@ -114,26 +122,22 @@ export default function Skill() {
                 <View style={{ alignSelf: "flex-start", gap: 2.5 }}>
                   <Text
                     style={{
-                      color: "rgb(158, 213, 255)",
+                      color: theme.accentContrastText,
                       paddingHorizontal: 5,
                     }}
                   >
                     {v.name}
                   </Text>
-                  <View
-                    style={{ height: 1, backgroundColor: "rgb(55, 62, 78)" }}
-                  />
+                  <View style={{ height: 1, backgroundColor: theme.border }} />
                 </View>
                 <Text
-                  style={{ color: "rgb(172, 193, 210)", paddingHorizontal: 5 }}
+                  style={{ color: theme.textSecondary, paddingHorizontal: 5 }}
                 >
                   {v.descriptionI18n?.[activeLanguage] ??
                     v.descriptionI18n?.en ??
                     v.description}
                 </Text>
-                <View
-                  style={{ height: 1, backgroundColor: "rgb(55, 62, 78)" }}
-                />
+                <View style={{ height: 1, backgroundColor: theme.border }} />
               </View>
             ))}
           </View>
@@ -145,7 +149,6 @@ export default function Skill() {
 
 const styles = StyleSheet.create({
   textSkillName: {
-    color: "rgb(224, 242, 255)",
     fontWeight: "500",
   },
   containerItem: {
@@ -155,7 +158,6 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   btn: {
-    backgroundColor: "rgb(39, 48, 58)",
     flexDirection: "row",
     alignItems: "center",
     padding: 20,
@@ -170,7 +172,6 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     fontWeight: "bold",
-    color: "rgb(224, 242, 255)",
     textAlign: "center",
     fontSize: 27,
   },

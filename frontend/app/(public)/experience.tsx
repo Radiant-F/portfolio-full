@@ -11,11 +11,13 @@ import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { usePublicTheme } from "@/hooks";
 
 export default function Experience() {
   const { isError, isFetching, isSuccess, data, refetch } =
     useGetExperiencesQuery(null);
   const { i18n, t } = useTranslation();
+  const theme = usePublicTheme();
 
   const { bottom: bottomInset } = useSafeAreaInsets();
   const [modalMounted, setModalMounted] = useState(false);
@@ -51,7 +53,10 @@ export default function Experience() {
             data.map((v) => (
               <ButtonCustom
                 key={v.id}
-                style={styles.btn}
+                style={{
+                  ...styles.btn,
+                  backgroundColor: theme.buttonSecondaryBackground,
+                }}
                 onPress={() => openModal(v)}
               >
                 <Image
@@ -60,17 +65,22 @@ export default function Experience() {
                   resizeMethod="resize"
                   resizeMode="contain"
                 />
-                <View style={styles.line} />
+                <View
+                  style={{ ...styles.line, backgroundColor: theme.border }}
+                />
                 <View style={{ flex: 1 }}>
                   <Text
-                    style={styles.textCompanyName}
+                    style={{ ...styles.textCompanyName, color: theme.text }}
                     selectable={false}
                     numberOfLines={1}
                   >
                     {v.companyTitle}
                   </Text>
                   <Text
-                    style={styles.textCompanyRole}
+                    style={{
+                      ...styles.textCompanyRole,
+                      color: theme.textSecondary,
+                    }}
                     selectable={false}
                     numberOfLines={1}
                   >
@@ -90,7 +100,7 @@ export default function Experience() {
       >
         {selectedExp && (
           <View style={{ padding: 20 }}>
-            <Text style={{ color: "rgb(172, 193, 210)", textAlign: "center" }}>
+            <Text style={{ color: theme.textSecondary, textAlign: "center" }}>
               {new Date(selectedExp.startDate).toLocaleDateString()} -{" "}
               {selectedExp.endDate
                 ? new Date(selectedExp.endDate).toLocaleDateString()
@@ -101,15 +111,20 @@ export default function Experience() {
 
             <View style={{ alignSelf: "flex-start", gap: 2.5 }}>
               <Text
-                style={{ color: "rgb(158, 213, 255)", paddingHorizontal: 5 }}
+                style={{
+                  color: theme.accentContrastText,
+                  paddingHorizontal: 5,
+                }}
               >
                 {t("public.experience.responsibility-title")}
               </Text>
-              <View style={{ height: 1, backgroundColor: "rgb(55, 62, 78)" }} />
+              <View style={{ height: 1, backgroundColor: theme.border }} />
             </View>
             <View style={{ padding: 10, gap: 5 }}>
-              <View style={styles.impact}>
-                <Text style={{ color: "rgb(172, 193, 210)" }}>
+              <View
+                style={{ ...styles.impact, borderBottomColor: theme.border }}
+              >
+                <Text style={{ color: theme.textSecondary }}>
                   {selectedExp.responsibilityI18n?.[activeLanguage] ??
                     selectedExp.responsibilityI18n?.en ??
                     selectedExp.responsibility}
@@ -119,17 +134,26 @@ export default function Experience() {
 
             <View style={{ alignSelf: "flex-start", gap: 2.5 }}>
               <Text
-                style={{ color: "rgb(158, 213, 255)", paddingHorizontal: 5 }}
+                style={{
+                  color: theme.accentContrastText,
+                  paddingHorizontal: 5,
+                }}
               >
                 {t("public.experience.achievements-title")}
               </Text>
-              <View style={{ height: 1, backgroundColor: "rgb(55, 62, 78)" }} />
+              <View style={{ height: 1, backgroundColor: theme.border }} />
             </View>
             <View style={{ padding: 10, gap: 5 }}>
               {selectedExp.achievements.map((v) => {
                 return (
-                  <View key={v.id} style={styles.impact}>
-                    <Text style={{ color: "rgb(172, 193, 210)" }}>
+                  <View
+                    key={v.id}
+                    style={{
+                      ...styles.impact,
+                      borderBottomColor: theme.border,
+                    }}
+                  >
+                    <Text style={{ color: theme.textSecondary }}>
                       {v.descriptionI18n?.[activeLanguage] ??
                         v.descriptionI18n?.en ??
                         v.description}
@@ -148,25 +172,19 @@ export default function Experience() {
 const styles = StyleSheet.create({
   impact: {
     borderBottomWidth: 1,
-    borderBottomColor: "rgb(55, 62, 78)",
     paddingBottom: 10,
   },
-  textCompanyRole: {
-    color: "rgb(172, 193, 210)",
-  },
+  textCompanyRole: {},
   textCompanyName: {
-    color: "rgb(224, 242, 255)",
     fontWeight: "bold",
     fontSize: 20,
     flex: 1,
   },
   line: {
-    backgroundColor: "rgb(55, 62, 78)",
     width: 1,
     marginHorizontal: 10,
   },
   btn: {
-    backgroundColor: "rgb(39, 48, 58)",
     flexDirection: "row",
     padding: 20,
     elevation: 3,
@@ -182,7 +200,6 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     fontWeight: "bold",
-    color: "rgb(224, 242, 255)",
     textAlign: "center",
     fontSize: 27,
   },

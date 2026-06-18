@@ -2,14 +2,16 @@ import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ButtonCustom } from "@/components";
 import InputForm from "./AdminFormInput";
+import { usePublicTheme } from "@/hooks";
 
 export default function AdminForm() {
   const [username, setUsername] = useState("");
   const [passphrase, setPassphrase] = useState("");
+  const theme = usePublicTheme();
 
   return (
     <View>
-      <Text style={{ color: "rgb(172, 193, 210)" }}>Site administrator</Text>
+      <Text style={{ color: theme.textSecondary }}>Site administrator</Text>
 
       <View style={{ height: 10 }} />
 
@@ -24,7 +26,7 @@ export default function AdminForm() {
       <View style={{ flexDirection: "row" }}>
         <View style={{ flex: 1 }} />
         <ButtonCustom style={styles.btnLogin}>
-          <Text style={{ color: "rgb(158, 213, 255)" }}>Login</Text>
+          <Text style={{ color: theme.accentContrastText }}>Login</Text>
         </ButtonCustom>
       </View>
     </View>

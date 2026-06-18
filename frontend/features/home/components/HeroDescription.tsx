@@ -5,6 +5,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
+import { usePublicTheme } from "@/hooks";
 
 const DEFAULT_DESCRIPTION_LIST = [
   "Software engineer of all kind!",
@@ -37,6 +38,7 @@ function getNextIndex(current: number, length: number) {
 
 export default function HeroDescription() {
   const { t, i18n } = useTranslation();
+  const theme = usePublicTheme();
   const descriptionList = useMemo(() => {
     const translatedDescriptions = t("home.hero.description-list", {
       returnObjects: true,
@@ -83,7 +85,7 @@ export default function HeroDescription() {
   }, [index, displayed, descriptionList.length, opacity]);
 
   return (
-    <Animated.Text style={[{ color: "rgb(172, 193, 210)" }, animatedStyle]}>
+    <Animated.Text style={[{ color: theme.textSecondary }, animatedStyle]}>
       {displayed}
     </Animated.Text>
   );

@@ -10,6 +10,7 @@ import PlayStore from "@/assets/socials/play-store.svg";
 import Web from "@/assets/socials/web.svg";
 
 import { SocialType } from "@/constants/social";
+import { usePublicTheme } from "@/hooks";
 
 type SocialsType = {
   platform: SocialType;
@@ -22,7 +23,8 @@ export default function Socials({
   width = 20,
   height = 15,
 }: SocialsType) {
-  const fill = "rgb(224, 242, 255)";
+  const theme = usePublicTheme();
+  const fill = theme.text;
 
   switch (platform) {
     case "discord":

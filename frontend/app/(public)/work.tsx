@@ -21,11 +21,13 @@ import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useGetWorksQuery } from "@/features/work";
 import type { WorkResponse } from "@/features/work/work";
+import { usePublicTheme } from "@/hooks";
 
 export default function Work() {
   const { isFetching, isError, isSuccess, refetch, data } =
     useGetWorksQuery(null);
   const { i18n, t } = useTranslation();
+  const theme = usePublicTheme();
   const [selectedWork, setSelectedWork] = useState<WorkResponse | null>(null);
   const activeLanguage = (i18n.resolvedLanguage ?? i18n.language).split(
     "-",
@@ -34,15 +36,23 @@ export default function Work() {
   const [selectedScreenshotIndex, setSelectedScreenshotIndex] = useState(0);
   const onNextScreenshot = () => {
     if (!selectedWork) return;
-    selectedScreenshotIndex + 1 === selectedWork.screenshots.length
-      ? setSelectedScreenshotIndex(0)
-      : setSelectedScreenshotIndex(selectedScreenshotIndex + 1);
+
+    if (selectedScreenshotIndex + 1 === selectedWork.screenshots.length) {
+      setSelectedScreenshotIndex(0);
+      return;
+    }
+
+    setSelectedScreenshotIndex(selectedScreenshotIndex + 1);
   };
   const onPrevScreenshot = () => {
     if (!selectedWork) return;
-    selectedScreenshotIndex === 0
-      ? setSelectedScreenshotIndex(selectedWork.screenshots.length - 1)
-      : setSelectedScreenshotIndex(selectedScreenshotIndex - 1);
+
+    if (selectedScreenshotIndex === 0) {
+      setSelectedScreenshotIndex(selectedWork.screenshots.length - 1);
+      return;
+    }
+
+    setSelectedScreenshotIndex(selectedScreenshotIndex - 1);
   };
 
   const { bottom: bottomInset } = useSafeAreaInsets();
@@ -77,16 +87,16 @@ export default function Work() {
         }}
       >
         <View style={{ padding: 20 }}>
-          <Text style={styles.textTitle}>
-            <Text style={{ color: "rgb(158, 213, 255)" }}>
+          <Text style={{ ...styles.textTitle, color: theme.text }}>
+            <Text style={{ color: theme.accentContrastText }}>
               {t("public.work.title-highlight-personal")}
             </Text>{" "}
             {t("public.work.title-middle")}{" "}
-            <Text style={{ color: "rgb(158, 213, 255)" }}>
+            <Text style={{ color: theme.accentContrastText }}>
               {t("public.work.title-highlight-team")}
             </Text>
           </Text>
-          <Text style={{ color: "rgb(172, 193, 210)", textAlign: "center" }}>
+          <Text style={{ color: theme.textSecondary, textAlign: "center" }}>
             {t("public.common.open-details")}
           </Text>
         </View>
@@ -100,7 +110,10 @@ export default function Work() {
                 return (
                   <ButtonCustom
                     key={v.id}
-                    style={styles.btn}
+                    style={{
+                      ...styles.btn,
+                      backgroundColor: theme.buttonSecondaryBackground,
+                    }}
                     onPress={() => openModal(v)}
                   >
                     <Image
@@ -110,7 +123,10 @@ export default function Work() {
                       resizeMode="cover"
                     />
                     <View style={{ flex: 1, padding: 15, gap: 10 }}>
-                      <Text style={styles.textWorkName} numberOfLines={1}>
+                      <Text
+                        style={{ ...styles.textWorkName, color: theme.text }}
+                        numberOfLines={1}
+                      >
                         {v.title}
                       </Text>
                       <View style={styles.viewTag}>
@@ -124,7 +140,7 @@ export default function Work() {
                           );
                         })}
                         {v.tags.length > 4 && (
-                          <Text style={{ color: "rgb(158, 213, 255)" }}>
+                          <Text style={{ color: theme.accentContrastText }}>
                             +{v.tags.length - 4} {t("public.work.more")}
                           </Text>
                         )}
@@ -180,43 +196,51 @@ export default function Work() {
             <View style={{ padding: 20, gap: 20 }}>
               <View style={styles.viewPagination}>
                 <ButtonCustom
-                  style={{ ...styles.btnPagination, paddingRight: 20 }}
+                  style={{
+                    ...styles.btnPagination,
+                    paddingRight: 20,
+                    backgroundColor: theme.buttonSecondaryBackground,
+                  }}
                   onPress={onPrevScreenshot}
                 >
                   <MCIcons
                     name="chevron-left"
-                    color={"rgb(172, 193, 210)"}
+                    color={theme.textSecondary}
                     size={25}
                   />
                   <Text
                     selectable={false}
-                    style={{ color: "rgb(172, 193, 210)" }}
+                    style={{ color: theme.textSecondary }}
                   >
                     {t("public.common.previous")}
                   </Text>
                 </ButtonCustom>
-                <Text style={{ color: "rgb(172, 193, 210)" }}>
+                <Text style={{ color: theme.textSecondary }}>
                   {selectedScreenshotIndex + 1}/
                   {selectedWork.screenshots.length}
                 </Text>
                 <ButtonCustom
-                  style={{ ...styles.btnPagination, paddingLeft: 20 }}
+                  style={{
+                    ...styles.btnPagination,
+                    paddingLeft: 20,
+                    backgroundColor: theme.buttonSecondaryBackground,
+                  }}
                   onPress={onNextScreenshot}
                 >
                   <Text
                     selectable={false}
-                    style={{ color: "rgb(172, 193, 210)" }}
+                    style={{ color: theme.textSecondary }}
                   >
                     {t("public.common.next")}
                   </Text>
                   <MCIcons
                     name="chevron-right"
-                    color={"rgb(172, 193, 210)"}
+                    color={theme.textSecondary}
                     size={25}
                   />
                 </ButtonCustom>
               </View>
-              <Text style={{ color: "rgb(172, 193, 210)" }}>
+              <Text style={{ color: theme.textSecondary }}>
                 {selectedWork.descriptionI18n?.[activeLanguage] ??
                   selectedWork.descriptionI18n?.en ??
                   selectedWork.description}
@@ -226,11 +250,14 @@ export default function Work() {
                 {selectedWork.links.map((v) => (
                   <ButtonCustom
                     key={v.id}
-                    style={styles.btnWorkSocial}
+                    style={{
+                      ...styles.btnWorkSocial,
+                      backgroundColor: theme.buttonSecondaryBackground,
+                    }}
                     onPress={() => onVisit(v.url)}
                   >
                     <Socials platform={v.platform} height={20} width={20} />
-                    <Text style={{ color: "rgb(224, 242, 255)" }}>
+                    <Text style={{ color: theme.buttonSecondaryText }}>
                       {v.label}
                     </Text>
                   </ButtonCustom>
@@ -257,7 +284,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   btnWorkSocial: {
-    backgroundColor: "rgb(39, 48, 58)",
     flexDirection: "row",
     alignItems: "center",
     height: 50,
@@ -276,7 +302,6 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgb(39, 48, 58)",
     borderRadius: 40 / 2,
     elevation: 3,
     flexDirection: "row",
@@ -311,12 +336,10 @@ const styles = StyleSheet.create({
     // justifyContent: "space-evenly",
   },
   textWorkName: {
-    color: "rgb(224, 242, 255)",
     fontWeight: "bold",
     // padding: 15,
   },
   btn: {
-    backgroundColor: "rgb(39, 48, 58)",
     elevation: 3,
     borderRadius: 20,
     overflow: "hidden",
@@ -332,7 +355,6 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     fontWeight: "bold",
-    color: "rgb(224, 242, 255)",
     textAlign: "center",
     fontSize: 27,
   },

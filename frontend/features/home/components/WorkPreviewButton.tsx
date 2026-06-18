@@ -7,6 +7,7 @@ import Animated, {
   type SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { usePublicTheme } from "@/hooks";
 
 export function getWrappedPaginationProgress(
   value: number,
@@ -49,6 +50,8 @@ export default function WorkPreviewButton({
   onHoverIn,
   onHoverOut,
 }: WorkPreviewButtonProps) {
+  const theme = usePublicTheme();
+
   const textStyle = useAnimatedStyle(() => {
     const wrappedProgress = getWrappedPaginationProgress(
       progress.value,
@@ -60,7 +63,7 @@ export default function WorkPreviewButton({
       color: interpolateColor(
         distance,
         [0, 1],
-        ["rgb(24, 34, 68)", "rgb(224, 242, 255)"],
+        [theme.accentForeground, theme.buttonSecondaryText],
       ),
       transform: [
         {

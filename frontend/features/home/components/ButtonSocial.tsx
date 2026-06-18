@@ -2,11 +2,13 @@ import { Linking, StyleSheet, useWindowDimensions, View } from "react-native";
 import React from "react";
 import { useGetContactQuery } from "@/features/contact";
 import { ButtonCustom, Socials } from "@/components";
+import { usePublicTheme } from "@/hooks";
 
 export default function ButtonSocial() {
   const { isSuccess, data } = useGetContactQuery(null);
   const { width } = useWindowDimensions();
   const isWide = width >= 450;
+  const theme = usePublicTheme();
 
   async function onVisit(url: string) {
     try {
@@ -22,7 +24,10 @@ export default function ButtonSocial() {
       <View style={styles.viewSocial}>
         {data.slice(0, isWide ? 5 : 4).map((v) => (
           <ButtonCustom
-            style={styles.btnSocial}
+            style={{
+              ...styles.btnSocial,
+              backgroundColor: theme.buttonSecondaryBackground,
+            }}
             key={v.id}
             onPress={() => onVisit(v.url)}
           >
@@ -42,7 +47,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
   },
   btnSocial: {
-    backgroundColor: "rgb(39, 48, 58)",
     width: 60,
     height: 60,
     borderRadius: 60 / 2,

@@ -8,6 +8,7 @@ import Animated, {
 import { useEffect } from "react";
 import type { LocaleType } from "@/constants/language";
 import { ButtonCustom, Flags } from "@/components";
+import { usePublicTheme } from "@/hooks";
 
 type ButtonLangProps = {
   label: string;
@@ -22,6 +23,7 @@ export default function ButtonLanguage({
   onPress,
   selected,
 }: ButtonLangProps) {
+  const theme = usePublicTheme();
   const selectProgress = useSharedValue(selected ? 1 : 0);
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export default function ButtonLanguage({
       backgroundColor: interpolateColor(
         emphasis,
         [0, 1],
-        ["rgba(104, 188, 248, 0)", "rgba(104, 188, 248, 0.15)"],
+        ["rgba(0, 0, 0, 0)", theme.accentSoft],
       ),
     };
   });
@@ -47,7 +49,7 @@ export default function ButtonLanguage({
       color: interpolateColor(
         emphasis,
         [0, 1],
-        ["rgb(172, 193, 210)", "rgb(158, 213, 255)"],
+        [theme.textSecondary, theme.accentContrastText],
       ),
     };
   });

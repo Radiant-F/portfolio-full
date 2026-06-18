@@ -8,15 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-
-const COLORS = {
-  input: "rgb(37, 43, 49)",
-  borderBlur: "rgb(55, 62, 78)",
-  borderFocus: "rgb(175, 211, 244)",
-  labelBlur: "rgb(172, 193, 210)",
-  labelFocus: "rgb(158, 213, 255)",
-  text: "rgb(230, 238, 245)",
-};
+import { usePublicTheme } from "@/hooks";
 
 type InputFormType = {
   title: string;
@@ -30,6 +22,7 @@ export default function InputForm({
   value,
 }: InputFormType) {
   const [focused, setFocused] = useState(false);
+  const theme = usePublicTheme();
 
   const floatProgress = useSharedValue(0);
   const focusProgress = useSharedValue(0);
@@ -52,7 +45,7 @@ export default function InputForm({
     borderColor: interpolateColor(
       focusProgress.value,
       [0, 1],
-      [COLORS.borderBlur, COLORS.borderFocus],
+      [theme.border, theme.accentContrastText],
     ),
   }));
 
@@ -67,7 +60,7 @@ export default function InputForm({
     color: interpolateColor(
       focusProgress.value,
       [0, 1],
-      [COLORS.labelBlur, COLORS.labelFocus],
+      [theme.textSecondary, theme.accentContrastText],
     ),
   }));
 
@@ -78,16 +71,27 @@ export default function InputForm({
       borderColor: interpolateColor(
         borderState,
         [0, 1, 2],
-        ["transparent", COLORS.borderBlur, COLORS.borderFocus],
+        ["transparent", theme.border, theme.accentContrastText],
       ),
     };
   });
 
   return (
-    <Animated.View style={[styles.viewForm, fieldStyle]}>
+    <Animated.View
+      style={[
+        styles.viewForm,
+        fieldStyle,
+        { backgroundColor: theme.surfaceTint, borderColor: theme.border },
+      ]}
+    >
       <Animated.View
         pointerEvents={"none"}
-        style={[styles.inputLabel, labelStyle, labelContainerStyle]}
+        style={[
+          styles.inputLabel,
+          labelStyle,
+          labelContainerStyle,
+          { backgroundColor: theme.surfaceTint },
+        ]}
       >
         <Animated.Text selectable={false} style={textLabelStyle}>
           {title}
@@ -101,8 +105,8 @@ export default function InputForm({
         autoCapitalize="none"
         autoCorrect={false}
         placeholder=""
-        style={[styles.input]}
-        placeholderTextColor={COLORS.labelBlur}
+        style={[styles.input, { color: theme.text }]}
+        placeholderTextColor={theme.textSecondary}
       />
     </Animated.View>
   );
@@ -111,13 +115,11 @@ export default function InputForm({
 const styles = StyleSheet.create({
   input: {
     height: 50,
-    color: COLORS.text,
     paddingHorizontal: 20,
     outlineStyle: "none" as any,
   },
   inputLabel: {
     position: "absolute",
-    backgroundColor: COLORS.input,
     paddingHorizontal: 10,
     borderRadius: 11,
     borderWidth: 1,
@@ -125,7 +127,6 @@ const styles = StyleSheet.create({
     left: 10,
   },
   viewForm: {
-    backgroundColor: COLORS.input,
     borderWidth: 1,
     borderRadius: 15,
     justifyContent: "center",

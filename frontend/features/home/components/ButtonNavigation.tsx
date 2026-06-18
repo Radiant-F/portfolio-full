@@ -8,6 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import type { StyleProp, ViewStyle } from "react-native";
 import { ButtonCustom } from "@/components";
+import { usePublicTheme } from "@/hooks";
 
 type ButtonNavProps = {
   label: string;
@@ -22,6 +23,7 @@ export default function ButtonNavigation({
   onPress,
   style,
 }: ButtonNavProps) {
+  const theme = usePublicTheme();
   const focusProgress = useSharedValue(focused ? 1 : 0);
   const hoverProgress = useSharedValue(0);
 
@@ -36,12 +38,12 @@ export default function ButtonNavigation({
       backgroundColor: interpolateColor(
         emphasis,
         [0, 1],
-        ["rgba(104, 188, 248, 0)", "rgba(104, 188, 248, 0.15)"],
+        ["rgba(0, 0, 0, 0)", theme.accentSoft],
       ),
       borderColor: interpolateColor(
         emphasis,
         [0, 1],
-        ["rgba(104, 188, 248, 0)", "rgba(104, 188, 248, 0.28)"],
+        ["rgba(0, 0, 0, 0)", theme.accentSoftStrong],
       ),
     };
   });
@@ -53,7 +55,7 @@ export default function ButtonNavigation({
       color: interpolateColor(
         emphasis,
         [0, 1],
-        ["rgb(172, 193, 210)", "rgb(158, 213, 255)"],
+        [theme.textSecondary, theme.accentContrastText],
       ),
     };
   });
@@ -76,7 +78,7 @@ export default function ButtonNavigation({
             paddingHorizontal: 14,
             borderRadius: 10,
             borderWidth: 1,
-            borderColor: "rgba(104, 188, 248, 0)",
+            borderColor: "rgba(0, 0, 0, 0)",
           },
           style,
           containerStyle,

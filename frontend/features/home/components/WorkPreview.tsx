@@ -22,6 +22,7 @@ import Animated, {
 } from "react-native-reanimated";
 import MCIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useGetWorkScreenshotPreviewQuery } from "@/features/work";
+import { usePublicTheme } from "@/hooks";
 
 const AUTO_SLIDE_INTERVAL_MS = 3500;
 
@@ -34,6 +35,7 @@ type WorkPreviewSlide = {
 export default function WorkPreview() {
   const { data } = useGetWorkScreenshotPreviewQuery(null);
   const { width: viewportWidth } = useWindowDimensions();
+  const theme = usePublicTheme();
 
   const previewItems = useMemo<WorkPreviewSlide[]>(() => {
     if (!data?.length) {
@@ -232,7 +234,11 @@ export default function WorkPreview() {
         onHoverOut={resumeAutoplay}
         style={[
           styles.viewWorkPreview,
-          { width: previewWidth, height: previewHeight },
+          {
+            width: previewWidth,
+            height: previewHeight,
+            backgroundColor: theme.surface,
+          },
         ]}
       >
         <Animated.FlatList
@@ -267,12 +273,19 @@ export default function WorkPreview() {
           onLayout={handlePaginationLayout}
           onHoverIn={pauseAutoplay}
           onHoverOut={resumeAutoplay}
-          style={styles.viewImageNumber}
+          style={{
+            ...styles.viewImageNumber,
+            backgroundColor: theme.buttonSecondaryBackground,
+          }}
         >
           <Animated.View
             pointerEvents="none"
             style={[
               styles.activeButtonBackground,
+              {
+                backgroundColor: theme.accent,
+                borderColor: theme.buttonSecondaryBackground,
+              },
               {
                 width: buttonWidth,
               },
@@ -291,10 +304,16 @@ export default function WorkPreview() {
             />
           ))}
         </Pressable>
-        <ButtonCustom onPress={toggleAutoplay} style={styles.btnAutoplayToggle}>
+        <ButtonCustom
+          onPress={toggleAutoplay}
+          style={{
+            ...styles.btnAutoplayToggle,
+            backgroundColor: theme.buttonSecondaryBackground,
+          }}
+        >
           <MCIcons
             name={autoplayIconName}
-            color={"rgb(224, 242, 255)"}
+            color={theme.buttonSecondaryText}
             size={20}
           />
         </ButtonCustom>
@@ -305,7 +324,6 @@ export default function WorkPreview() {
 
 const styles = StyleSheet.create({
   btnAutoplayToggle: {
-    backgroundColor: "rgb(39, 48, 58)",
     height: 35,
     width: 35,
     borderRadius: 35 / 2,
@@ -327,22 +345,18 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     left: 0,
-    backgroundColor: "rgb(158, 213, 255)",
     borderWidth: 5,
-    borderColor: "rgb(39, 48, 58)",
     borderRadius: 35 / 2,
   },
   viewImageNumber: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: "rgb(39, 48, 58)",
     borderRadius: 35 / 2,
     overflow: "hidden",
     position: "relative",
     flex: 1,
   },
   viewWorkPreview: {
-    backgroundColor: "rgb(30, 31, 36)",
     elevation: 5,
     borderRadius: 20,
     width: 400,

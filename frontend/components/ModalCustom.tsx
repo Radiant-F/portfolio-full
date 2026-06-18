@@ -10,6 +10,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { runOnJS } from "react-native-worklets";
 import { ScrollView } from "react-native-gesture-handler";
+import { usePublicTheme } from "@/hooks";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -40,6 +41,7 @@ export default function ModalCustom({
   children,
   showHeader = true,
 }: ModalCustomType) {
+  const theme = usePublicTheme();
   const [mounted, setMounted] = useState(visible);
   const progress = useSharedValue(0);
 
@@ -94,7 +96,7 @@ export default function ModalCustom({
   }
 
   const backdropStyle = useAnimatedStyle(() => ({
-    opacity: progress.value * 0.5,
+    opacity: progress.value,
   }));
 
   const headerStyle = useAnimatedStyle(() => ({
@@ -124,12 +126,17 @@ export default function ModalCustom({
     >
       <View style={styles.container}>
         <AnimatedPressable
-          style={[styles.backdrop, backdropStyle]}
+          style={[
+            styles.backdrop,
+            { backgroundColor: theme.overlayBackdrop },
+            backdropStyle,
+          ]}
           onPress={handleClose}
         />
         <Animated.View
           style={[
             styles.content,
+            { borderColor: theme.border },
             { ...(maxWidth ? { maxWidth } : null) },
             contentStyle,
           ]}
@@ -137,28 +144,50 @@ export default function ModalCustom({
           {showHeader && (
             <Animated.View style={[styles.header, headerStyle]}>
               {showHeaderInfoStart && (
-                <View style={styles.viewHeaderInfo}>
+                <View
+                  style={{
+                    ...styles.viewHeaderInfo,
+                    backgroundColor: theme.surface,
+                  }}
+                >
                   {customHeaderInfoStart ?? (
                     <MCIcons
                       name={iconHeaderInfoStart}
                       size={20}
-                      color={"rgb(172, 193, 210)"}
+                      color={theme.textSecondary}
                     />
                   )}
                 </View>
               )}
               <View style={{ flex: 1 }}>
-                <View style={styles.viewHeaderTitle}>
-                  <Text style={styles.textHeaderTitle} numberOfLines={1}>
+                <View
+                  style={{
+                    ...styles.viewHeaderTitle,
+                    backgroundColor: theme.surface,
+                  }}
+                >
+                  <Text
+                    style={{
+                      ...styles.textHeaderTitle,
+                      color: theme.accentContrastText,
+                    }}
+                    numberOfLines={1}
+                  >
                     {title}
                   </Text>
                 </View>
               </View>
-              <ButtonCustom style={styles.viewHeaderInfo} onPress={handleClose}>
+              <ButtonCustom
+                style={{
+                  ...styles.viewHeaderInfo,
+                  backgroundColor: theme.surface,
+                }}
+                onPress={handleClose}
+              >
                 <MCIcons
                   name="close-circle-outline"
                   size={20}
-                  color={"rgb(172, 193, 210)"}
+                  color={theme.textSecondary}
                 />
               </ButtonCustom>
             </Animated.View>
@@ -166,6 +195,7 @@ export default function ModalCustom({
           <View
             style={[
               styles.viewContent,
+              { backgroundColor: theme.surface },
               { maxHeight: maxContentHeight ? maxContentHeight : null },
             ]}
           >
@@ -182,18 +212,15 @@ const styles = StyleSheet.create({
     width: "100%",
     flexShrink: 1,
     minHeight: 120,
-    backgroundColor: "rgb(30, 31, 36)",
     borderRadius: 50 / 2,
     elevation: 5,
     overflow: "hidden",
   },
   textHeaderTitle: {
-    color: "rgb(175, 211, 244)",
     fontWeight: "bold",
     textAlignVertical: "center",
   },
   viewHeaderTitle: {
-    backgroundColor: "rgb(30, 31, 36)",
     height: 50,
     borderRadius: 50 / 2,
     paddingHorizontal: 20,
@@ -207,7 +234,6 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 50 / 2,
     elevation: 3,
-    backgroundColor: "rgb(30, 31, 36)",
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
@@ -222,6 +248,9 @@ const styles = StyleSheet.create({
     maxHeight: "90%",
     minHeight: 180,
     gap: 10,
+    borderWidth: 1,
+    borderRadius: 28,
+    padding: 2,
   },
   container: {
     justifyContent: "center",
@@ -233,6 +262,5 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
     height: "100%",
-    backgroundColor: "black",
   },
 });

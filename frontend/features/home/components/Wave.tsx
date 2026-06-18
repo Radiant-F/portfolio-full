@@ -8,8 +8,10 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
+import { usePublicTheme } from "@/hooks";
 
 export default function FluidAnimation() {
+  const theme = usePublicTheme();
   const { width } = useWindowDimensions();
   const waveWidth = Math.max(Math.ceil(width), 1);
   const totalWaveWidth = waveWidth * 2;
@@ -49,7 +51,7 @@ export default function FluidAnimation() {
           height="200"
           viewBox={`0 0 ${totalWaveWidth} 200`}
         >
-          <Path fill={"rgb(158, 213, 255)"} d={path} />
+          <Path fill={theme.wave} d={path} />
         </Svg>
       </Animated.View>
     </View>

@@ -6,10 +6,12 @@ import { LANGUAGES } from "@/constants/language";
 import { ButtonCustom, Flags, ModalCustom } from "@/components";
 import ButtonLanguage from "./ButtonLanguage";
 import { MaterialCommunityIcons as MCIcons } from "@expo/vector-icons";
+import { usePublicTheme } from "@/hooks";
 
 export default function LanguagePicker() {
   const { i18n } = useTranslation();
   const selectedLanguage = i18n.language;
+  const theme = usePublicTheme();
 
   const [modalMounted, setModalMounted] = useState(false);
 
@@ -29,7 +31,7 @@ export default function LanguagePicker() {
             style={styles.btnOpenModal}
             onPress={openModal}
           >
-            <Text style={{ color: "rgb(172, 193, 210)" }}>
+            <Text style={{ color: theme.textSecondary }}>
               {value.locale.toUpperCase()}
             </Text>
             <Flags locale={value.locale} />
@@ -54,7 +56,7 @@ export default function LanguagePicker() {
             />
           ))}
           <View style={{ height: 10 }} />
-          <Text style={{ color: "rgb(172, 193, 210)", textAlign: "center" }}>
+          <Text style={{ color: theme.textSecondary, textAlign: "center" }}>
             Powered by{" "}
             <Pressable
               onPress={async () => {
@@ -71,7 +73,7 @@ export default function LanguagePicker() {
                 style={{ textDecorationLine: "underline", fontWeight: "bold" }}
               >
                 <MCIcons
-                  color={"rgb(172, 193, 210)"}
+                  color={theme.textSecondary}
                   name="open-in-new"
                   size={13}
                 />{" "}

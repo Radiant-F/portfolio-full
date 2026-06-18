@@ -8,9 +8,11 @@ import { ButtonCustom } from "@/components";
 import LanguagePicker from "./LanguagePicker";
 import ButtonNavigation from "./ButtonNavigation";
 import AppSettings from "./app-settings/AppSettings";
+import { usePublicTheme } from "@/hooks";
 
 export default function HeaderHome(props: DrawerHeaderProps) {
   const { top } = useSafeAreaInsets();
+  const theme = usePublicTheme();
 
   const pathname = usePathname();
   const activeRouteName = pathname.split("/").filter(Boolean)[0] ?? "index";
@@ -28,13 +30,19 @@ export default function HeaderHome(props: DrawerHeaderProps) {
   const isWide = width >= BREAKPOINT;
 
   return (
-    <View style={{ ...styles.container, paddingTop: top + 10 }}>
+    <View
+      style={{
+        ...styles.container,
+        paddingTop: top + 10,
+        backgroundColor: theme.headerBackground,
+      }}
+    >
       {!isWide && (
         <ButtonCustom
           style={styles.btnDrawer}
           onPress={() => props.navigation.toggleDrawer()}
         >
-          <MCIcons name="menu-open" color={"rgb(172, 193, 210)"} size={25} />
+          <MCIcons name="menu-open" color={theme.textSecondary} size={25} />
         </ButtonCustom>
       )}
 
@@ -89,7 +97,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   container: {
-    backgroundColor: "rgb(31, 31, 38)",
     elevation: 3,
     paddingHorizontal: 20,
     flexDirection: "row",

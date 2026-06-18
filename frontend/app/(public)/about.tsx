@@ -1,13 +1,14 @@
-import { useGetAboutQuery } from "@/features/about";
 import { StyleSheet, Text, View } from "react-native";
+import { usePublicTheme } from "@/hooks";
 
 export default function About() {
   // const { data } = useGetAboutQuery(null);
+  const theme = usePublicTheme();
 
   return (
     <View style={styles.container}>
       <Text
-        style={{ color: "rgb(224, 242, 255)", textAlign: "center" }}
+        style={{ color: theme.text, textAlign: "center" }}
       >{`Work in progress 🏗️\nUnless if you already know about me :3`}</Text>
     </View>
   );
