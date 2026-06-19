@@ -7,6 +7,14 @@
   "change-language-to": "Change language to",
   "change-language": "Change Language",
   "home": {
+    "nav": {
+      "index": "Главная",
+      "work": "Работы",
+      "skill": "Навыки",
+      "experience": "Опыт",
+      "contact": "Контакты",
+      "about": "Обо мне"
+    },
     "hero": {
       "greeting": "Привет!",
       "intro": "Меня зовут",

@@ -3,21 +3,16 @@ import { usePathname } from "expo-router";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { DrawerActions } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 import ButtonNavigation from "./ButtonNavigation";
 
 export default function DrawerContentHome(props: DrawerContentComponentProps) {
   const { top } = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   const pathname = usePathname();
   const activeRouteName = pathname.split("/").filter(Boolean)[0] ?? "index";
-  const routes = [
-    { name: "index", label: "Home" },
-    { name: "work", label: "Work" },
-    { name: "skill", label: "Skill" },
-    { name: "experience", label: "Experience" },
-    { name: "contact", label: "Contact" },
-    { name: "about", label: "About" },
-  ];
+  const routes = ["index", "work", "skill", "experience", "contact", "about"];
 
   return (
     <View style={{ paddingTop: 20 + top, gap: 15, padding: 20 }}>
@@ -30,11 +25,11 @@ export default function DrawerContentHome(props: DrawerContentComponentProps) {
               padding: 0,
               justifyContent: "center",
             }}
-            key={route.name}
-            label={route.label}
-            focused={route.name === activeRouteName}
+            key={route}
+            label={t(`home.nav.${route}`)}
+            focused={route === activeRouteName}
             onPress={() =>
-              props.navigation.dispatch(DrawerActions.jumpTo(route.name))
+              props.navigation.dispatch(DrawerActions.jumpTo(route))
             }
           />
         );

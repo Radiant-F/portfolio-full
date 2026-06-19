@@ -80,7 +80,7 @@ export default function LanguagePicker() {
                 LibreTranslate
               </Text>
             </Pressable>
-            . English is much prefered.
+            .{"\n"}For best result, use English.
           </Text>
         </View>
       </ModalCustom>

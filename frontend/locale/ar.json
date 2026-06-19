@@ -7,6 +7,14 @@
   "change-language-to": "تغيير اللغة إلى",
   "change-language": "تغيير اللغة",
   "home": {
+    "nav": {
+      "index": "الرئيسية",
+      "work": "الأعمال",
+      "skill": "المهارات",
+      "experience": "الخبرة",
+      "contact": "تواصل",
+      "about": "حول"
+    },
     "hero": {
       "greeting": "مرحباً!",
       "intro": "الاسم هو",

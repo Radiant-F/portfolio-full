@@ -162,7 +162,7 @@ export default function Theme() {
         {openColorPicker && (
           <ColorPicker
             style={{
-              paddingHorizontal: 50,
+              paddingHorizontal: 20,
               width: "100%",
               alignSelf: "center",
               gap: 10,

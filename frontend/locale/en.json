@@ -7,6 +7,14 @@
   "change-language-to": "Change language to",
   "change-language": "Change Language",
   "home": {
+    "nav": {
+      "index": "Home",
+      "work": "Work",
+      "skill": "Skill",
+      "experience": "Experience",
+      "contact": "Contact",
+      "about": "About"
+    },
     "hero": {
       "greeting": "Heya!",
       "intro": "The name is",

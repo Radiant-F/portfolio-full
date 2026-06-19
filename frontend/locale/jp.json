@@ -7,6 +7,14 @@
   "change-language-to": "Change language to",
   "change-language": "Change Language",
   "home": {
+    "nav": {
+      "index": "ホーム",
+      "work": "作品",
+      "skill": "スキル",
+      "experience": "経験",
+      "contact": "連絡",
+      "about": "概要"
+    },
     "hero": {
       "greeting": "やあ！",
       "intro": "名前は",

@@ -7,6 +7,14 @@
   "change-language-to": "Ganti bahasa ke",
   "change-language": "Ganti Bahasa",
   "home": {
+    "nav": {
+      "index": "Beranda",
+      "work": "Karya",
+      "skill": "Keahlian",
+      "experience": "Pengalaman",
+      "contact": "Kontak",
+      "about": "Tentang"
+    },
     "hero": {
       "greeting": "Hai!",
       "intro": "Namanya",

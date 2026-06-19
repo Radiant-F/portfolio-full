@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     maxHeight: "90%",
     minHeight: 180,
     gap: 10,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderRadius: 28,
     padding: 2,
   },

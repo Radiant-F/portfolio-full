@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MCIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { usePathname } from "expo-router";
 import { DrawerActions } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 import { ButtonCustom } from "@/components";
 import LanguagePicker from "./LanguagePicker";
 import ButtonNavigation from "./ButtonNavigation";
@@ -13,17 +14,11 @@ import { usePublicTheme } from "@/hooks";
 export default function HeaderHome(props: DrawerHeaderProps) {
   const { top } = useSafeAreaInsets();
   const theme = usePublicTheme();
+  const { t } = useTranslation();
 
   const pathname = usePathname();
   const activeRouteName = pathname.split("/").filter(Boolean)[0] ?? "index";
-  const routes = [
-    { name: "index", label: "Home" },
-    { name: "work", label: "Work" },
-    { name: "skill", label: "Skill" },
-    { name: "experience", label: "Experience" },
-    { name: "contact", label: "Contact" },
-    { name: "about", label: "About" },
-  ];
+  const routes = ["index", "work", "skill", "experience", "contact", "about"];
 
   const { width } = useWindowDimensions();
   const BREAKPOINT = 768;
@@ -57,11 +52,11 @@ export default function HeaderHome(props: DrawerHeaderProps) {
         <View style={{ flexDirection: "row", gap: 10 }}>
           {routes.map((route) => (
             <ButtonNavigation
-              key={route.name}
-              label={route.label}
-              focused={route.name === activeRouteName}
+              key={route}
+              label={t(`home.nav.${route}`)}
+              focused={route === activeRouteName}
               onPress={() =>
-                props.navigation.dispatch(DrawerActions.jumpTo(route.name))
+                props.navigation.dispatch(DrawerActions.jumpTo(route))
               }
             />
           ))}

@@ -238,6 +238,7 @@ export default function WorkPreview() {
             width: previewWidth,
             height: previewHeight,
             backgroundColor: theme.surface,
+            direction: "ltr",
           },
         ]}
       >
@@ -268,7 +269,7 @@ export default function WorkPreview() {
           onMomentumScrollEnd={handleMomentumEnd}
         />
       </Pressable>
-      <View style={{ flexDirection: "row", gap: 10 }}>
+      <View style={{ flexDirection: "row", gap: 10, direction: "ltr" }}>
         <Pressable
           onLayout={handlePaginationLayout}
           onHoverIn={pauseAutoplay}
@@ -276,6 +277,7 @@ export default function WorkPreview() {
           style={{
             ...styles.viewImageNumber,
             backgroundColor: theme.buttonSecondaryBackground,
+            direction: "ltr",
           }}
         >
           <Animated.View
