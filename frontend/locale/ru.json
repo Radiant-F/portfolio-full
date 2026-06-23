@@ -46,7 +46,8 @@
       "title-middle": "skills и",
       "title-highlight-soft": "soft",
       "title-suffix": "skills",
-      "modal-intro": "С помощью этого навыка я смог сделать следующее:"
+      "modal-intro": "С помощью этого навыка я смог сделать следующее:",
+      "modal-intro-empty": "В данный момент пусто. Загляните позже!"
     },
     "work": {
       "title-highlight-personal": "Личные",

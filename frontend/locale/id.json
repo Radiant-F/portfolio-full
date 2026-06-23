@@ -46,7 +46,8 @@
       "title-middle": "skill dan",
       "title-highlight-soft": "soft",
       "title-suffix": "skill",
-      "modal-intro": "Dengan skill ini, saya berhasil melakukan:"
+      "modal-intro": "Dengan skill ini, saya berhasil melakukan:",
+      "modal-intro-empty": "Saat ini kosong. Silakan periksa kembali nanti!"
     },
     "work": {
       "title-highlight-personal": "Personal",

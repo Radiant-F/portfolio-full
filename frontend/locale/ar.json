@@ -46,7 +46,8 @@
       "title-middle": "و",
       "title-highlight-soft": "المهارات الناعمة",
       "title-suffix": "",
-      "modal-intro": "باستخدام هذه المهارة، تمكنت من القيام بما يلي:"
+      "modal-intro": "باستخدام هذه المهارة، تمكنت من القيام بما يلي:",
+      "modal-intro-empty": "غير متوفر حاليًا. يرجى المحاولة لاحقًا!"
     },
     "work": {
       "title-highlight-personal": "الشخصية",

@@ -21,6 +21,5 @@ export {
 
 // Reducer
 export { default as skillReducer } from "./services/skillReducerSlice";
-export { default as ModalSkillDetails } from "./components/ModalSkillDetails";
 
 // Components

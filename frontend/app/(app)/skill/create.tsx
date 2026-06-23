@@ -23,6 +23,7 @@ export default function SkillCreate() {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const [createSkill, { isLoading }] = useCreateSkillMutation();
+  const [imageError, setImageError] = useState<string | null>(null);
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<{
     uri: string;
@@ -37,12 +38,20 @@ export default function SkillCreate() {
   } = useForm<FormValues>({ defaultValues: { title: "", sortOrder: "0" } });
 
   async function onSubmit(values: FormValues) {
-    const formData = new FormData();
-    formData.append("title", values.title);
-    formData.append("sortOrder", values.sortOrder);
-    if (imageFile) {
-      formData.append("image", imageFile as any);
+    if (!imageFile) {
+      setImageError("Image is required");
+      return;
     }
+
+    const formData = new FormData();
+    formData.append("title", values.title.trim());
+    formData.append("image", imageFile as any);
+
+    const sortOrder = values.sortOrder.trim();
+    if (sortOrder.length > 0) {
+      formData.append("sortOrder", String(Number(sortOrder)));
+    }
+
     await createSkill(formData).unwrap();
     router.back();
   }
@@ -80,18 +89,29 @@ export default function SkillCreate() {
             </Text>
 
             <ImagePickerInput
-              label={t("cms.skill.name")}
+              label="Image"
               value={imageUri}
               onChange={(uri, file) => {
                 setImageUri(uri);
                 setImageFile(file);
+                if (file) {
+                  setImageError(null);
+                }
               }}
             />
+            {imageError ? (
+              <Text style={[styles.errorText, { color: colors.error }]}>
+                {imageError}
+              </Text>
+            ) : null}
 
             <Controller
               control={control}
               name="title"
-              rules={{ required: true }}
+              rules={{
+                required: true,
+                validate: (value) => value.trim().length > 0,
+              }}
               render={({ field: { value, onChange } }) => (
                 <FormInput
                   label={t("cms.skill.name")}
@@ -106,12 +126,17 @@ export default function SkillCreate() {
             <Controller
               control={control}
               name="sortOrder"
+              rules={{
+                validate: (value) =>
+                  value.trim().length === 0 || /^-?\d+$/.test(value.trim()),
+              }}
               render={({ field: { value, onChange } }) => (
                 <FormInput
                   label={t("cms.sort-order")}
                   value={value}
                   onChangeText={onChange}
                   keyboardType="number-pad"
+                  error={errors.sortOrder ? t("cms.sort-order") : undefined}
                 />
               )}
             />
@@ -162,6 +187,12 @@ const styles = StyleSheet.create({
   },
   backText: { fontFamily: "LexendRegular", fontSize: 14 },
   pageTitle: { fontSize: 22, fontFamily: "LexendBold", marginBottom: 20 },
+  errorText: {
+    fontFamily: "LexendRegular",
+    fontSize: 12,
+    marginTop: -8,
+    marginBottom: 10,
+  },
   saveBtn: {
     paddingVertical: 14,
     borderRadius: 12,

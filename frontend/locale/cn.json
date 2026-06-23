@@ -46,7 +46,8 @@
       "title-middle": "技能和",
       "title-highlight-soft": "软",
       "title-suffix": "技能",
-      "modal-intro": "通过这项技能，我完成了："
+      "modal-intro": "通过这项技能，我完成了：",
+      "modal-intro-empty": "目前为空。请稍后再来查看！"
     },
     "work": {
       "title-highlight-personal": "个人",

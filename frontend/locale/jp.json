@@ -46,7 +46,8 @@
       "title-middle": "スキルと",
       "title-highlight-soft": "ソフト",
       "title-suffix": "スキル",
-      "modal-intro": "このスキルで実現してきたこと:"
+      "modal-intro": "このスキルで実現してきたこと:",
+      "modal-intro-empty": "現在、空室です。後ほど再度ご確認ください。"
     },
     "work": {
       "title-highlight-personal": "個人",

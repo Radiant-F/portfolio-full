@@ -65,7 +65,7 @@ export default function Skill() {
 
         <View style={styles.containerItem}>
           {isFetching && <LoadingIndicator />}
-          {isError && <ErrorIndicator onPressRefresh={refetch} />}
+          {true && <ErrorIndicator onPressRefresh={refetch} />}
           {isSuccess &&
             data.map((v) => {
               return (
@@ -113,34 +113,57 @@ export default function Skill() {
         }
       >
         <View style={{ padding: 20 }}>
-          <Text style={{ color: theme.textSecondary }}>
-            {t("public.skill.modal-intro")}
-          </Text>
-          <View style={{ gap: 20, marginTop: 20 }}>
-            {selectedSkill?.details.map((v) => (
-              <View key={v.id} style={{ gap: 5 }}>
-                <View style={{ alignSelf: "flex-start", gap: 2.5 }}>
-                  <Text
-                    style={{
-                      color: theme.accentContrastText,
-                      paddingHorizontal: 5,
-                    }}
-                  >
-                    {v.name}
-                  </Text>
-                  <View style={{ height: 1, backgroundColor: theme.border }} />
-                </View>
-                <Text
-                  style={{ color: theme.textSecondary, paddingHorizontal: 5 }}
-                >
-                  {v.descriptionI18n?.[activeLanguage] ??
-                    v.descriptionI18n?.en ??
-                    v.description}
-                </Text>
-                <View style={{ height: 1, backgroundColor: theme.border }} />
+          {selectedSkill && selectedSkill.details.length == 0 && (
+            <Text
+              style={{
+                color: theme.textSecondary,
+                textAlign: "center",
+                marginTop: 30,
+              }}
+            >
+              {t("public.skill.modal-intro-empty")}
+            </Text>
+          )}
+          {selectedSkill && selectedSkill.details.length != 0 && (
+            <>
+              <Text style={{ color: theme.textSecondary }}>
+                {t("public.skill.modal-intro")}
+              </Text>
+              <View style={{ gap: 20, marginTop: 20 }}>
+                {selectedSkill.details.map((v) => (
+                  <View key={v.id} style={{ gap: 5 }}>
+                    <View style={{ alignSelf: "flex-start", gap: 2.5 }}>
+                      <Text
+                        style={{
+                          color: theme.accentContrastText,
+                          paddingHorizontal: 5,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {v.name}
+                      </Text>
+                      <View
+                        style={{ height: 1, backgroundColor: theme.border }}
+                      />
+                    </View>
+                    <Text
+                      style={{
+                        color: theme.textSecondary,
+                        paddingHorizontal: 5,
+                      }}
+                    >
+                      {v.descriptionI18n?.[activeLanguage] ??
+                        v.descriptionI18n?.en ??
+                        v.description}
+                    </Text>
+                    <View
+                      style={{ height: 1, backgroundColor: theme.border }}
+                    />
+                  </View>
+                ))}
               </View>
-            ))}
-          </View>
+            </>
+          )}
         </View>
       </ModalCustom>
     </>
@@ -155,14 +178,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    gap: 15,
+    gap: 10,
   },
   btn: {
     flexDirection: "row",
     alignItems: "center",
     padding: 20,
     paddingVertical: 10,
-    gap: 5,
+    gap: 10,
     paddingRight: 25,
     borderRadius: 20,
   },

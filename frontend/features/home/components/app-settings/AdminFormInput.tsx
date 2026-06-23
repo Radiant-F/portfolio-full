@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput, TextInputProps } from "react-native";
 import Animated, {
   Easing,
   interpolate,
@@ -14,12 +14,22 @@ type InputFormType = {
   title: string;
   onChangeText: (text: string) => void;
   value: string;
-};
+} & Pick<
+  TextInputProps,
+  | "autoComplete"
+  | "blurOnSubmit"
+  | "keyboardType"
+  | "returnKeyType"
+  | "secureTextEntry"
+  | "textContentType"
+  | "onSubmitEditing"
+>;
 
 export default function InputForm({
   onChangeText,
   title = "Input Title",
   value,
+  ...inputProps
 }: InputFormType) {
   const [focused, setFocused] = useState(false);
   const theme = usePublicTheme();
@@ -107,6 +117,7 @@ export default function InputForm({
         placeholder=""
         style={[styles.input, { color: theme.text }]}
         placeholderTextColor={theme.textSecondary}
+        {...inputProps}
       />
     </Animated.View>
   );

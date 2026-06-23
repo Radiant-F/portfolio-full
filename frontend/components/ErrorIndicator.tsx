@@ -13,9 +13,9 @@ export default function ErrorIndicator({
 
   return (
     <View style={{ gap: 10, alignItems: "center" }}>
-      <Text style={{ color: theme.textSecondary }}>
+      {/* <Text style={{ color: theme.textSecondary }}>
         Failed to fetch data! {"o(><；)oo"}
-      </Text>
+      </Text> */}
       <ButtonCustom
         style={{
           ...styles.btnSecondary,

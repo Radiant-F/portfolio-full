@@ -46,7 +46,8 @@
       "title-middle": "skills and",
       "title-highlight-soft": "soft",
       "title-suffix": "skills",
-      "modal-intro": "With this skill, I managed to do:"
+      "modal-intro": "With this skill, I managed to do:",
+      "modal-intro-empty": "Currently empty. Check back later!"
     },
     "work": {
       "title-highlight-personal": "Personal",
