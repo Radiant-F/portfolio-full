@@ -65,7 +65,7 @@ export default function Skill() {
 
         <View style={styles.containerItem}>
           {isFetching && <LoadingIndicator />}
-          {true && <ErrorIndicator onPressRefresh={refetch} />}
+          {isError && <ErrorIndicator onPressRefresh={refetch} />}
           {isSuccess &&
             data.map((v) => {
               return (
