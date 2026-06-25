@@ -11,6 +11,17 @@ import { aboutController } from "./modules/about";
 import { seedDefaultUser } from "./database/seed";
 import { seedDemoData } from "./database/seed";
 
+function isTruthy(value: string | undefined): boolean {
+  if (!value) return false;
+  return ["1", "true", "yes", "on"].includes(value.toLowerCase());
+}
+
+const port = Number(process.env.PORT ?? 3000);
+const seedOnBoot = isTruthy(
+  process.env.SEED_ON_BOOT ??
+    (process.env.NODE_ENV === "production" ? "false" : "true"),
+);
+
 const app = new Elysia()
   .use(cors())
   .use(
@@ -52,10 +63,14 @@ const app = new Elysia()
   .use(workController)
   .use(contactController)
   .use(aboutController)
-  .listen(3000);
+  .listen(port);
 
-seedDefaultUser().catch(console.error);
-seedDemoData().catch(console.error);
+if (seedOnBoot) {
+  seedDefaultUser().catch(console.error);
+  seedDemoData().catch(console.error);
+} else {
+  console.log("🌱 Seed on boot is disabled");
+}
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,

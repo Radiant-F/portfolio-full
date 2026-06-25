@@ -12,8 +12,15 @@ const LANG_TO_ISO: Record<SupportedLang, string> = {
 
 export type I18nMap = Partial<Record<SupportedLang, string>>;
 
+function normalizeBaseUrl(value: string): string {
+  const withProtocol = /^https?:\/\//i.test(value) ? value : `http://${value}`;
+  return withProtocol.replace(/\/+$/, "");
+}
+
 function getLibreTranslateUrl(): string {
-  return process.env.LIBRETRANSLATE_URL ?? "http://localhost:5000";
+  return normalizeBaseUrl(
+    process.env.LIBRETRANSLATE_URL ?? "http://localhost:5000",
+  );
 }
 
 async function translateText(
