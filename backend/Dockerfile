@@ -6,6 +6,7 @@ COPY package.json bun.lock tsconfig.json ./
 RUN bun install --frozen-lockfile
 
 COPY src ./src
+COPY drizzle ./drizzle
 
 EXPOSE 10000
 

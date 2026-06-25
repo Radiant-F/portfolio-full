@@ -10,6 +10,7 @@ import { contactController } from "./modules/contact";
 import { aboutController } from "./modules/about";
 import { seedDefaultUser } from "./database/seed";
 import { seedDemoData } from "./database/seed";
+import { migrateDatabase } from "./database/migrate";
 
 function isTruthy(value: string | undefined): boolean {
   if (!value) return false;
@@ -22,58 +23,75 @@ const seedOnBoot = isTruthy(
     (process.env.NODE_ENV === "production" ? "false" : "true"),
 );
 
-const app = new Elysia()
-  .use(cors())
-  .use(
-    openapi({
-      documentation: {
-        info: {
-          title: "Portfolio CMS API",
-          version: "1.0.0",
-          description: "Backend API for portfolio content management",
-        },
-        tags: [
-          { name: "Auth", description: "Authentication endpoints" },
-          { name: "Skills", description: "Skills CRUD endpoints" },
-          { name: "Experiences", description: "Experiences CRUD endpoints" },
-          { name: "Tags", description: "Tags CRUD endpoints" },
-          { name: "Works", description: "Works CRUD endpoints" },
-          { name: "Contacts", description: "Contacts CRUD endpoints" },
-          { name: "About", description: "About me content endpoint" },
-        ],
-        components: {
-          securitySchemes: {
-            bearerAuth: {
-              type: "http",
-              scheme: "bearer",
-              bearerFormat: "JWT",
+function buildApp() {
+  return new Elysia()
+    .use(cors())
+    .use(
+      openapi({
+        documentation: {
+          info: {
+            title: "Portfolio CMS API",
+            version: "1.0.0",
+            description: "Backend API for portfolio content management",
+          },
+          tags: [
+            { name: "Auth", description: "Authentication endpoints" },
+            { name: "Skills", description: "Skills CRUD endpoints" },
+            { name: "Experiences", description: "Experiences CRUD endpoints" },
+            { name: "Tags", description: "Tags CRUD endpoints" },
+            { name: "Works", description: "Works CRUD endpoints" },
+            { name: "Contacts", description: "Contacts CRUD endpoints" },
+            { name: "About", description: "About me content endpoint" },
+          ],
+          components: {
+            securitySchemes: {
+              bearerAuth: {
+                type: "http",
+                scheme: "bearer",
+                bearerFormat: "JWT",
+              },
             },
           },
         },
+      }),
+    )
+    .get(
+      "/",
+      () => "Hey there, cutie. Documentation is available at /openapi.",
+      {
+        detail: { hide: true },
       },
-    }),
-  )
-  .get("/", () => "Hey there, cutie. Documentation is available at /openapi.", {
-    detail: { hide: true },
-  })
-  .use(authController)
-  .use(skillController)
-  .use(experienceController)
-  .use(tagController)
-  .use(workController)
-  .use(contactController)
-  .use(aboutController)
-  .listen(port);
-
-if (seedOnBoot) {
-  seedDefaultUser().catch(console.error);
-  seedDemoData().catch(console.error);
-} else {
-  console.log("🌱 Seed on boot is disabled");
+    )
+    .use(authController)
+    .use(skillController)
+    .use(experienceController)
+    .use(tagController)
+    .use(workController)
+    .use(contactController)
+    .use(aboutController);
 }
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
-);
+async function bootstrap() {
+  await migrateDatabase();
+  console.log("🗃️ Database migrations checked");
 
-export type App = typeof app;
+  const app = buildApp().listen(port);
+
+  if (seedOnBoot) {
+    seedDefaultUser().catch(console.error);
+    seedDemoData().catch(console.error);
+  } else {
+    console.log("🌱 Seed on boot is disabled");
+  }
+
+  console.log(
+    `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
+  );
+}
+
+bootstrap().catch((error) => {
+  console.error("❌ Failed to bootstrap server", error);
+  process.exit(1);
+});
+
+export type App = ReturnType<typeof buildApp>;

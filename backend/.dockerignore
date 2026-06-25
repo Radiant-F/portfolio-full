@@ -1,6 +1,5 @@
 node_modules
 test
-drizzle
 .env
 .git
 .gitignore
