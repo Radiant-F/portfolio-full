@@ -2,6 +2,9 @@ export type WorkTagName =
   | "Android"
   | "iOS"
   | "Web"
+  | "WordPress"
+  | "Open Source"
+  | "React"
   | "React Native"
   | "Expo"
   | "Play Store"
@@ -9,7 +12,8 @@ export type WorkTagName =
   | "Laravel"
   | "MongoDB"
   | "Personal"
-  | "Team";
+  | "Team"
+  | "Private";
 
 export type WorkPlatformName =
   | "github"

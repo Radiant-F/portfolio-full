@@ -196,52 +196,54 @@ export default function Work() {
             )}
 
             <View style={{ padding: 20, gap: 20 }}>
-              <View style={styles.viewPagination}>
-                <ButtonCustom
-                  style={{
-                    ...styles.btnPagination,
-                    paddingRight: 20,
-                    backgroundColor: theme.buttonSecondaryBackground,
-                  }}
-                  onPress={onPrevScreenshot}
-                >
-                  <MCIcons
-                    name="chevron-left"
-                    color={theme.textSecondary}
-                    size={25}
-                  />
-                  <Text
-                    selectable={false}
-                    style={{ color: theme.textSecondary }}
+              {selectedWork.screenshots.length && (
+                <View style={styles.viewPagination}>
+                  <ButtonCustom
+                    style={{
+                      ...styles.btnPagination,
+                      paddingRight: 20,
+                      backgroundColor: theme.buttonSecondaryBackground,
+                    }}
+                    onPress={onPrevScreenshot}
                   >
-                    {t("public.common.previous")}
+                    <MCIcons
+                      name="chevron-left"
+                      color={theme.textSecondary}
+                      size={25}
+                    />
+                    <Text
+                      selectable={false}
+                      style={{ color: theme.textSecondary }}
+                    >
+                      {t("public.common.previous")}
+                    </Text>
+                  </ButtonCustom>
+                  <Text style={{ color: theme.textSecondary }}>
+                    {selectedScreenshotIndex + 1}/
+                    {selectedWork.screenshots.length}
                   </Text>
-                </ButtonCustom>
-                <Text style={{ color: theme.textSecondary }}>
-                  {selectedScreenshotIndex + 1}/
-                  {selectedWork.screenshots.length}
-                </Text>
-                <ButtonCustom
-                  style={{
-                    ...styles.btnPagination,
-                    paddingLeft: 20,
-                    backgroundColor: theme.buttonSecondaryBackground,
-                  }}
-                  onPress={onNextScreenshot}
-                >
-                  <Text
-                    selectable={false}
-                    style={{ color: theme.textSecondary }}
+                  <ButtonCustom
+                    style={{
+                      ...styles.btnPagination,
+                      paddingLeft: 20,
+                      backgroundColor: theme.buttonSecondaryBackground,
+                    }}
+                    onPress={onNextScreenshot}
                   >
-                    {t("public.common.next")}
-                  </Text>
-                  <MCIcons
-                    name="chevron-right"
-                    color={theme.textSecondary}
-                    size={25}
-                  />
-                </ButtonCustom>
-              </View>
+                    <Text
+                      selectable={false}
+                      style={{ color: theme.textSecondary }}
+                    >
+                      {t("public.common.next")}
+                    </Text>
+                    <MCIcons
+                      name="chevron-right"
+                      color={theme.textSecondary}
+                      size={25}
+                    />
+                  </ButtonCustom>
+                </View>
+              )}
               <Text style={{ color: theme.textSecondary }}>
                 {selectedWork.descriptionI18n?.[activeLanguage] ??
                   selectedWork.descriptionI18n?.en ??

@@ -35,6 +35,24 @@ const TAG_CONFIG: Record<
     borderColor: "rgb(186, 104, 200)",
     textColor: "rgb(225, 190, 231)",
   },
+  WordPress: {
+    icon: "wordpress",
+    backgroundColor: "rgb(33, 103, 178)",
+    borderColor: "rgb(85, 136, 214)",
+    textColor: "rgb(224, 236, 255)",
+  },
+  "Open Source": {
+    icon: "github",
+    backgroundColor: "rgb(36, 41, 46)",
+    borderColor: "rgb(81, 90, 98)",
+    textColor: "rgb(204, 214, 221)",
+  },
+  React: {
+    icon: "react",
+    backgroundColor: "rgb(97, 218, 251)",
+    borderColor: "rgb(1, 135, 212)",
+    textColor: "rgb(15, 76, 129)",
+  },
   "React Native": {
     icon: "react",
     backgroundColor: "rgb(28, 136, 160)",
@@ -70,6 +88,12 @@ const TAG_CONFIG: Record<
     backgroundColor: "rgb(17, 75, 45)",
     borderColor: "rgb(38, 165, 106)",
     textColor: "rgb(200, 230, 201)",
+  },
+  Private: {
+    icon: "lock",
+    backgroundColor: "rgb(38, 38, 40)",
+    borderColor: "rgb(97, 97, 100)",
+    textColor: "rgb(224, 224, 224)",
   },
   Personal: {
     icon: "account",
