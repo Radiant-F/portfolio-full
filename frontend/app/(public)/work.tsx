@@ -159,7 +159,7 @@ export default function Work() {
         onClose={closeModal}
         title={selectedWork?.title ?? "Work Title"}
         customHeaderInfoStart={
-          selectedWork?.iconUrl && (
+          selectedWork && (
             <Image
               source={{ uri: selectedWork.iconUrl }}
               style={{ width: "100%", height: "100%" }}
@@ -171,27 +171,29 @@ export default function Work() {
       >
         {selectedWork && (
           <>
-            <View style={{ width: "100%", height: 280 }}>
-              <Image
-                source={{
-                  uri: selectedWork.screenshots[selectedScreenshotIndex]
-                    .imageUrl,
-                }}
-                style={styles.imgWorkScBackdrop}
-                resizeMethod="resize"
-                resizeMode="cover"
-                blurRadius={5}
-              />
-              <Image
-                source={{
-                  uri: selectedWork.screenshots[selectedScreenshotIndex]
-                    .imageUrl,
-                }}
-                style={styles.imgWorkSc}
-                resizeMethod="resize"
-                resizeMode="contain"
-              />
-            </View>
+            {selectedWork.screenshots.length && (
+              <View style={{ width: "100%", height: 280 }}>
+                <Image
+                  source={{
+                    uri: selectedWork.screenshots[selectedScreenshotIndex]
+                      .imageUrl,
+                  }}
+                  style={styles.imgWorkScBackdrop}
+                  resizeMethod="resize"
+                  resizeMode="cover"
+                  blurRadius={5}
+                />
+                <Image
+                  source={{
+                    uri: selectedWork.screenshots[selectedScreenshotIndex]
+                      .imageUrl,
+                  }}
+                  style={styles.imgWorkSc}
+                  resizeMethod="resize"
+                  resizeMode="contain"
+                />
+              </View>
+            )}
 
             <View style={{ padding: 20, gap: 20 }}>
               <View style={styles.viewPagination}>
