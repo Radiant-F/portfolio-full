@@ -1,4 +1,4 @@
-import { eq, count } from "drizzle-orm";
+import { count } from "drizzle-orm";
 import { db } from "./index";
 import {
   users,
@@ -33,12 +33,7 @@ export async function seedDefaultUser() {
     return;
   }
 
-  const [result] = await db.select({ total: count() }).from(users);
-
-  if (result.total > 0) {
-    console.log("✅ Users already exist, skipping seed");
-    return;
-  }
+  await db.delete(users);
 
   const hashedPassword = await Bun.password.hash(password, "argon2id");
 
@@ -51,28 +46,18 @@ export async function seedDefaultUser() {
 }
 
 export async function seedDemoData() {
-  // Only seed if all content tables are empty
-  const [contactCount] = await db.select({ total: count() }).from(contacts);
-  const [tagCount] = await db.select({ total: count() }).from(tags);
-  const [skillCount] = await db.select({ total: count() }).from(skills);
-  const [experienceCount] = await db
-    .select({ total: count() })
-    .from(experiences);
-  const [workCount] = await db.select({ total: count() }).from(works);
-
-  const hasData =
-    contactCount.total > 0 ||
-    tagCount.total > 0 ||
-    skillCount.total > 0 ||
-    experienceCount.total > 0 ||
-    workCount.total > 0;
-
-  if (hasData) {
-    console.log("✅ Demo data already exists, skipping seed");
-    return;
-  }
-
   console.log("🌱 Seeding demo data...");
+
+  await db.delete(workTags);
+  await db.delete(workLinks);
+  await db.delete(workScreenshots);
+  await db.delete(works);
+  await db.delete(experienceAchievements);
+  await db.delete(experiences);
+  await db.delete(skillDetails);
+  await db.delete(skills);
+  await db.delete(tags);
+  await db.delete(contacts);
 
   // Contacts
   await db.insert(contacts).values(

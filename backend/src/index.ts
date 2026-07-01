@@ -11,17 +11,10 @@ import { aboutController } from "./modules/about";
 import { seedDefaultUser } from "./database/seed";
 import { seedDemoData } from "./database/seed";
 import { migrateDatabase } from "./database/migrate";
-
-function isTruthy(value: string | undefined): boolean {
-  if (!value) return false;
-  return ["1", "true", "yes", "on"].includes(value.toLowerCase());
-}
+import { shouldSeedOnBoot } from "./database/seedConfig";
 
 const port = Number(process.env.PORT ?? 3000);
-const seedOnBoot = isTruthy(
-  process.env.SEED_ON_BOOT ??
-    (process.env.NODE_ENV === "production" ? "false" : "true"),
-);
+const seedOnBoot = shouldSeedOnBoot(process.env.SEED_ON_BOOT);
 
 function buildApp() {
   return new Elysia()
