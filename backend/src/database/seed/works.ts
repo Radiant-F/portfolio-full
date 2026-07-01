@@ -111,8 +111,36 @@ const SEED_WORKS = [
     iconUrl:
       "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782456788/portfolio/works/ftnj13ccafxaubyk5jmn.jpg",
     sortOrder: 2,
-    links: [],
-    screenshots: [],
+    links: [
+      {
+        label: "Website",
+        platform: "web",
+        url: "https://summitmasproperty.com/",
+        sortOrder: 0,
+      },
+    ],
+    screenshots: [
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782459238/portfolio/works/screenshots/crbag516egew3fwph2ar.jpg",
+        sortOrder: 0,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782459239/portfolio/works/screenshots/ei4upw2xfbbp9wpu1rks.jpg",
+        sortOrder: 1,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782459240/portfolio/works/screenshots/aubiqoyz333bt44ixjlu.jpg",
+        sortOrder: 2,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782459240/portfolio/works/screenshots/d8wvkcswal6r7jpmvmrk.jpg",
+        sortOrder: 3,
+      },
+    ],
     tagNames: ["Laravel", "WordPress", "Web"],
   },
   {
@@ -128,8 +156,36 @@ const SEED_WORKS = [
     iconUrl:
       "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782460539/portfolio/works/nxjxzshppbmygy9dbojf.png",
     sortOrder: 3,
-    links: [],
-    screenshots: [],
+    links: [
+      {
+        label: "Play Store",
+        platform: "play-store",
+        url: "https://play.google.com/store/apps/details?id=com.panthermania&hl=en",
+        sortOrder: 0,
+      },
+    ],
+    screenshots: [
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782460623/portfolio/works/screenshots/qpvq105qtkvgwszkvdqx.png",
+        sortOrder: 0,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782460624/portfolio/works/screenshots/wqufmaoyf1sngdihnlqi.jpg",
+        sortOrder: 1,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782460625/portfolio/works/screenshots/fvjckhokznjxfos3nn8l.jpg",
+        sortOrder: 2,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782460625/portfolio/works/screenshots/phxqksoyex6c7y7f644f.jpg",
+        sortOrder: 3,
+      },
+    ],
     tagNames: ["Android", "Play Store", "React Native"],
   },
   {
@@ -146,7 +202,33 @@ const SEED_WORKS = [
       "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782461176/portfolio/works/ihf4iqxycil2d8zajusn.jpg",
     sortOrder: 4,
     links: [],
-    screenshots: [],
+    screenshots: [
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782461494/portfolio/works/screenshots/qz4wzxvyzf1xyypj9y3g.jpg",
+        sortOrder: 0,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782461495/portfolio/works/screenshots/b3xrj20qmaybatkexrk3.jpg",
+        sortOrder: 1,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782461496/portfolio/works/screenshots/lao3hwpf88vpcv1kzrfn.jpg",
+        sortOrder: 2,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782461496/portfolio/works/screenshots/n0smq75vadsqv7fktosf.jpg",
+        sortOrder: 3,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782461497/portfolio/works/screenshots/ikvnomt5jqafgiforzog.jpg",
+        sortOrder: 4,
+      },
+    ],
     tagNames: ["Web", "Personal"],
   },
   {
@@ -163,8 +245,36 @@ const SEED_WORKS = [
     iconUrl:
       "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782463386/portfolio/works/wewvip65ozcenmzrglnk.jpg",
     sortOrder: 5,
-    links: [],
-    screenshots: [],
+    links: [
+      {
+        label: "Website",
+        platform: "web",
+        url: "https://comikaevent.app/",
+        sortOrder: 0,
+      },
+    ],
+    screenshots: [
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782463485/portfolio/works/screenshots/udhry9eduaizrfqip9mk.jpg",
+        sortOrder: 0,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782463485/portfolio/works/screenshots/woatxlerj5szvjkbmxcz.jpg",
+        sortOrder: 1,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782463486/portfolio/works/screenshots/djnbvqvfeielz7resgof.jpg",
+        sortOrder: 2,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782463487/portfolio/works/screenshots/txtiyagywbu1y5mtfvet.png",
+        sortOrder: 3,
+      },
+    ],
     tagNames: ["Team", "Web"],
   },
   {
@@ -181,8 +291,31 @@ const SEED_WORKS = [
     iconUrl:
       "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782466119/portfolio/works/jgbe13fdhrciiyvg2kdk.jpg",
     sortOrder: 6,
-    links: [],
-    screenshots: [],
+    links: [
+      {
+        label: "GitHub",
+        platform: "github",
+        url: "https://github.com/Radiant-F/sttlt",
+        sortOrder: 0,
+      },
+    ],
+    screenshots: [
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782466297/portfolio/works/screenshots/crvohmkvj09el8stm4xd.jpg",
+        sortOrder: 0,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782466298/portfolio/works/screenshots/aw5ulqsqehqngyrwwdl1.jpg",
+        sortOrder: 1,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782466299/portfolio/works/screenshots/paz53dhk5ui4bzzr3fee.jpg",
+        sortOrder: 2,
+      },
+    ],
     tagNames: ["Open Source", "Personal", "Web"],
   },
   {
@@ -198,8 +331,36 @@ const SEED_WORKS = [
     iconUrl:
       "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782704522/portfolio/works/rxutsizac7n7bgsvdggs.jpg",
     sortOrder: 7,
-    links: [],
-    screenshots: [],
+    links: [
+      {
+        label: "Play Store",
+        platform: "play-store",
+        url: "https://play.google.com/store/apps/details?id=com.simanajemen",
+        sortOrder: 0,
+      },
+    ],
+    screenshots: [
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782704664/portfolio/works/screenshots/vjtebmpq4vhxxpkzguhg.jpg",
+        sortOrder: 0,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782704664/portfolio/works/screenshots/ibwy9uj5rkab8vwmzu0k.jpg",
+        sortOrder: 1,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782704666/portfolio/works/screenshots/merkm2fvffqccl58qsgk.jpg",
+        sortOrder: 2,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782704666/portfolio/works/screenshots/zbmb2incpgzrbkm8gtsi.jpg",
+        sortOrder: 3,
+      },
+    ],
     tagNames: ["Android", "Play Store", "React Native"],
   },
   {
@@ -216,8 +377,46 @@ const SEED_WORKS = [
     iconUrl:
       "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782720959/portfolio/works/xdrm36ptet5yxxhwy85u.png",
     sortOrder: 8,
-    links: [],
-    screenshots: [],
+    links: [
+      {
+        label: "GitHub",
+        platform: "github",
+        url: "https://github.com/Radiant-F/portfolio-full",
+        sortOrder: 0,
+      },
+    ],
+    screenshots: [
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782721126/portfolio/works/screenshots/d5ercqu9zpx8ooxxx4et.jpg",
+        sortOrder: 0,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782721127/portfolio/works/screenshots/dbvt82jt49kvffrxflip.png",
+        sortOrder: 1,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782721128/portfolio/works/screenshots/snl8okqhgpfu8frwznob.png",
+        sortOrder: 2,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782721128/portfolio/works/screenshots/pezxeixsgkah2mlfc8fr.png",
+        sortOrder: 3,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782721129/portfolio/works/screenshots/iogxrsucuqfu1esyyvuk.png",
+        sortOrder: 4,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782721130/portfolio/works/screenshots/pswxhdczgcvqlasy8nbo.png",
+        sortOrder: 5,
+      },
+    ],
     tagNames: ["Expo", "React Native", "Web"],
   },
   {
@@ -234,8 +433,29 @@ const SEED_WORKS = [
       "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782791955/portfolio/works/zhuylsgrhlm84n9hvuy6.png",
     sortOrder: 9,
     links: [],
-    screenshots: [],
-    tagNames: ["Mobile", "React Native"],
+    screenshots: [
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782792832/portfolio/works/screenshots/i2up6p6z9qbwwtafkaqu.jpg",
+        sortOrder: 0,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782792833/portfolio/works/screenshots/igetozwc3faisml06mie.jpg",
+        sortOrder: 1,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782792834/portfolio/works/screenshots/s3zblsysmysquxinfqmf.jpg",
+        sortOrder: 2,
+      },
+      {
+        imageUrl:
+          "https://res.cloudinary.com/dyhzh3ybt/image/upload/v1782792835/portfolio/works/screenshots/nfgiuvfpx12xy7lnklyk.jpg",
+        sortOrder: 3,
+      },
+    ],
+    tagNames: ["Android", "Expo", "Open Source", "Play Store", "Personal"],
   },
 ];
 

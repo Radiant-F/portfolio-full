@@ -151,6 +151,7 @@ export async function seedDemoData() {
         w.links.map((l) => ({
           workId: work.id,
           label: l.label,
+          platform: l.platform,
           url: l.url,
           sortOrder: l.sortOrder,
         })),
