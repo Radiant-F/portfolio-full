@@ -31,6 +31,13 @@
       "breakpoints": true
     },
     {
+      "idx": 4,
+      "version": "7",
+      "when": 1784147592335,
+      "tag": "0004_typical_emma_frost",
+      "breakpoints": true
+    },
+    {
       "idx": 5,
       "version": "7",
       "when": 1784210000000,
