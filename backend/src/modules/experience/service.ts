@@ -2,7 +2,6 @@ import { eq, asc } from "drizzle-orm";
 import { db } from "../../database";
 import { experiences, experienceAchievements } from "../../database/schema";
 import {
-  translateToAll,
   mergeTranslation,
   type SupportedLang,
 } from "../../services/translation";
@@ -50,8 +49,6 @@ export abstract class ExperienceService {
   }
 
   static async create(data: CreateExperienceData) {
-    const responsibilityI18n = await translateToAll(data.responsibility);
-
     const [exp] = await db
       .insert(experiences)
       .values({
@@ -61,7 +58,6 @@ export abstract class ExperienceService {
         endDate: data.endDate,
         position: data.position,
         responsibility: data.responsibility,
-        responsibilityI18n,
         sortOrder: data.sortOrder ?? 0,
       })
       .returning();
@@ -80,7 +76,6 @@ export abstract class ExperienceService {
     if (data.position !== undefined) values.position = data.position;
     if (data.responsibility !== undefined) {
       values.responsibility = data.responsibility;
-      values.responsibilityI18n = await translateToAll(data.responsibility);
     }
     if (data.sortOrder !== undefined) values.sortOrder = data.sortOrder;
 
@@ -126,14 +121,11 @@ export abstract class ExperienceService {
 
     if (!exp) return null;
 
-    const descriptionI18n = await translateToAll(data.description);
-
     const [achievement] = await db
       .insert(experienceAchievements)
       .values({
         experienceId,
         description: data.description,
-        descriptionI18n,
         sortOrder: data.sortOrder ?? 0,
       })
       .returning();
@@ -145,7 +137,6 @@ export abstract class ExperienceService {
     const values: Record<string, unknown> = {};
     if (data.description !== undefined) {
       values.description = data.description;
-      values.descriptionI18n = await translateToAll(data.description);
     }
     if (data.sortOrder !== undefined) values.sortOrder = data.sortOrder;
 

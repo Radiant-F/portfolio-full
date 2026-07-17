@@ -64,6 +64,10 @@
       "title-prefix": "Mari",
       "title-highlight": "terhubung",
       "visit": "Kunjungi"
+    },
+    "about": {
+      "title-prefix": "Tentang",
+      "title-highlight": "saya"
     }
   },
   "cms": {
@@ -145,5 +149,32 @@
       "name": "Nama Tag",
       "add-tag": "Tambah Tag"
     }
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "theme-mode": "Mode Tema",
+    "mode-dark": "Gelap",
+    "mode-auto": "Otomatis",
+    "mode-light": "Terang",
+    "theme-color": "Warna Tema",
+    "swatch-default": "Bawaan",
+    "swatch-sakura": "Sakura",
+    "swatch-amethyst": "Ametis",
+    "swatch-rose": "Mawar",
+    "swatch-custom": "Kustom",
+    "language": "Bahasa",
+    "site-administrator": "Administrator situs",
+    "username": "Nama pengguna",
+    "passphrase": "Frasa sandi",
+    "passphrase-hint": "Min 8 huruf: huruf besar, huruf kecil, angka & simbol khusus.",
+    "login": "Masuk",
+    "login-error-empty": "Masukkan nama pengguna (min 5 huruf) dan frasa sandi.",
+    "login-error-invalid": "Nama pengguna atau frasa sandi salah.",
+    "lang-en": "Inggris",
+    "lang-jp": "Jepang",
+    "lang-cn": "Tionghoa (Sederhana)",
+    "lang-ru": "Rusia",
+    "lang-id": "Indonesia",
+    "lang-ar": "Arab"
   }
 }

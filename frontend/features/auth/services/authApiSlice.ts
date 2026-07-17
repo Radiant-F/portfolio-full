@@ -55,7 +55,7 @@ const authReducerSlice = apiSlice.injectEndpoints({
         }
       },
     }),
-    me: build.query<{ id: string; email: string }, null>({
+    me: build.query<{ id: string; username: string }, null>({
       query: () => "/auth/me",
     }),
   }),

@@ -14,7 +14,7 @@ export const users = pgTable("users", {
   id: varchar("id")
     .$defaultFn(() => createId())
     .primaryKey(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
+  username: varchar("username", { length: 255 }).notNull().unique(),
   password: varchar("password", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
@@ -271,7 +271,17 @@ export const about = pgTable("about", {
   id: varchar("id")
     .$defaultFn(() => createId())
     .primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
   content: text("content").notNull(),
+  titleI18n: jsonb("title_i18n")
+    .$type<Record<string, string>>()
+    .notNull()
+    .default({}),
+  contentI18n: jsonb("content_i18n")
+    .$type<Record<string, string>>()
+    .notNull()
+    .default({}),
+  sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

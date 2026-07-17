@@ -64,6 +64,10 @@
       "title-prefix": "気軽に",
       "title-highlight": "連絡して",
       "visit": "開く"
+    },
+    "about": {
+      "title-prefix": "私に",
+      "title-highlight": "ついて"
     }
   },
   "cms": {
@@ -145,5 +149,32 @@
       "name": "Tag Name",
       "add-tag": "Add Tag"
     }
+  },
+  "settings": {
+    "title": "設定",
+    "theme-mode": "テーマモード",
+    "mode-dark": "ダーク",
+    "mode-auto": "自動",
+    "mode-light": "ライト",
+    "theme-color": "テーマカラー",
+    "swatch-default": "デフォルト",
+    "swatch-sakura": "さくら",
+    "swatch-amethyst": "アメジスト",
+    "swatch-rose": "ローズ",
+    "swatch-custom": "カスタム",
+    "language": "言語",
+    "site-administrator": "サイト管理者",
+    "username": "ユーザー名",
+    "passphrase": "パスフレーズ",
+    "passphrase-hint": "最小8文字。大文字・小文字・数字・記号を各1つ以上含む。",
+    "login": "ログイン",
+    "login-error-empty": "ユーザー名（5文字以上）とパスフレーズを入力してください。",
+    "login-error-invalid": "ユーザー名またはパスフレーズが正しくありません。",
+    "lang-en": "英語",
+    "lang-jp": "日本語",
+    "lang-cn": "中国語（簡体字）",
+    "lang-ru": "ロシア語",
+    "lang-id": "インドネシア語",
+    "lang-ar": "アラビア語"
   }
 }

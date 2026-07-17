@@ -12,6 +12,7 @@ import {
   workScreenshots,
   workTags,
   contacts,
+  about,
 } from "./schema";
 
 // ─── Example data ─────────────────────────────────────────
@@ -20,29 +21,30 @@ import SEED_CONTACTS from "./seed/contacts";
 import SEED_SKILLS from "./seed/skills";
 import SEED_EXPERIENCES from "./seed/experiences";
 import SEED_WORKS from "./seed/works";
+import SEED_ABOUT from "./seed/about";
 
 // ─── Seed functions ────────────────────────────────────────
 export async function seedDefaultUser() {
-  const email = process.env.DEFAULT_USER_EMAIL;
-  const password = process.env.DEFAULT_USER_PASSWORD;
+  const username = process.env.DEFAULT_USER_USERNAME;
+  const passphrase = process.env.DEFAULT_USER_PASSPHRASE;
 
-  if (!email || !password) {
+  if (!username || !passphrase) {
     console.log(
-      "⚠️ DEFAULT_USER_EMAIL or DEFAULT_USER_PASSWORD not set, skipping seed",
+      "⚠️ DEFAULT_USER_USERNAME or DEFAULT_USER_PASSPHRASE not set, skipping seed",
     );
     return;
   }
 
   await db.delete(users);
 
-  const hashedPassword = await Bun.password.hash(password, "argon2id");
+  const hashedPassword = await Bun.password.hash(passphrase, "argon2id");
 
   await db.insert(users).values({
-    email,
+    username,
     password: hashedPassword,
   });
 
-  console.log(`✅ Default user seeded: ${email}`);
+  console.log(`✅ Default user seeded: ${username}`);
 }
 
 export async function seedDemoData() {
@@ -58,6 +60,7 @@ export async function seedDemoData() {
   await db.delete(skills);
   await db.delete(tags);
   await db.delete(contacts);
+  await db.delete(about);
 
   // Contacts
   await db.insert(contacts).values(
@@ -179,6 +182,18 @@ export async function seedDemoData() {
     }
   }
   console.log(`  ✓ ${SEED_WORKS.length} works`);
+
+  // About
+  await db.insert(about).values(
+    SEED_ABOUT.map((a) => ({
+      title: a.title,
+      content: a.content,
+      titleI18n: a.titleI18n,
+      contentI18n: a.contentI18n,
+      sortOrder: a.sortOrder,
+    })),
+  );
+  console.log(`  ✓ ${SEED_ABOUT.length} about items`);
 
   console.log("🎉 Demo data seeded successfully");
 }

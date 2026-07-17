@@ -19,10 +19,12 @@ export const authController = new Elysia({
   .post(
     "/login",
     async ({ body, accessJwt, refreshJwt, cookie, status }) => {
-      const user = await AuthService.login(body.email, body.password);
+      const user = await AuthService.login(body.username, body.passphrase);
 
       if (!user) {
-        return status(401, { message: "Invalid email or password" as const });
+        return status(401, {
+          message: "Invalid username or passphrase" as const,
+        });
       }
 
       const accessToken = await accessJwt.sign({ sub: user.id });
@@ -60,7 +62,7 @@ export const authController = new Elysia({
       },
       detail: {
         summary: "Login",
-        description: "Authenticate with email and password. Returns JWT tokens in both response body and httpOnly cookies.",
+        description: "Authenticate with username and passphrase. Returns JWT tokens in both response body and httpOnly cookies.",
       },
     }
   )

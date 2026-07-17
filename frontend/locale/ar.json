@@ -64,6 +64,10 @@
       "title-prefix": "ابقَ على",
       "title-highlight": "تواصل",
       "visit": "زيارة"
+    },
+    "about": {
+      "title-prefix": "نبذة",
+      "title-highlight": "عني"
     }
   },
   "cms": {
@@ -145,5 +149,32 @@
       "name": "اسم الوسم",
       "add-tag": "إضافة وسم"
     }
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "theme-mode": "وضع السمة",
+    "mode-dark": "داكن",
+    "mode-auto": "تلقائي",
+    "mode-light": "فاتح",
+    "theme-color": "لون السمة",
+    "swatch-default": "الافتراضي",
+    "swatch-sakura": "ساكورا",
+    "swatch-amethyst": "أميثيست",
+    "swatch-rose": "روز",
+    "swatch-custom": "مخصص",
+    "language": "اللغة",
+    "site-administrator": "مسؤول الموقع",
+    "username": "اسم المستخدم",
+    "passphrase": "عبارة المرور",
+    "passphrase-hint": "8 أحرف على الأقل: حرف كبير وصغير ورقم ورمز خاص.",
+    "login": "تسجيل الدخول",
+    "login-error-empty": "أدخل اسم المستخدم (5 أحرف على الأقل) وعبارة المرور.",
+    "login-error-invalid": "اسم المستخدم أو عبارة المرور غير صحيحة.",
+    "lang-en": "الإنجليزية",
+    "lang-jp": "اليابانية",
+    "lang-cn": "الصينية (المبسطة)",
+    "lang-ru": "الروسية",
+    "lang-id": "الإندونيسية",
+    "lang-ar": "العربية"
   }
 }

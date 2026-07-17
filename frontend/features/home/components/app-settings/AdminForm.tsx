@@ -4,57 +4,68 @@ import { ButtonCustom } from "@/components";
 import InputForm from "./AdminFormInput";
 import { usePublicTheme } from "@/hooks";
 import { useSignInMutation } from "@/features/auth";
+import { useTranslation } from "react-i18next";
 
 export default function AdminForm() {
   const [signIn, { isLoading }] = useSignInMutation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [passphrase, setPassphrase] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const theme = usePublicTheme();
+  const { t } = useTranslation();
 
   async function handleSignIn() {
-    const trimmedEmail = email.trim();
+    const trimmedUsername = username.trim();
 
-    if (!trimmedEmail || !password) {
-      setErrorMessage("Enter your email and password.");
+    if (trimmedUsername.length < 5 || !passphrase) {
+      setErrorMessage(t("settings.login-error-empty"));
       return;
     }
 
     setErrorMessage("");
 
     try {
-      await signIn({ email: trimmedEmail, password }).unwrap();
+      await signIn({
+        username: trimmedUsername,
+        passphrase,
+      }).unwrap();
     } catch (error) {
-      setErrorMessage("Invalid email or password.");
+      setErrorMessage(t("settings.login-error-invalid"));
     }
   }
 
   return (
     <View>
-      <Text style={{ color: theme.textSecondary }}>Site administrator</Text>
+      <Text style={{ color: theme.textSecondary }}>
+        {t("settings.site-administrator")}
+      </Text>
 
       <View style={{ height: 10 }} />
 
       <InputForm
-        autoComplete="email"
-        keyboardType="email-address"
-        onChangeText={setEmail}
-        title="Email"
-        value={email}
+        autoCapitalize="none"
+        autoComplete="username"
+        onChangeText={setUsername}
+        title={t("settings.username")}
+        value={username}
       />
       <View style={{ height: 15 }} />
       <InputForm
         autoComplete="password"
         blurOnSubmit
-        onChangeText={setPassword}
+        onChangeText={setPassphrase}
         onSubmitEditing={handleSignIn}
         returnKeyType="done"
         secureTextEntry
         textContentType="password"
-        title="Password"
-        value={password}
+        title={t("settings.passphrase")}
+        value={passphrase}
       />
       <View style={{ height: 10 }} />
+      <Text style={{ color: theme.textMuted, fontSize: 12 }}>
+        {t("settings.passphrase-hint")}
+      </Text>
+      <View style={{ height: 6 }} />
       {errorMessage ? (
         <>
           <Text style={{ color: theme.accentContrastText, marginBottom: 10 }}>
@@ -72,7 +83,9 @@ export default function AdminForm() {
           {isLoading ? (
             <ActivityIndicator color={theme.accentContrastText} />
           ) : (
-            <Text style={{ color: theme.accentContrastText }}>Login</Text>
+            <Text style={{ color: theme.accentContrastText }}>
+              {t("settings.login")}
+            </Text>
           )}
         </ButtonCustom>
       </View>

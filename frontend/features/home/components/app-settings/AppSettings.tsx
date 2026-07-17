@@ -6,10 +6,12 @@ import AdminForm from "./AdminForm";
 import LanguagePicker from "./LanguagePicker";
 import Theme from "./Theme";
 import { usePublicTheme } from "@/hooks";
+import { useTranslation } from "react-i18next";
 
 export default function AppSettings() {
   const [modalMounted, setModalMounted] = useState(false);
   const theme = usePublicTheme();
+  const { t } = useTranslation();
 
   function openModal() {
     setModalMounted(true);
@@ -28,7 +30,7 @@ export default function AppSettings() {
       <ModalCustom
         visible={modalMounted}
         onClose={closeModal}
-        title="Settings"
+        title={t("settings.title")}
         iconHeaderInfoStart="cog"
         maxWidth={420}
       >

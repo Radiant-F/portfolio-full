@@ -2,7 +2,6 @@ import { eq, asc } from "drizzle-orm";
 import { db } from "../../database";
 import { skills, skillDetails } from "../../database/schema";
 import {
-  translateToAll,
   mergeTranslation,
   type SupportedLang,
 } from "../../services/translation";
@@ -107,15 +106,12 @@ export abstract class SkillService {
 
     if (!skill) return null;
 
-    const descriptionI18n = await translateToAll(data.description);
-
     const [detail] = await db
       .insert(skillDetails)
       .values({
         skillId,
         name: data.name,
         description: data.description,
-        descriptionI18n,
         sortOrder: data.sortOrder ?? 0,
       })
       .returning();
@@ -128,7 +124,6 @@ export abstract class SkillService {
     if (data.name !== undefined) values.name = data.name;
     if (data.description !== undefined) {
       values.description = data.description;
-      values.descriptionI18n = await translateToAll(data.description);
     }
     if (data.sortOrder !== undefined) values.sortOrder = data.sortOrder;
 

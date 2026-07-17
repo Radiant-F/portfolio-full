@@ -3,27 +3,27 @@ import { db } from "../../database";
 import { users } from "../../database/schema";
 
 export abstract class AuthService {
-  static async login(email: string, password: string) {
+  static async login(username: string, passphrase: string) {
     const [user] = await db
       .select()
       .from(users)
-      .where(eq(users.email, email))
+      .where(eq(users.username, username))
       .limit(1);
 
     if (!user) return null;
 
-    const valid = await Bun.password.verify(password, user.password);
+    const valid = await Bun.password.verify(passphrase, user.password);
 
     if (!valid) return null;
 
-    return { id: user.id, email: user.email };
+    return { id: user.id, username: user.username };
   }
 
   static async getUserById(id: string) {
     const [user] = await db
       .select({
         id: users.id,
-        email: users.email,
+        username: users.username,
       })
       .from(users)
       .where(eq(users.id, id))

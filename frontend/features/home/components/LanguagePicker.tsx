@@ -1,11 +1,10 @@
 import { useTranslation } from "react-i18next";
-import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useState } from "react";
 import { setLanguage } from "@/locale/i18n";
 import { LANGUAGES } from "@/constants/language";
 import { ButtonCustom, Flags, ModalCustom } from "@/components";
 import ButtonLanguage from "./ButtonLanguage";
-import { MaterialCommunityIcons as MCIcons } from "@expo/vector-icons";
 import { usePublicTheme } from "@/hooks";
 
 export default function LanguagePicker() {
@@ -55,33 +54,6 @@ export default function LanguagePicker() {
               selected={lang.locale === selectedLanguage}
             />
           ))}
-          <View style={{ height: 10 }} />
-          <Text style={{ color: theme.textSecondary, textAlign: "center" }}>
-            Powered by{" "}
-            <Pressable
-              onPress={async () => {
-                try {
-                  await Linking.openURL("https://docs.libretranslate.com/");
-                } catch (error) {
-                  alert(
-                    `Cannot open url. Error detail: ${JSON.stringify(error)}`,
-                  );
-                }
-              }}
-            >
-              <Text
-                style={{ textDecorationLine: "underline", fontWeight: "bold" }}
-              >
-                <MCIcons
-                  color={theme.textSecondary}
-                  name="open-in-new"
-                  size={13}
-                />{" "}
-                LibreTranslate
-              </Text>
-            </Pressable>
-            .{"\n"}For best result, use English.
-          </Text>
         </View>
       </ModalCustom>
     </View>

@@ -10,6 +10,7 @@ import {
   type PublicThemeMode,
 } from "@/features/home/services/publicThemeSlice";
 import { PUBLIC_THEME_SWATCHES } from "@/features/home/theme/publicTheme";
+import { useTranslation } from "react-i18next";
 
 type ThemeModeOption = "dark" | "auto" | "light";
 
@@ -47,6 +48,7 @@ export default function Theme() {
     (state) => state.publicTheme.accentColor,
   );
   const theme = usePublicTheme();
+  const { t } = useTranslation();
 
   const selectedMode = INVERSE_MODE_MAP[themeMode];
   const normalizedAccent = normalizeHex(selectedAccent);
@@ -69,7 +71,7 @@ export default function Theme() {
   return (
     <View style={{ gap: 20 }}>
       <View style={{ gap: 10 }}>
-        <Text style={{ color: theme.textSecondary }}>Theme Mode</Text>
+        <Text style={{ color: theme.textSecondary }}>{t("settings.theme-mode")}</Text>
         <View style={{ ...styles.viewMode, borderColor: theme.borderStrong }}>
           <ButtonCustom
             style={{
@@ -79,7 +81,7 @@ export default function Theme() {
             onPress={() => dispatch(setPublicThemeMode(MODE_MAP.dark))}
           >
             <MCIcons name="weather-night" color={iconColor("dark")} size={20} />
-            <Text style={{ color: textColor("dark") }}>Dark</Text>
+            <Text style={{ color: textColor("dark") }}>{t("settings.mode-dark")}</Text>
           </ButtonCustom>
           <ButtonCustom
             style={{
@@ -89,7 +91,7 @@ export default function Theme() {
             onPress={() => dispatch(setPublicThemeMode(MODE_MAP.auto))}
           >
             <MCIcons name="monitor" color={iconColor("auto")} size={20} />
-            <Text style={{ color: textColor("auto") }}>Auto</Text>
+            <Text style={{ color: textColor("auto") }}>{t("settings.mode-auto")}</Text>
           </ButtonCustom>
           <ButtonCustom
             style={{
@@ -103,13 +105,13 @@ export default function Theme() {
               color={iconColor("light")}
               size={20}
             />
-            <Text style={{ color: textColor("light") }}>Light</Text>
+            <Text style={{ color: textColor("light") }}>{t("settings.mode-light")}</Text>
           </ButtonCustom>
         </View>
       </View>
 
       <View style={{ gap: 10 }}>
-        <Text style={{ color: theme.textSecondary }}>Theme Color</Text>
+        <Text style={{ color: theme.textSecondary }}>{t("settings.theme-color")}</Text>
         <View style={styles.viewSwatch}>
           {PUBLIC_THEME_SWATCHES.map((swatch) => {
             const swatchHex = normalizeHex(swatch.value);
@@ -139,7 +141,7 @@ export default function Theme() {
                     fontWeight: isSelected ? "700" : "500",
                   }}
                 >
-                  {swatch.label}
+                  {t(`settings.swatch-${swatch.label.toLowerCase()}`)}
                 </Text>
               </ButtonCustom>
             );
@@ -155,7 +157,7 @@ export default function Theme() {
                 : "transparent",
             }}
           >
-            <Text style={{ color: theme.buttonSecondaryText }}>Custom</Text>
+            <Text style={{ color: theme.buttonSecondaryText }}>{t("settings.swatch-custom")}</Text>
           </ButtonCustom>
         </View>
 

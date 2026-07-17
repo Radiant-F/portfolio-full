@@ -12,21 +12,21 @@ const app = new Elysia()
   .use(authController)
   .use(aboutController);
 
-const TEST_EMAIL = process.env.DEFAULT_USER_EMAIL!;
-const TEST_PASSWORD = process.env.DEFAULT_USER_PASSWORD!;
+const TEST_USERNAME = process.env.DEFAULT_USER_USERNAME!;
+const TEST_PASSPHRASE = process.env.DEFAULT_USER_PASSPHRASE!;
 
 let accessToken: string;
+let itemId: string;
 
 beforeAll(async () => {
   await seedDefaultUser();
-  // Clean up any existing about row
   await db.delete(about);
 
   const res = await app.handle(
     new Request("http://localhost/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: TEST_EMAIL, password: TEST_PASSWORD }),
+      body: JSON.stringify({ username: TEST_USERNAME, passphrase: TEST_PASSPHRASE }),
     })
   );
   const data = await res.json();
@@ -35,111 +35,176 @@ beforeAll(async () => {
 
 describe("About Endpoints", () => {
   describe("GET /about (empty)", () => {
-    it("should return null content when no about exists", async () => {
-      const res = await app.handle(
-        new Request("http://localhost/about")
-      );
+    it("should return an empty array when no items exist", async () => {
+      const res = await app.handle(new Request("http://localhost/about"));
       expect(res.status).toBe(200);
       const data = await res.json();
-      expect(data.content).toBeNull();
+      expect(data).toBeArray();
+      expect(data.length).toBe(0);
     });
   });
 
-  describe("PUT /about (authenticated)", () => {
+  describe("POST /about (authenticated)", () => {
     it("should reject unauthenticated request", async () => {
       const res = await app.handle(
         new Request("http://localhost/about", {
-          method: "PUT",
+          method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            content: "<p>Hello world</p>",
+            title: "Intro",
+            content: "Hello world",
           }),
         })
       );
       expect(res.status).toBe(401);
     });
 
-    it("should create about content", async () => {
+    it("should create an about item", async () => {
       const res = await app.handle(
         new Request("http://localhost/about", {
-          method: "PUT",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({
-            content: "<p>I'm a full-stack developer.</p>",
+            title: "Introduction",
+            content: "I'm a full-stack developer.",
+            sortOrder: 1,
           }),
         })
       );
 
       expect(res.status).toBe(200);
       const data = await res.json();
-      expect(data.content).toBe("<p>I'm a full-stack developer.</p>");
+      expect(data.title).toBe("Introduction");
+      expect(data.content).toBe("I'm a full-stack developer.");
+      expect(data.sortOrder).toBe(1);
+      expect(data.titleI18n).toEqual({});
+      expect(data.contentI18n).toEqual({});
       expect(data.id).toBeDefined();
+
+      itemId = data.id;
+    });
+
+    it("should store content verbatim (no HTML sanitization)", async () => {
+      const raw = '<p>Safe</p><script>alert("xss")</script>';
+      const res = await app.handle(
+        new Request("http://localhost/about", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ title: "Raw", content: raw }),
+        })
+      );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      expect(data.content).toBe(raw);
+      expect(data.content).toContain("<script>");
+    });
+
+    it("should accept manual i18n translations", async () => {
+      const res = await app.handle(
+        new Request("http://localhost/about", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            title: "Bio",
+            content: "Hello",
+            titleI18n: { id: "Biografi" },
+            contentI18n: { id: "Halo", jp: "こんにちは" },
+          }),
+        })
+      );
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      expect(data.titleI18n).toEqual({ id: "Biografi" });
+      expect(data.contentI18n).toEqual({ id: "Halo", jp: "こんにちは" });
     });
   });
 
   describe("GET /about (after create)", () => {
-    it("should return the about content", async () => {
-      const res = await app.handle(
-        new Request("http://localhost/about")
-      );
+    it("should return the created items as an array", async () => {
+      const res = await app.handle(new Request("http://localhost/about"));
       expect(res.status).toBe(200);
       const data = await res.json();
-      expect(data.content).toBe("<p>I'm a full-stack developer.</p>");
+      expect(data).toBeArray();
+      const found = data.find((i: any) => i.id === itemId);
+      expect(found).toBeDefined();
+      expect(found.title).toBe("Introduction");
     });
   });
 
-  describe("PUT /about (update)", () => {
-    it("should update existing about content", async () => {
+  describe("PUT /about/:id", () => {
+    it("should update an item", async () => {
       const res = await app.handle(
-        new Request("http://localhost/about", {
+        new Request(`http://localhost/about/${itemId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({
-            content: "<h1>About Me</h1><p>Updated bio.</p>",
+            content: "Updated bio.",
+            contentI18n: { ru: "Обновлено" },
           }),
         })
       );
 
       expect(res.status).toBe(200);
       const data = await res.json();
-      expect(data.content).toBe("<h1>About Me</h1><p>Updated bio.</p>");
+      expect(data.content).toBe("Updated bio.");
+      expect(data.title).toBe("Introduction");
+      expect(data.contentI18n).toEqual({ ru: "Обновлено" });
     });
-  });
 
-  describe("PUT /about (sanitization)", () => {
-    it("should strip script tags from content", async () => {
+    it("should return 404 for a non-existent item", async () => {
       const res = await app.handle(
-        new Request("http://localhost/about", {
+        new Request("http://localhost/about/non-existent-id", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
-          body: JSON.stringify({
-            content:
-              '<p>Safe</p><script>alert("xss")</script><img src="valid.jpg" onerror="alert(1)">',
-          }),
+          body: JSON.stringify({ title: "Nope" }),
+        })
+      );
+      expect(res.status).toBe(404);
+    });
+  });
+
+  describe("DELETE /about/:id", () => {
+    it("should delete an item", async () => {
+      const res = await app.handle(
+        new Request(`http://localhost/about/${itemId}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${accessToken}` },
         })
       );
 
       expect(res.status).toBe(200);
       const data = await res.json();
-      expect(data.content).not.toContain("<script>");
-      expect(data.content).not.toContain("onerror");
-      expect(data.content).toContain("<p>Safe</p>");
-      expect(data.content).toContain('<img src="valid.jpg" />');
+      expect(data.message).toBe("About item deleted successfully");
+    });
+
+    it("should return 404 after deletion", async () => {
+      const res = await app.handle(
+        new Request(`http://localhost/about/${itemId}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+      );
+      expect(res.status).toBe(404);
     });
   });
 
-  // Clean up
   describe("Cleanup", () => {
-    it("should clean up about row", async () => {
+    it("should clean up about rows", async () => {
       await db.delete(about);
     });
   });

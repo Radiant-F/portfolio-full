@@ -16,6 +16,7 @@ type InputFormType = {
   value: string;
 } & Pick<
   TextInputProps,
+  | "autoCapitalize"
   | "autoComplete"
   | "blurOnSubmit"
   | "keyboardType"

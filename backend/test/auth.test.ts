@@ -6,8 +6,8 @@ import { seedDefaultUser } from "../src/database/seed";
 
 const app = new Elysia().use(cors()).use(authController);
 
-const TEST_EMAIL = process.env.DEFAULT_USER_EMAIL!;
-const TEST_PASSWORD = process.env.DEFAULT_USER_PASSWORD!;
+const TEST_USERNAME = process.env.DEFAULT_USER_USERNAME!;
+const TEST_PASSPHRASE = process.env.DEFAULT_USER_PASSPHRASE!;
 
 beforeAll(async () => {
   await seedDefaultUser();
@@ -24,8 +24,8 @@ describe("Auth Endpoints", () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            email: TEST_EMAIL,
-            password: TEST_PASSWORD,
+            username: TEST_USERNAME,
+            passphrase: TEST_PASSPHRASE,
           }),
         })
       );
@@ -35,38 +35,38 @@ describe("Auth Endpoints", () => {
       const data = await res.json();
       expect(data.accessToken).toBeString();
       expect(data.refreshToken).toBeString();
-      expect(data.user.email).toBe(TEST_EMAIL);
+      expect(data.user.username).toBe(TEST_USERNAME);
       expect(data.user.id).toBeString();
 
       accessToken = data.accessToken;
       refreshToken = data.refreshToken;
     });
 
-    it("should reject invalid password", async () => {
+    it("should reject invalid passphrase", async () => {
       const res = await app.handle(
         new Request("http://localhost/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            email: TEST_EMAIL,
-            password: "wrong-password",
+            username: TEST_USERNAME,
+            passphrase: "WrongPass1!",
           }),
         })
       );
 
       expect(res.status).toBe(401);
       const data = await res.json();
-      expect(data.message).toBe("Invalid email or password");
+      expect(data.message).toBe("Invalid username or passphrase");
     });
 
-    it("should reject non-existent email", async () => {
+    it("should reject non-existent username", async () => {
       const res = await app.handle(
         new Request("http://localhost/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            email: "nonexistent@example.com",
-            password: "whatever",
+            username: "nonexistent",
+            passphrase: TEST_PASSPHRASE,
           }),
         })
       );
@@ -74,14 +74,74 @@ describe("Auth Endpoints", () => {
       expect(res.status).toBe(401);
     });
 
-    it("should reject invalid email format", async () => {
+    it("should reject username shorter than 5 characters", async () => {
       const res = await app.handle(
         new Request("http://localhost/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            email: "not-an-email",
-            password: "whatever",
+            username: "abc",
+            passphrase: TEST_PASSPHRASE,
+          }),
+        })
+      );
+
+      expect(res.status).toBe(422);
+    });
+
+    it("should reject passphrase without an uppercase letter", async () => {
+      const res = await app.handle(
+        new Request("http://localhost/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: TEST_USERNAME,
+            passphrase: "lower1!",
+          }),
+        })
+      );
+
+      expect(res.status).toBe(422);
+    });
+
+    it("should reject passphrase shorter than 8 characters", async () => {
+      const res = await app.handle(
+        new Request("http://localhost/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: TEST_USERNAME,
+            passphrase: "Ab1!",
+          }),
+        })
+      );
+
+      expect(res.status).toBe(422);
+    });
+
+    it("should reject passphrase containing a forbidden plus sign", async () => {
+      const res = await app.handle(
+        new Request("http://localhost/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: TEST_USERNAME,
+            passphrase: "Abcdef1+",
+          }),
+        })
+      );
+
+      expect(res.status).toBe(422);
+    });
+
+    it("should reject passphrase containing a forbidden backtick", async () => {
+      const res = await app.handle(
+        new Request("http://localhost/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: TEST_USERNAME,
+            passphrase: "Abcdef1`",
           }),
         })
       );
@@ -101,14 +161,12 @@ describe("Auth Endpoints", () => {
       expect(res.status).toBe(200);
 
       const data = await res.json();
-      expect(data.email).toBe(TEST_EMAIL);
+      expect(data.username).toBe(TEST_USERNAME);
       expect(data.id).toBeString();
     });
 
     it("should return 401 without token", async () => {
-      const res = await app.handle(
-        new Request("http://localhost/auth/me")
-      );
+      const res = await app.handle(new Request("http://localhost/auth/me"));
 
       expect(res.status).toBe(401);
     });
@@ -139,7 +197,7 @@ describe("Auth Endpoints", () => {
       const data = await res.json();
       expect(data.accessToken).toBeString();
       expect(data.refreshToken).toBeString();
-      expect(data.user.email).toBe(TEST_EMAIL);
+      expect(data.user.username).toBe(TEST_USERNAME);
 
       // Update tokens for subsequent tests
       accessToken = data.accessToken;
