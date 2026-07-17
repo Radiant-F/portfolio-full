@@ -9,7 +9,9 @@
 // API hooks
 export {
   useGetAboutQuery,
+  useCreateAboutMutation,
   useUpdateAboutMutation,
+  useDeleteAboutMutation,
 } from "./services/aboutApiSlice";
 
 // Reducer

@@ -64,6 +64,10 @@
       "title-prefix": "Оставайтесь на",
       "title-highlight": "связи",
       "visit": "Открыть"
+    },
+    "about": {
+      "title-prefix": "Обо",
+      "title-highlight": "мне"
     }
   },
   "cms": {
@@ -145,5 +149,32 @@
       "name": "Tag Name",
       "add-tag": "Add Tag"
     }
+  },
+  "settings": {
+    "title": "Настройки",
+    "theme-mode": "Режим темы",
+    "mode-dark": "Тёмная",
+    "mode-auto": "Авто",
+    "mode-light": "Светлая",
+    "theme-color": "Цвет темы",
+    "swatch-default": "По умолчанию",
+    "swatch-sakura": "Сакура",
+    "swatch-amethyst": "Аметист",
+    "swatch-rose": "Роза",
+    "swatch-custom": "Свой",
+    "language": "Язык",
+    "site-administrator": "Администратор сайта",
+    "username": "Имя пользователя",
+    "passphrase": "Парольная фраза",
+    "passphrase-hint": "Минимум 8 символов: заглавная и строчная буква, цифра и спецсимвол.",
+    "login": "Войти",
+    "login-error-empty": "Введите имя пользователя (от 5 символов) и парольную фразу.",
+    "login-error-invalid": "Неверное имя пользователя или парольная фраза.",
+    "lang-en": "Английский",
+    "lang-jp": "Японский",
+    "lang-cn": "Китайский (упрощённый)",
+    "lang-ru": "Русский",
+    "lang-id": "Индонезийский",
+    "lang-ar": "Арабский"
   }
 }

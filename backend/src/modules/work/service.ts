@@ -8,7 +8,6 @@ import {
   tags,
 } from "../../database/schema";
 import {
-  translateToAll,
   mergeTranslation,
   type SupportedLang,
 } from "../../services/translation";
@@ -128,14 +127,11 @@ export abstract class WorkService {
   }
 
   static async create(data: CreateWorkData) {
-    const descriptionI18n = await translateToAll(data.description);
-
     const [work] = await db
       .insert(works)
       .values({
         title: data.title,
         description: data.description,
-        descriptionI18n,
         iconUrl: data.iconUrl,
         sortOrder: data.sortOrder ?? 0,
       })
@@ -149,7 +145,6 @@ export abstract class WorkService {
     if (data.title !== undefined) values.title = data.title;
     if (data.description !== undefined) {
       values.description = data.description;
-      values.descriptionI18n = await translateToAll(data.description);
     }
     if (data.iconUrl !== undefined) values.iconUrl = data.iconUrl;
     if (data.sortOrder !== undefined) values.sortOrder = data.sortOrder;

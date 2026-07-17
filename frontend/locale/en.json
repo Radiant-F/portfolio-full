@@ -64,6 +64,10 @@
       "title-prefix": "Get in",
       "title-highlight": "touch",
       "visit": "Visit"
+    },
+    "about": {
+      "title-prefix": "About",
+      "title-highlight": "me"
     }
   },
   "cms": {
@@ -145,5 +149,32 @@
       "name": "Tag Name",
       "add-tag": "Add Tag"
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "theme-mode": "Theme Mode",
+    "mode-dark": "Dark",
+    "mode-auto": "Auto",
+    "mode-light": "Light",
+    "theme-color": "Theme Color",
+    "swatch-default": "Default",
+    "swatch-sakura": "Sakura",
+    "swatch-amethyst": "Amethyst",
+    "swatch-rose": "Rose",
+    "swatch-custom": "Custom",
+    "language": "Language",
+    "site-administrator": "Site administrator",
+    "username": "Username",
+    "passphrase": "Passphrase",
+    "passphrase-hint": "Min 8 chars, with uppercase, lowercase, number & a special symbol.",
+    "login": "Login",
+    "login-error-empty": "Enter your username (min 5 characters) and passphrase.",
+    "login-error-invalid": "Invalid username or passphrase.",
+    "lang-en": "English",
+    "lang-jp": "Japanese",
+    "lang-cn": "Chinese (Simplified)",
+    "lang-ru": "Russian",
+    "lang-id": "Indonesian",
+    "lang-ar": "Arabic"
   }
 }

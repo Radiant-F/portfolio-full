@@ -18,8 +18,8 @@ export {
 export {
   default as authReducer,
   clearCredentials,
-  setEmail,
-  setPassword,
+  setUsername,
+  setPassphrase,
   setCredentials,
   setSessionStatus,
 } from "./services/authReducerSlice";

@@ -12,11 +12,11 @@ const workLinkPlatform = t.Union([
 ]);
 
 const _insertUser = createInsertSchema(table.users, {
-  email: t.String({ format: "email" }),
+  username: t.String({ minLength: 5 }),
 });
 
 const _selectUser = createSelectSchema(table.users, {
-  email: t.String({ format: "email" }),
+  username: t.String({ minLength: 5 }),
 });
 
 const _insertSkill = createInsertSchema(table.skills, {

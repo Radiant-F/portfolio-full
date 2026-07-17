@@ -10,8 +10,8 @@ const app = new Elysia()
   .use(authController)
   .use(contactController);
 
-const TEST_EMAIL = process.env.DEFAULT_USER_EMAIL!;
-const TEST_PASSWORD = process.env.DEFAULT_USER_PASSWORD!;
+const TEST_USERNAME = process.env.DEFAULT_USER_USERNAME!;
+const TEST_PASSPHRASE = process.env.DEFAULT_USER_PASSPHRASE!;
 
 let accessToken: string;
 let contactId: string;
@@ -23,7 +23,7 @@ beforeAll(async () => {
     new Request("http://localhost/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: TEST_EMAIL, password: TEST_PASSWORD }),
+      body: JSON.stringify({ username: TEST_USERNAME, passphrase: TEST_PASSPHRASE }),
     })
   );
   const data = await res.json();

@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AuthState } from "../auth";
 
 const initialState: AuthState = {
-  email: "",
-  password: "",
+  username: "",
+  passphrase: "",
   sessionStatus: "checking",
   credentials: {
     accessToken: null,
@@ -33,11 +33,11 @@ export const authSlice = createSlice({
     ) => {
       state.sessionStatus = action.payload;
     },
-    setEmail: (state, action: PayloadAction<string>) => {
-      state.email = action.payload;
+    setUsername: (state, action: PayloadAction<string>) => {
+      state.username = action.payload;
     },
-    setPassword: (state, action: PayloadAction<string>) => {
-      state.password = action.payload;
+    setPassphrase: (state, action: PayloadAction<string>) => {
+      state.passphrase = action.payload;
     },
   },
 });
@@ -46,8 +46,8 @@ export const {
   clearCredentials,
   setCredentials,
   setSessionStatus,
-  setEmail,
-  setPassword,
+  setUsername,
+  setPassphrase,
 } = authSlice.actions;
 
 export default authSlice.reducer;

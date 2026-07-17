@@ -3,22 +3,22 @@ export type LoginResponse = {
   refreshToken: string;
   user: {
     id: string;
-    email: string;
+    username: string;
   };
 };
 
 export type LoginRequest = {
-  email: string;
-  password: string;
+  username: string;
+  passphrase: string;
 };
 
 export type AuthState = {
-  email: string;
-  password: string;
+  username: string;
+  passphrase: string;
   sessionStatus: "checking" | "authenticated" | "unauthenticated";
   credentials: {
     accessToken: string | null;
     refreshToken: string | null;
-    user: { id: string; email: string } | null;
+    user: { id: string; username: string } | null;
   };
 };

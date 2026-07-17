@@ -64,6 +64,10 @@
       "title-prefix": "保持",
       "title-highlight": "联系",
       "visit": "访问"
+    },
+    "about": {
+      "title-prefix": "关于",
+      "title-highlight": "我"
     }
   },
   "cms": {
@@ -145,5 +149,32 @@
       "name": "Tag Name",
       "add-tag": "Add Tag"
     }
+  },
+  "settings": {
+    "title": "设置",
+    "theme-mode": "主题模式",
+    "mode-dark": "深色",
+    "mode-auto": "自动",
+    "mode-light": "浅色",
+    "theme-color": "主题颜色",
+    "swatch-default": "默认",
+    "swatch-sakura": "樱花",
+    "swatch-amethyst": "紫晶",
+    "swatch-rose": "玫瑰",
+    "swatch-custom": "自定义",
+    "language": "语言",
+    "site-administrator": "站点管理员",
+    "username": "用户名",
+    "passphrase": "口令",
+    "passphrase-hint": "至少8位，需包含大写字母、小写字母、数字和特殊符号。",
+    "login": "登录",
+    "login-error-empty": "请填用户名（至少5个字符）和口令。",
+    "login-error-invalid": "用户名或口令不正确。",
+    "lang-en": "英语",
+    "lang-jp": "日语",
+    "lang-cn": "中文（简体）",
+    "lang-ru": "俄语",
+    "lang-id": "印尼语",
+    "lang-ar": "阿拉伯语"
   }
 }
