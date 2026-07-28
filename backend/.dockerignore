@@ -37,8 +37,8 @@ Thumbs.db
 # Data
 data-example/*
 
-# Drizzle
-drizzle/meta/
+# Drizzle - do not exclude meta folder (contains _journal.json)
+# Only exclude temporary migration files if needed
 
 # Railway (if present)
 .railway/
