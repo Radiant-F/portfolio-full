@@ -1,47 +1,7 @@
-# Dependencies
 node_modules
-test
-coverage
-*.bun
-
-# Environment files
 .env
-.env.*
-!.env.example
-
-# Git
-.git
-.gitignore
-
-# Build artifacts
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# IDE
-.vscode
-.idea
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Bun
- bun.lockb
-
-# Data
-data-example/*
-
-# Drizzle - do not exclude migration files or metadata
-!drizzle
-!drizzle/*.sql
-!drizzle/meta
-!drizzle/meta/_journal.json
-
-# Railway (if present)
-.railway/
+.env.example
+data-example
+docs
+test
+*.md

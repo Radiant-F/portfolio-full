@@ -21,12 +21,14 @@ import { Platform } from "react-native";
 
 let refreshRequest: Promise<boolean> | null = null;
 
-const defaultApiBaseUrl =
+const _defaultApiBaseUrl =
   Platform.OS === "web" && typeof window !== "undefined"
     ? `${window.location.protocol}//${window.location.hostname}:3000`
     : "http://192.168.20.676767:3000";
 
-const apiBaseUrl = process.env.EXPO_PUBLIC_API_URL || defaultApiBaseUrl;
+const apiBaseUrl =
+  process.env.EXPO_PUBLIC_API_URL ||
+  "https://backend-724508866599.asia-southeast1.run.app";
 
 function getRequestUrl(args: string | FetchArgs) {
   return typeof args === "string" ? args : args.url;

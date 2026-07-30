@@ -1,13 +1,15 @@
-FROM oven/bun:1.2.21-alpine
-
+FROM oven/bun:1 AS base
 WORKDIR /app
 
-COPY package.json bun.lock tsconfig.json ./
-RUN bun install --frozen-lockfile
+# Install deps first (better layer caching)
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile --production
 
-COPY src ./src
-COPY drizzle ./drizzle
+# Copy rest of the source
+COPY . .
 
-EXPOSE 10000
+# Cloud Run listens on $PORT (defaults to 8080)
+ENV NODE_ENV=production
+EXPOSE 8080
 
 CMD ["bun", "run", "src/index.ts"]
