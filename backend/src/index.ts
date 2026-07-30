@@ -10,7 +10,7 @@ import { contactController } from "./modules/contact";
 import { aboutController } from "./modules/about";
 import { seedDefaultUser } from "./database/seed";
 import { seedDemoData } from "./database/seed";
-import { migrateDatabase } from "./database/migrate";
+// import { migrateDatabase } from "./database/migrate";
 import { shouldSeedOnBoot } from "./database/seedConfig";
 
 const port = Number(process.env.PORT ?? 3000);
@@ -65,8 +65,8 @@ function buildApp() {
 }
 
 async function bootstrap() {
-  await migrateDatabase();
-  console.log("🗃️ Database migrations checked");
+  // await migrateDatabase();
+  // console.log("🗃️ Database migrations checked");
 
   const app = buildApp().listen(port);
 
