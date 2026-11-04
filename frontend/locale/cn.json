@@ -168,7 +168,7 @@
     "passphrase": "口令",
     "passphrase-hint": "至少8位，需包含大写字母、小写字母、数字和特殊符号。",
     "login": "登录",
-    "login-error-empty": "请填用户名（至少5个字符）和口令。",
+    "login-error-empty": "你在干什么？",
     "login-error-invalid": "用户名或口令不正确。",
     "lang-en": "英语",
     "lang-jp": "日语",

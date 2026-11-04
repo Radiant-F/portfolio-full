@@ -168,7 +168,7 @@
     "passphrase": "Passphrase",
     "passphrase-hint": "Min 8 chars, with uppercase, lowercase, number & a special symbol.",
     "login": "Login",
-    "login-error-empty": "Enter your username (min 5 characters) and passphrase.",
+    "login-error-empty": "What are you doing?",
     "login-error-invalid": "Invalid username or passphrase.",
     "lang-en": "English",
     "lang-jp": "Japanese",

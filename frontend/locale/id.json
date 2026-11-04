@@ -168,7 +168,7 @@
     "passphrase": "Frasa sandi",
     "passphrase-hint": "Min 8 huruf: huruf besar, huruf kecil, angka & simbol khusus.",
     "login": "Masuk",
-    "login-error-empty": "Masukkan nama pengguna (min 5 huruf) dan frasa sandi.",
+    "login-error-empty": "Mau apa?",
     "login-error-invalid": "Nama pengguna atau frasa sandi salah.",
     "lang-en": "Inggris",
     "lang-jp": "Jepang",
