@@ -182,6 +182,28 @@ describe("Auth Endpoints", () => {
     });
   });
 
+  describe("POST /auth/test/expired-access-token", () => {
+    it("should generate an access token rejected as expired", async () => {
+      const expiredTokenResponse = await app.handle(
+        new Request("http://localhost/auth/test/expired-access-token", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+      );
+
+      expect(expiredTokenResponse.status).toBe(200);
+      const { accessToken: expiredToken } = await expiredTokenResponse.json();
+
+      const meResponse = await app.handle(
+        new Request("http://localhost/auth/me", {
+          headers: { Authorization: `Bearer ${expiredToken}` },
+        })
+      );
+
+      expect(meResponse.status).toBe(401);
+    });
+  });
+
   describe("POST /auth/refresh", () => {
     it("should refresh tokens with valid refresh token in body", async () => {
       const res = await app.handle(

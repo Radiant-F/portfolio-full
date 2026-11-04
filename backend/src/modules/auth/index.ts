@@ -145,6 +145,33 @@ export const authController = new Elysia({
       },
     }
   )
+  .post(
+    "/test/expired-access-token",
+    async ({ accessJwt, userId, status }) => {
+      if (process.env.NODE_ENV === "production") {
+        return status(404, { message: "Not Found" as const });
+      }
+
+      return {
+        accessToken: await accessJwt.sign({
+          sub: userId,
+          exp: Math.floor(Date.now() / 1000) - 60,
+        }),
+      };
+    },
+    {
+      isAuth: true,
+      response: {
+        200: t.Object({ accessToken: t.String() }),
+        404: t.Object({ message: t.Literal("Not Found") }),
+      },
+      detail: {
+        summary: "Generate expired access token",
+        description: "Generate an expired access token for the authenticated user. Available outside production only.",
+        security: [{ bearerAuth: [] }],
+      },
+    }
+  )
   .get(
     "/me",
     async ({ userId, status }) => {
