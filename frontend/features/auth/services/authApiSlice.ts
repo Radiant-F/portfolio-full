@@ -21,10 +21,7 @@ const authReducerSlice = apiSlice.injectEndpoints({
       onQueryStarted: async (_args, api) => {
         try {
           const { data } = await api.queryFulfilled;
-
-          persistSession(data);
-          api.dispatch(setCredentials(toAuthCredentials(data)));
-          router.replace("/(app)");
+          alert(`${JSON.stringify(data)}`)
         } catch (error) {}
       },
     }),
@@ -35,9 +32,6 @@ const authReducerSlice = apiSlice.injectEndpoints({
           await api.queryFulfilled;
         } catch (error) {
         } finally {
-          clearStoredSession();
-          api.dispatch(clearCredentials());
-          router.replace("/sign-in");
         }
       },
     }),
