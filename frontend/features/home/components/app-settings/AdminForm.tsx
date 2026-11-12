@@ -62,9 +62,9 @@ export default function AdminForm() {
         value={passphrase}
       />
       <View style={{ height: 10 }} />
-      <Text style={{ color: theme.textMuted, fontSize: 12 }}>
+      {/* <Text style={{ color: theme.textMuted, fontSize: 12 }}>
         {t("settings.passphrase-hint")}
-      </Text>
+      </Text> */}
       <View style={{ height: 6 }} />
       {errorMessage ? (
         <>

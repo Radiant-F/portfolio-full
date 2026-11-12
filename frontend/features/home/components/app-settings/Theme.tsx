@@ -210,9 +210,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     height: 50,
+    minWidth: 50,
     paddingHorizontal: 15,
-    paddingRight: 17.5,
     gap: 5,
+    justifyContent: 'center',
     borderRadius: 50 / 2,
   },
 });
