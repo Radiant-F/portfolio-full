@@ -1,8 +1,3 @@
-import type { LoginResponse } from "@/features/auth/auth";
-import {
-  clearCredentials,
-  setCredentials,
-} from "@/features/auth/services/authReducerSlice";
 import { RootState } from "@/redux/store";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type {
@@ -13,11 +8,10 @@ import type {
 import { Platform } from "react-native";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.EXPO_PUBLIC_API_URL_PROD,
+  baseUrl: process.env.EXPO_PUBLIC_API_URL_DEV,
   credentials: Platform.OS === "web" ? "include" : "omit",
   prepareHeaders: (headers, api) => {
-    const accessToken = (api.getState() as RootState).auth.credentials
-      .accessToken;
+    const accessToken = (api.getState() as RootState).auth.accessToken;
 
     if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
 
