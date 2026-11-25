@@ -20,6 +20,7 @@ export type CreateAbout = {
 };
 
 export type UpdateAbout = {
+  id?: string;
   title?: string;
   content?: string;
   titleI18n?: Partial<Record<LocaleType, string>>;

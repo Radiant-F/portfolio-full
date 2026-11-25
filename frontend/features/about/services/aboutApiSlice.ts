@@ -16,12 +16,9 @@ const aboutApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["About"],
     }),
-    updateAbout: build.mutation<
-      AboutResponse,
-      { id: string; body: UpdateAbout }
-    >({
-      query: ({ id, body }) => ({
-        url: `/about/${id}`,
+    updateAbout: build.mutation<AboutResponse, UpdateAbout>({
+      query: (body) => ({
+        url: `/about/${body.id}`,
         method: "PUT",
         body,
       }),
