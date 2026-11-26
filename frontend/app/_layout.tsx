@@ -2,14 +2,16 @@ import i18n from "@/locale/i18n";
 import { Stack } from "expo-router";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
-import { useAppDispatch } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { storage } from "@/api/storage";
 import { useFonts } from "expo-font";
+import { setSession } from "@/features/auth";
 
 function RootNavigator() {
   const dispatch = useAppDispatch();
+  const accessToken = useAppSelector((state) => state.auth.accessToken);
 
   const [isReady, setIsReady] = useState(false);
 
@@ -25,9 +27,13 @@ function RootNavigator() {
     async function restoreSession() {
       try {
         const savedLanguage = storage.getString("settings.language");
+        const savedSession = storage.getString("user.session");
 
         if (savedLanguage && savedLanguage !== i18n.language) {
           await i18n.changeLanguage(savedLanguage);
+        }
+        if (savedSession) {
+          dispatch(setSession(JSON.parse(savedSession)));
         }
       } catch (restoreError) {
       } finally {
@@ -67,7 +73,9 @@ function RootNavigator() {
       <Stack.Screen name="(public)" />
 
       {/* CMS routes */}
-      {/* back log */}
+      <Stack.Protected guard={Boolean(accessToken)}>
+        <Stack.Screen name="(admin)" />
+      </Stack.Protected>
     </Stack>
   );
 }
